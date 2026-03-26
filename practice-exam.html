@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AWS CLF-C02 Practice Exam</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; }
+    .header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+    .header h1 { font-size: 1.4rem; font-weight: 800; }
+    .header-meta { color: #94a3b8; font-size: 0.85rem; margin-top: 0.2rem; }
+    .timer { background: #1e3a5f; border: 2px solid #3B82F6; border-radius: 8px; padding: 0.4rem 1rem; font-size: 1.1rem; font-weight: 700; color: #60a5fa; font-variant-numeric: tabular-nums; }
+    .timer.urgent { border-color: #EF4444; color: #f87171; background: #450a0a; }
+    .container { max-width: 720px; margin: 0 auto; padding: 1.5rem; }
+    .card { background: white; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,0.1); padding: 1.5rem; margin-bottom: 1rem; }
+    .btn { padding: 0.6rem 1.4rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.15s; }
+    .btn-primary { background: #3B82F6; color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-primary:disabled { background: #93c5fd; cursor: not-allowed; }
+    .btn-secondary { background: #f1f5f9; color: #334155; }
+    .btn-secondary:hover { background: #e2e8f0; }
+    .btn-green { background: #10B981; color: white; }
+    .btn-green:hover { background: #059669; }
+    .domain-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; color: white; }
+    .type-badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; background: #f1f5f9; color: #475569; margin-left: 0.5rem; }
+    .type-badge.multi { background: #fef3c7; color: #92400e; }
+    .progress-bar-wrap { background: #e2e8f0; border-radius: 999px; height: 6px; margin: 1rem 0; }
+    .progress-bar { background: #3B82F6; height: 6px; border-radius: 999px; transition: width 0.3s; }
+    .question-text { font-size: 1rem; font-weight: 600; line-height: 1.6; margin: 1rem 0; }
+    .option-btn { width: 100%; text-align: left; padding: 0.8rem 1rem; border-radius: 8px; border: 2px solid #e2e8f0; background: white; margin-bottom: 0.5rem; cursor: pointer; font-size: 0.9rem; line-height: 1.5; transition: all 0.15s; display: flex; align-items: flex-start; gap: 0.75rem; }
+    .option-btn:hover:not(.disabled) { border-color: #3B82F6; background: #eff6ff; }
+    .option-btn.selected { border-color: #3B82F6; background: #eff6ff; }
+    .option-btn.correct { border-color: #10B981; background: #ecfdf5; color: #065f46; }
+    .option-btn.wrong { border-color: #EF4444; background: #fef2f2; color: #991b1b; }
+    .option-btn.disabled { cursor: default; }
+    .option-indicator { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #cbd5e1; flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; }
+    .option-indicator.checkbox { border-radius: 4px; }
+    .option-indicator.filled { background: #3B82F6; border-color: #3B82F6; color: white; }
+    .option-indicator.correct-ind { background: #10B981; border-color: #10B981; color: white; }
+    .option-indicator.wrong-ind { background: #EF4444; border-color: #EF4444; color: white; }
+    .explanation { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 1rem; margin-top: 0.75rem; font-size: 0.9rem; line-height: 1.6; color: #1e40af; }
+    .explanation strong { color: #1e3a8a; }
+    .nav-dots { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+    .dot { width: 28px; height: 28px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.75rem; font-weight: 600; transition: all 0.15s; }
+    .dot.unanswered { background: #e2e8f0; color: #64748b; }
+    .dot.current { background: #3B82F6; color: white; }
+    .dot.correct-dot { background: #10B981; color: white; }
+    .dot.wrong-dot { background: #EF4444; color: white; }
+    .score-header { text-align: center; padding: 2rem; border-radius: 12px; margin-bottom: 1.5rem; }
+    .score-header.pass { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 2px solid #10B981; }
+    .score-header.fail { background: linear-gradient(135deg, #fef2f2, #fee2e2); border: 2px solid #EF4444; }
+    .score-pct { font-size: 3rem; font-weight: 900; }
+    .score-pass-fail { font-size: 1.5rem; font-weight: 800; margin: 0.3rem 0; }
+    .domain-score-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+    .domain-score-label { font-size: 0.85rem; font-weight: 600; min-width: 220px; }
+    .domain-score-bar-wrap { flex: 1; background: #e2e8f0; border-radius: 999px; height: 10px; }
+    .domain-score-bar { height: 10px; border-radius: 999px; transition: width 0.5s; }
+    .domain-score-num { font-size: 0.85rem; font-weight: 700; min-width: 45px; text-align: right; }
+    .review-q { border-bottom: 1px solid #f1f5f9; padding: 1.2rem 0; }
+    .review-q:last-child { border-bottom: none; }
+    .review-badges { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+    .correct-badge { background: #d1fae5; color: #065f46; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .wrong-badge { background: #fee2e2; color: #991b1b; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .review-opt { font-size: 0.85rem; padding: 0.3rem 0.6rem; border-radius: 6px; margin: 0.2rem 0; }
+    .review-opt.correct-opt { background: #ecfdf5; color: #065f46; }
+    .review-opt.wrong-opt { background: #fef2f2; color: #991b1b; }
+    .review-opt.neutral { color: #475569; }
+    .settings-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    .settings-label { font-weight: 600; font-size: 0.9rem; min-width: 120px; }
+    .q-count-btn { padding: 0.4rem 0.9rem; border-radius: 6px; border: 2px solid #e2e8f0; background: white; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+    .q-count-btn.active { border-color: #3B82F6; background: #eff6ff; color: #1d4ed8; }
+    select { padding: 0.4rem 0.8rem; border-radius: 6px; border: 2px solid #e2e8f0; font-size: 0.85rem; background: white; }
+    .coverage-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin: 1rem 0; }
+    .coverage-item { background: #f8fafc; border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.82rem; display: flex; align-items: center; gap: 0.5rem; }
+    .nav-link { padding: 0.5rem 1rem; background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #334155; font-size: 0.85rem; font-weight: 600; }
+    .nav-link:hover { background: #3B82F6; color: white; }
+    .bottom-nav { display: flex; gap: 0.5rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
+    @media (max-width: 520px) { .coverage-list { grid-template-columns: 1fr; } .domain-score-label { min-width: 140px; } }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef } = React;
+
+const DOMAIN_COLORS = {
+  'Cloud Concepts': '#3B82F6',
+  'Security & Compliance': '#EF4444',
+  'Technology': '#10B981',
+  'Billing & Pricing': '#F59E0B',
+};
+
+const ALL_QUESTIONS = [
+  // CLOUD CONCEPTS (10)
+  { id: 1, domain: 'Cloud Concepts', type: 'single', text: 'A startup wants to avoid large upfront hardware costs and pay only for the compute resources they actually consume each month. Which AWS benefit does this describe?', options: ['Economies of scale', 'Trade fixed expense for variable expense', 'Stop guessing capacity', 'Go global in minutes'], correct: [1], explanation: 'Trading fixed (CapEx) for variable expense (OpEx) means you pay only for what you consume rather than investing in infrastructure before you know how much you\'ll need.' },
+  { id: 2, domain: 'Cloud Concepts', type: 'single', text: 'A company\'s application crashed during a major product launch because a single server couldn\'t handle the sudden traffic spike. Which AWS cloud design principle would have BEST prevented this?', options: ['Design for failure', 'Implement elasticity', 'Loose coupling', 'Think in parallel'], correct: [1], explanation: 'Elasticity means automatically scaling resources up or down to match demand. An Auto Scaling group would have added more EC2 instances during the spike, preventing the crash.' },
+  { id: 3, domain: 'Cloud Concepts', type: 'single', text: 'AWS purchases hardware in massive quantities and passes the savings to customers in the form of lower prices. Which cloud advantage does this represent?', options: ['Stop guessing capacity', 'Trade fixed for variable expense', 'Benefit from massive economies of scale', 'Increase speed and agility'], correct: [2], explanation: 'Economies of scale: because AWS aggregates usage from hundreds of thousands of customers, they achieve higher economies of scale and can pass savings on to you as lower pay-as-you-go prices.' },
+  { id: 4, domain: 'Cloud Concepts', type: 'single', text: 'A financial services firm requires complete control over all hardware, maximum security isolation, and cannot share infrastructure with any other organization. Which cloud deployment model fits?', options: ['Public cloud', 'Private (on-premises) cloud', 'Hybrid cloud', 'Community cloud'], correct: [1], explanation: 'A private cloud is operated solely for a single organization. It may be on-premises or hosted by a third party, but it provides dedicated infrastructure with no sharing with other tenants.' },
+  { id: 5, domain: 'Cloud Concepts', type: 'single', text: 'A hospital must keep patient records on-premises due to HIPAA regulations, but wants to burst analytics workloads into the cloud during peak processing periods. Which deployment model applies?', options: ['Public cloud', 'Private cloud', 'Hybrid cloud', 'Multi-cloud'], correct: [2], explanation: 'Hybrid cloud combines on-premises (private) infrastructure with public cloud resources. The sensitive data stays on-premises while burst/analytics workloads run in AWS.' },
+  { id: 6, domain: 'Cloud Concepts', type: 'single', text: 'A developer uploads Python application code to a platform that automatically handles provisioning servers, load balancing, and scaling — without any infrastructure management. Which service model is this?', options: ['IaaS', 'PaaS', 'SaaS', 'FaaS'], correct: [1], explanation: 'Platform as a Service (PaaS) provides a platform for developers to build and deploy applications without managing the underlying infrastructure. AWS Elastic Beanstalk is an example.' },
+  { id: 7, domain: 'Cloud Concepts', type: 'single', text: 'A US-based company wants to expand to Southeast Asia within days to reduce latency for local users. Which AWS advantage makes this possible?', options: ['Stop spending money on data centers', 'Trade fixed for variable expense', 'Go global in minutes', 'Benefit from economies of scale'], correct: [2], explanation: 'AWS has Regions worldwide, so you can deploy your application globally in minutes by replicating infrastructure to a new AWS Region — something that would take months on-premises.' },
+  { id: 8, domain: 'Cloud Concepts', type: 'single', text: 'A company moves from buying physical servers (capitalized over 5 years) to paying monthly AWS bills. What financial transformation has occurred?', options: ['Variable to fixed expense', 'CapEx to OpEx', 'OpEx to CapEx', 'Fixed to reserved expense'], correct: [1], explanation: 'Moving to the cloud shifts IT spending from capital expenditure (CapEx — buying assets) to operational expenditure (OpEx — paying for services as used). This improves cash flow and flexibility.' },
+  { id: 9, domain: 'Cloud Concepts', type: 'single', text: 'A company upgrades a single EC2 instance from a t3.medium to a t3.2xlarge to handle increased load. This is an example of what type of scaling?', options: ['Horizontal scaling', 'Vertical scaling', 'Elastic scaling', 'Auto scaling'], correct: [1], explanation: 'Vertical scaling (scale up) means increasing the size/power of an existing resource. Horizontal scaling (scale out) means adding more instances. AWS generally favors horizontal scaling for resilience.' },
+  { id: 10, domain: 'Cloud Concepts', type: 'single', text: 'An on-premises team waits 6 weeks to procure, rack, and configure new servers. AWS eliminates this wait. Which cloud benefit does this represent?', options: ['Economies of scale', 'Global reach', 'Speed and agility', 'Stop guessing capacity'], correct: [2], explanation: 'Speed and agility: Cloud reduces the time to make IT resources available from weeks to minutes, enabling developers to experiment and innovate faster.' },
+
+  // SECURITY & COMPLIANCE (15)
+  { id: 11, domain: 'Security & Compliance', type: 'single', text: 'A company notices that the operating system on their Amazon RDS MySQL instance has not been patched in months. Under the shared responsibility model, who is responsible for patching the RDS OS?', options: ['The customer — they manage the database', 'AWS — RDS is a managed service', 'Both AWS and the customer equally', 'The database vendor (Oracle/MySQL)'], correct: [1], explanation: 'For managed services like RDS, AWS is responsible for patching the underlying OS and database engine. The customer is responsible for patching the applications running ON TOP of RDS.' },
+  { id: 12, domain: 'Security & Compliance', type: 'multi', text: 'Under the AWS Shared Responsibility Model, which TWO items are the CUSTOMER\'s responsibility? (Select TWO)', options: ['Physical security of AWS data centers', 'Configuring EC2 security groups correctly', 'Encrypting data stored in S3 buckets', 'Patching the hypervisor', 'Maintaining network infrastructure between AZs'], correct: [1, 2], explanation: 'Customers are responsible for security IN the cloud: configuring security groups, encrypting their data, managing IAM, and patching their own OS/applications. AWS handles the physical and hypervisor layers.' },
+  { id: 13, domain: 'Security & Compliance', type: 'single', text: 'Under the shared responsibility model for AWS Lambda, what is the customer PRIMARILY responsible for?', options: ['Patching the underlying OS', 'Managing the Lambda runtime environment', 'Function code quality and IAM execution permissions', 'Scaling Lambda infrastructure'], correct: [2], explanation: 'With Lambda (serverless), AWS manages everything below the function: OS, runtime patches, scaling, availability. The customer is responsible for the function code, its logic, and the IAM role permissions it uses.' },
+  { id: 14, domain: 'Security & Compliance', type: 'single', text: 'A new employee joins the database team and needs access only to Amazon S3 and Amazon DynamoDB. Which approach follows the principle of least privilege?', options: ['Assign the employee to the "Administrators" group temporarily', 'Create an IAM policy with only S3 and DynamoDB permissions and attach it to the user', 'Give the employee root account credentials with instructions to be careful', 'Assign the AWS managed policy "PowerUserAccess"'], correct: [1], explanation: 'Least privilege means granting only the permissions required to perform the job. Creating a specific IAM policy for S3 and DynamoDB ensures the user cannot access any other services.' },
+  { id: 15, domain: 'Security & Compliance', type: 'single', text: 'An IAM user\'s password was stolen. The attacker is trying to log in to the AWS Management Console. Which security feature would BEST prevent unauthorized access even with valid credentials?', options: ['AWS Shield', 'IAM password policy', 'Multi-Factor Authentication (MFA)', 'VPC Security Groups'], correct: [2], explanation: 'MFA requires a second factor (a one-time code) in addition to the password. Even with the stolen password, the attacker cannot log in without the physical MFA device or authenticator app.' },
+  { id: 16, domain: 'Security & Compliance', type: 'single', text: 'A security auditor needs to know who deleted a specific EC2 instance, what IAM user made the API call, and from which IP address. Which AWS service provides this information?', options: ['Amazon CloudWatch', 'AWS Config', 'AWS CloudTrail', 'Amazon Inspector'], correct: [2], explanation: 'CloudTrail logs every AWS API call including the caller identity (IAM user/role), timestamp, source IP, and the parameters used. It is the primary service for API-level audit logging.' },
+  { id: 17, domain: 'Security & Compliance', type: 'single', text: 'A web application is being targeted by SQL injection attacks through login forms and cross-site scripting (XSS) in comment fields. Which AWS service should be deployed to block these attacks?', options: ['AWS Shield Standard', 'AWS WAF (Web Application Firewall)', 'Amazon GuardDuty', 'AWS Network Firewall'], correct: [1], explanation: 'AWS WAF operates at Layer 7 (application layer) and can inspect HTTP requests to block SQL injection, XSS, and other OWASP Top 10 web exploits using managed or custom rules.' },
+  { id: 18, domain: 'Security & Compliance', type: 'single', text: 'Which AWS service provides automatic protection against Layer 3 and Layer 4 DDoS attacks (such as SYN floods) at NO additional cost for all AWS customers?', options: ['AWS Shield Advanced', 'AWS WAF', 'AWS Shield Standard', 'Amazon GuardDuty'], correct: [2], explanation: 'AWS Shield Standard is automatically enabled for all AWS customers at no extra charge. It protects against the most common Layer 3/4 DDoS attacks. Shield Advanced is the paid tier with additional protections.' },
+  { id: 19, domain: 'Security & Compliance', type: 'multi', text: 'A company needs to download AWS SOC 2 and PCI DSS compliance reports, and also maintain a log of all API calls made in their account. Which TWO services fulfill these requirements? (Select TWO)', options: ['AWS Artifact', 'AWS Config', 'AWS CloudTrail', 'AWS Security Hub', 'Amazon Inspector'], correct: [0, 2], explanation: 'AWS Artifact provides on-demand access to AWS compliance reports (SOC, PCI, ISO, etc.). AWS CloudTrail logs all API calls in your account for security audit and compliance purposes.' },
+  { id: 20, domain: 'Security & Compliance', type: 'single', text: 'A company is concerned they may have accidentally stored credit card numbers and social security numbers in various S3 buckets across their account. Which service automatically discovers and alerts on this sensitive data?', options: ['Amazon Inspector', 'Amazon GuardDuty', 'Amazon Macie', 'AWS Config'], correct: [2], explanation: 'Amazon Macie uses machine learning to automatically discover, classify, and protect sensitive data in S3, including PII (SSNs, passport numbers) and financial data like credit card numbers.' },
+  { id: 21, domain: 'Security & Compliance', type: 'single', text: 'A security team wants continuous monitoring that automatically detects when EC2 instances start communicating with known malicious IP addresses or cryptocurrency mining pools. Which service provides this?', options: ['Amazon Inspector', 'AWS Config', 'Amazon Macie', 'Amazon GuardDuty'], correct: [3], explanation: 'Amazon GuardDuty is a continuous threat detection service that uses ML and threat intelligence feeds to detect anomalous behavior like communication with malicious IPs, unusual API calls, and compromised credentials.' },
+  { id: 22, domain: 'Security & Compliance', type: 'single', text: 'A company wants to automatically rotate their RDS database master password every 30 days and have applications retrieve the current password without hardcoding it. Which service handles this?', options: ['AWS KMS', 'AWS Certificate Manager', 'AWS Secrets Manager', 'AWS CloudHSM'], correct: [2], explanation: 'AWS Secrets Manager stores secrets (passwords, API keys, tokens) and can automatically rotate them on a schedule. Applications call the Secrets Manager API to retrieve the current secret value.' },
+  { id: 23, domain: 'Security & Compliance', type: 'single', text: 'When you enable encryption for an Amazon EBS volume using the default AWS-managed key, which service is managing the encryption keys?', options: ['AWS CloudHSM', 'AWS Certificate Manager', 'AWS Macie', 'AWS KMS (Key Management Service)'], correct: [3], explanation: 'AWS KMS manages encryption keys for AWS services. When you encrypt EBS volumes, S3 objects, or RDS databases, KMS handles key creation, storage, rotation, and access control.' },
+  { id: 24, domain: 'Security & Compliance', type: 'single', text: 'A financial institution requires a hardware security module where they manage their own encryption keys and AWS has absolutely zero access to the key material. Which service meets this requirement?', options: ['AWS KMS with customer-managed keys', 'AWS CloudHSM', 'AWS Secrets Manager', 'AWS Certificate Manager'], correct: [1], explanation: 'AWS CloudHSM provides dedicated hardware security modules. Unlike KMS where AWS manages the HSM infrastructure, with CloudHSM you control and manage the keys entirely — AWS has no access to your key material.' },
+  { id: 25, domain: 'Security & Compliance', type: 'single', text: 'A compliance team needs to receive automatic alerts whenever an S3 bucket is made public or a security group opens port 22 to 0.0.0.0/0. Which service continuously monitors and evaluates resource configurations against rules?', options: ['AWS CloudTrail', 'Amazon GuardDuty', 'AWS Config', 'Amazon Inspector'], correct: [2], explanation: 'AWS Config continuously records resource configurations and can evaluate them against compliance rules. You can create Config Rules that trigger alerts or auto-remediation when resources become non-compliant.' },
+
+  // TECHNOLOGY (18)
+  { id: 26, domain: 'Technology', type: 'single', text: 'A company runs a web application on multiple EC2 instances. They need to automatically distribute incoming HTTP traffic across all healthy instances. Which AWS service provides this?', options: ['Amazon Route 53', 'AWS Global Accelerator', 'Elastic Load Balancing (ELB)', 'Amazon CloudFront'], correct: [2], explanation: 'Elastic Load Balancing automatically distributes incoming application traffic across multiple EC2 instances, containers, or Lambda functions. It also performs health checks and stops routing to unhealthy targets.' },
+  { id: 27, domain: 'Technology', type: 'single', text: 'A data science team runs video encoding batch jobs that take 45 minutes each. The jobs can be interrupted and restarted. Cost savings is the top priority. Which EC2 pricing model is BEST?', options: ['On-Demand Instances', 'Reserved Instances (1-year)', 'Spot Instances', 'Dedicated Hosts'], correct: [2], explanation: 'Spot Instances offer up to 90% discount over On-Demand pricing. They can be interrupted by AWS with 2-minute notice, making them ideal for fault-tolerant batch jobs like video encoding that can checkpoint and restart.' },
+  { id: 28, domain: 'Technology', type: 'multi', text: 'A company needs BOTH a persistent block storage volume attached to a single EC2 instance AND a shared file system accessible simultaneously by multiple EC2 instances. Which TWO services fulfill these requirements? (Select TWO)', options: ['Amazon S3', 'Amazon EBS (Elastic Block Store)', 'Amazon EFS (Elastic File System)', 'Amazon FSx for Lustre', 'AWS Storage Gateway'], correct: [1, 2], explanation: 'EBS provides persistent block storage attached to a single EC2 instance (like a hard drive). EFS is a managed NFS file system that can be mounted simultaneously on many EC2 instances across multiple AZs.' },
+  { id: 29, domain: 'Technology', type: 'single', text: 'A healthcare company must archive 10 years of compliance records that are almost never accessed. They need the absolute lowest storage cost and can tolerate up to 12 hours to retrieve data. Which S3 storage class is BEST?', options: ['S3 Standard-IA', 'S3 Glacier Flexible Retrieval', 'S3 Glacier Deep Archive', 'S3 One Zone-IA'], correct: [2], explanation: 'S3 Glacier Deep Archive is the lowest-cost S3 storage class, designed for data that is rarely (if ever) accessed with a retrieval time of 12 hours. It\'s ideal for long-term compliance archives.' },
+  { id: 30, domain: 'Technology', type: 'single', text: 'A data analyst wants to run SQL queries directly on raw CSV and JSON log files stored in Amazon S3 without loading them into a database or managing any servers. Which service enables this?', options: ['Amazon RDS', 'Amazon Redshift', 'Amazon Athena', 'Amazon EMR'], correct: [2], explanation: 'Amazon Athena is a serverless query service that lets you run SQL directly on data in S3 using standard SQL. You pay only per query (per TB scanned). No infrastructure to manage.' },
+  { id: 31, domain: 'Technology', type: 'single', text: 'An application needs to handle 1 million database reads per second with single-digit millisecond latency for a gaming leaderboard (key-value data). Which AWS database service is MOST appropriate?', options: ['Amazon RDS MySQL', 'Amazon Aurora', 'Amazon Redshift', 'Amazon DynamoDB'], correct: [3], explanation: 'DynamoDB is a serverless NoSQL key-value and document database designed for single-digit millisecond performance at any scale. It can handle millions of requests per second with consistent low latency.' },
+  { id: 32, domain: 'Technology', type: 'single', text: 'A company\'s RDS database in us-east-1a failed and the application experienced 40 minutes of downtime waiting for manual recovery. Which RDS feature would have provided automatic failover?', options: ['RDS Read Replicas', 'RDS Multi-AZ deployment', 'RDS Automated Backups', 'Amazon Aurora Serverless'], correct: [1], explanation: 'RDS Multi-AZ maintains a synchronous standby replica in a different AZ. If the primary fails, RDS automatically fails over to the standby within 1-2 minutes — no manual intervention required.' },
+  { id: 33, domain: 'Technology', type: 'single', text: 'A news website stores article images in Amazon S3 in us-east-1. Users in Tokyo and Singapore report 400ms+ load times for images. What is the MOST cost-effective fix?', options: ['Replicate S3 bucket to ap-northeast-1', 'Use AWS Global Accelerator', 'Deploy Amazon CloudFront as a CDN in front of S3', 'Move the S3 bucket to a Singapore region'], correct: [2], explanation: 'Amazon CloudFront is a CDN with 400+ edge locations worldwide. It caches content at the edge location nearest to users, reducing latency from 400ms+ to milliseconds for globally distributed users.' },
+  { id: 34, domain: 'Technology', type: 'single', text: 'A company needs to migrate 200TB of on-premises data to AWS. Their internet connection would take an estimated 180 days to transfer this data. What is the BEST solution?', options: ['AWS DataSync over existing internet', 'AWS Direct Connect (order new circuit)', 'AWS Snowball Edge (physical transfer appliance)', 'Compress all data and use AWS Transfer Family'], correct: [2], explanation: 'AWS Snowball Edge is a physical petabyte-scale data transfer device. AWS ships it to you, you load your data, ship it back, and AWS imports it to S3. Ideal when network transfer would take too long.' },
+  { id: 35, domain: 'Technology', type: 'single', text: 'On-premises applications need to access Amazon S3 as if it were a local network file share, using NFS or SMB protocols, without rewriting application code. Which service enables this?', options: ['AWS DataSync', 'AWS Transfer Family', 'AWS Storage Gateway', 'Amazon EFS'], correct: [2], explanation: 'AWS Storage Gateway is a hybrid cloud service that connects on-premises environments to AWS storage. The File Gateway presents S3 as NFS/SMB shares to on-premises applications.' },
+  { id: 36, domain: 'Technology', type: 'single', text: 'A developer wants to automatically resize images immediately when they are uploaded to S3, using a lightweight event-driven function. The process takes under 2 minutes. Which is the MOST cost-efficient solution?', options: ['EC2 instance running continuously', 'AWS Fargate task triggered by S3', 'AWS Lambda triggered by S3 events', 'AWS Batch job'], correct: [2], explanation: 'AWS Lambda is ideal for short, event-driven tasks. An S3 event trigger invokes a Lambda function instantly on each upload. You pay only for the milliseconds of execution — no idle costs unlike EC2.' },
+  { id: 37, domain: 'Technology', type: 'single', text: 'A company wants to run Docker containers on AWS without provisioning or managing any EC2 instances. Which approach provides FULLY serverless container execution?', options: ['EC2 instances with Docker installed', 'Amazon ECS with EC2 launch type', 'Amazon ECS or EKS with AWS Fargate', 'Amazon Lightsail containers'], correct: [2], explanation: 'AWS Fargate is a serverless compute engine for containers. With ECS+Fargate or EKS+Fargate, you define the container and resources needed — AWS manages the underlying compute infrastructure entirely.' },
+  { id: 38, domain: 'Technology', type: 'single', text: 'A DevOps team wants to ensure that Dev, Staging, and Production environments are always identical and can be reproduced exactly, preventing configuration drift. Which service achieves this?', options: ['AWS Systems Manager', 'AWS Elastic Beanstalk', 'AWS CloudFormation', 'AWS OpsWorks'], correct: [2], explanation: 'AWS CloudFormation is an Infrastructure as Code (IaC) service. You define your infrastructure in YAML/JSON templates, and CloudFormation creates identical, reproducible stacks across environments.' },
+  { id: 39, domain: 'Technology', type: 'single', text: 'A company has regulatory requirements to run certain workloads on-premises, but wants to use AWS services and APIs consistently across their on-premises data center and AWS. Which service enables this?', options: ['AWS Direct Connect', 'AWS Local Zones', 'AWS Outposts', 'AWS Wavelength'], correct: [2], explanation: 'AWS Outposts brings AWS infrastructure, services, APIs, and tools to virtually any on-premises facility. It lets you run AWS services locally while connecting to the full AWS cloud.' },
+  { id: 40, domain: 'Technology', type: 'single', text: 'An e-commerce app\'s order service needs to send orders to a shipping service. If the shipping service goes down temporarily, orders should queue safely without being lost. Which AWS service achieves this decoupling?', options: ['Amazon SNS', 'Amazon Kinesis', 'Amazon SQS', 'Amazon EventBridge'], correct: [2], explanation: 'Amazon SQS (Simple Queue Service) is a managed message queue. Orders are placed in the queue by the order service and processed by the shipping service when available — messages persist until consumed.' },
+  { id: 41, domain: 'Technology', type: 'single', text: 'When a customer completes a purchase, the system needs to simultaneously notify the inventory service, billing service, and send a confirmation email — all at once. Which service enables this fan-out pattern?', options: ['Amazon SQS', 'AWS Step Functions', 'Amazon SNS (Simple Notification Service)', 'Amazon EventBridge'], correct: [2], explanation: 'Amazon SNS is a pub/sub messaging service. A single SNS topic can fan out to multiple subscribers simultaneously (SQS queues, Lambda functions, email, HTTP endpoints) with one publish operation.' },
+  { id: 42, domain: 'Technology', type: 'single', text: 'A team wants to monitor EC2 CPU utilization and automatically send an email alert when it exceeds 85% for 5 consecutive minutes. Which combination of services implements this?', options: ['AWS Config + SES', 'CloudWatch Alarms + SNS', 'CloudTrail + Lambda', 'AWS Health + EventBridge'], correct: [1], explanation: 'CloudWatch collects metrics (including EC2 CPU utilization) and Alarms can trigger actions when thresholds are breached. An SNS topic connected to the alarm sends email notifications.' },
+  { id: 43, domain: 'Technology', type: 'single', text: 'A company needs a consistent 10Gbps private network connection from their data center to AWS with guaranteed bandwidth and latency — NOT over the public internet. Which service provides this?', options: ['AWS Site-to-Site VPN', 'Amazon CloudFront', 'AWS Direct Connect', 'AWS Global Accelerator'], correct: [2], explanation: 'AWS Direct Connect establishes a dedicated private network connection from your data center to AWS. Unlike VPN, it doesn\'t traverse the public internet, providing consistent network performance.' },
+
+  // BILLING & PRICING (7)
+  { id: 44, domain: 'Billing & Pricing', type: 'single', text: 'A company runs the same EC2 instance type 24/7/365 and can commit to using it for the next 3 years. Which pricing option provides the MAXIMUM cost savings?', options: ['Spot Instances', 'On-Demand Instances', 'Convertible Reserved Instances 1-year No Upfront', 'Standard Reserved Instances 3-year All Upfront'], correct: [3], explanation: 'Standard Reserved Instances with a 3-year term and All Upfront payment provides the maximum discount (up to 72%). The longer term and full upfront payment yield the greatest savings.' },
+  { id: 45, domain: 'Billing & Pricing', type: 'single', text: 'A startup wants to receive an email alert BEFORE their monthly AWS bill exceeds $500. Which AWS service should they configure?', options: ['AWS Cost Explorer', 'AWS Cost & Usage Report', 'AWS Budgets', 'AWS Pricing Calculator'], correct: [2], explanation: 'AWS Budgets lets you set custom cost, usage, or reservation budgets and sends alerts (via email or SNS) when actual or forecasted costs exceed your threshold — before you overspend.' },
+  { id: 46, domain: 'Billing & Pricing', type: 'single', text: 'A FinOps team needs the most granular AWS cost data available — hourly costs broken down by individual resource, service, and cost allocation tag — for ingestion into their data warehouse. Which tool provides this?', options: ['AWS Cost Explorer', 'AWS Trusted Advisor', 'AWS Budgets', 'AWS Cost & Usage Report (CUR)'], correct: [3], explanation: 'The AWS Cost & Usage Report (CUR) is the most detailed billing dataset. It provides hourly/daily line items for every service and resource, and can be delivered to S3 for analysis with Athena or a BI tool.' },
+  { id: 47, domain: 'Billing & Pricing', type: 'single', text: 'A company has 20 AWS accounts across business units. They want a single consolidated monthly bill, volume discount pricing across all accounts, and the ability to share Reserved Instance benefits. Which AWS feature enables this?', options: ['AWS IAM Organizations', 'AWS Control Tower', 'AWS Organizations Consolidated Billing', 'AWS Service Catalog'], correct: [2], explanation: 'AWS Organizations Consolidated Billing combines all member account bills into one, aggregates usage for volume discounts, and allows Reserved Instances and Savings Plans to be shared across accounts.' },
+  { id: 48, domain: 'Billing & Pricing', type: 'single', text: 'A company\'s mission-critical application is completely down. They need AWS Support to respond within 15 minutes and have access to a dedicated Technical Account Manager. Which Support plan is required?', options: ['Business Support', 'Developer Support', 'Enterprise On-Ramp Support', 'Enterprise Support'], correct: [3], explanation: 'Enterprise Support provides a 15-minute response SLA for business-critical system down issues AND a designated Technical Account Manager (TAM). Enterprise On-Ramp only provides a pool of TAMs (not dedicated) and 30-min SLA.' },
+  { id: 49, domain: 'Billing & Pricing', type: 'multi', text: 'A company is calculating the Total Cost of Ownership (TCO) for their on-premises data center. Which TWO costs should be included in the on-premises TCO calculation? (Select TWO)', options: ['AWS data transfer fees', 'Physical server hardware purchase costs', 'AWS Reserved Instance costs', 'Power and cooling costs for the data center', 'AWS Support plan fees'], correct: [1, 3], explanation: 'On-premises TCO includes: hardware purchase/maintenance, power, cooling, facilities, networking, and staff. These hidden costs are often overlooked when comparing on-premises vs cloud economics.' },
+  { id: 50, domain: 'Billing & Pricing', type: 'single', text: 'An AWS customer wants machine learning-powered recommendations to identify over-provisioned EC2 instances and right-size them to reduce costs. Which service provides these recommendations?', options: ['AWS Trusted Advisor', 'AWS Cost Explorer', 'AWS Compute Optimizer', 'AWS Budgets'], correct: [2], explanation: 'AWS Compute Optimizer uses ML to analyze historical utilization metrics and provides right-sizing recommendations for EC2 instances, Auto Scaling groups, EBS volumes, and Lambda functions.' },
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, '0');
+  const s = (sec % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function getDomainColor(d) { return DOMAIN_COLORS[d] || '#64748b'; }
+
+// --- MENU ---
+function MenuScreen({ onStart }) {
+  const [count, setCount] = useState(50);
+  const [domain, setDomain] = useState('All Domains');
+  const [timerOn, setTimerOn] = useState(true);
+  const domains = ['All Domains', ...Object.keys(DOMAIN_COLORS)];
+  const coverage = Object.entries(DOMAIN_COLORS).map(([d, c]) => ({
+    d, c, n: ALL_QUESTIONS.filter(q => q.domain === d).length
+  }));
+  return (
+    <div className="container">
+      <div className="card">
+        <h2 style={{ marginBottom: '0.3rem' }}>Practice Exam Settings</h2>
+        <p style={{ color: '#64748b', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Configure your session before starting</p>
+
+        <div className="settings-row">
+          <span className="settings-label">Questions:</span>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {[10, 20, 30, 50].map(n => (
+              <button key={n} className={`q-count-btn${count === n ? ' active' : ''}`} onClick={() => setCount(n)}>{n}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="settings-row">
+          <span className="settings-label">Domain Filter:</span>
+          <select value={domain} onChange={e => setDomain(e.target.value)}>
+            {domains.map(d => <option key={d}>{d}</option>)}
+          </select>
+        </div>
+
+        <div className="settings-row">
+          <span className="settings-label">Timer:</span>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.9rem' }}>
+            <input type="checkbox" checked={timerOn} onChange={e => setTimerOn(e.target.checked)} />
+            Enable countdown timer
+          </label>
+        </div>
+
+        <div style={{ marginTop: '1rem' }}>
+          <p style={{ fontSize: '0.85rem', fontWeight: '600', color: '#334155', marginBottom: '0.5rem' }}>Question Coverage (50 total):</p>
+          <div className="coverage-list">
+            {coverage.map(({ d, c, n }) => (
+              <div key={d} className="coverage-item">
+                <span style={{ width: 10, height: 10, borderRadius: '50%', background: c, display: 'inline-block', flexShrink: 0 }}></span>
+                <span>{d}: <strong>{n} Q</strong></span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <button className="btn btn-primary" style={{ marginTop: '1rem', width: '100%', padding: '0.8rem' }}
+          onClick={() => onStart({ count, domain, timerOn })}>
+          Start Exam →
+        </button>
+      </div>
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '0.5rem' }}>
+        <a href="index.html" className="nav-link">📚 Study Guide</a>
+        <a href="full-exam.html" className="nav-link">📝 Full Mock Exam</a>
+      </div>
+    </div>
+  );
+}
+
+// --- EXAM ---
+function ExamScreen({ questions, timerOn, onFinish }) {
+  const [idx, setIdx] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState({});
+  const [timeLeft, setTimeLeft] = useState(timerOn ? questions.length * 72 : null);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (!timerOn) return;
+    intervalRef.current = setInterval(() => {
+      setTimeLeft(t => {
+        if (t <= 1) { clearInterval(intervalRef.current); onFinish(answers); return 0; }
+        return t - 1;
+      });
+    }, 1000);
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  const q = questions[idx];
+  const sel = answers[q.id] || [];
+  const isSubmitted = submitted[q.id];
+  const isMulti = q.type === 'multi';
+
+  function toggleAnswer(oi) {
+    if (isSubmitted) return;
+    setAnswers(prev => {
+      const cur = prev[q.id] || [];
+      if (isMulti) {
+        return { ...prev, [q.id]: cur.includes(oi) ? cur.filter(x => x !== oi) : [...cur, oi] };
+      }
+      return { ...prev, [q.id]: [oi] };
+    });
+  }
+
+  function submit() {
+    if (sel.length === 0) return;
+    setSubmitted(prev => ({ ...prev, [q.id]: true }));
+  }
+
+  function isCorrect(qid) {
+    const q2 = questions.find(x => x.id === qid);
+    const a = answers[qid] || [];
+    return q2 && q2.correct.length === a.length && q2.correct.every(c => a.includes(c));
+  }
+
+  function getOptionClass(oi) {
+    if (!isSubmitted) return sel.includes(oi) ? 'option-btn selected' : 'option-btn';
+    if (q.correct.includes(oi)) return 'option-btn correct disabled';
+    if (sel.includes(oi)) return 'option-btn wrong disabled';
+    return 'option-btn disabled';
+  }
+
+  function getIndicatorClass(oi) {
+    const base = isMulti ? 'option-indicator checkbox' : 'option-indicator';
+    if (!isSubmitted) return sel.includes(oi) ? base + ' filled' : base;
+    if (q.correct.includes(oi)) return base + ' correct-ind';
+    if (sel.includes(oi)) return base + ' wrong-ind';
+    return base;
+  }
+
+  function getIndicatorContent(oi) {
+    if (!isSubmitted) return sel.includes(oi) ? (isMulti ? '✓' : '●') : '';
+    if (q.correct.includes(oi)) return '✓';
+    if (sel.includes(oi)) return '✗';
+    return '';
+  }
+
+  const progress = (Object.keys(submitted).length / questions.length) * 100;
+  const urgent = timeLeft !== null && timeLeft < 300;
+
+  return (
+    <div>
+      <div className="header">
+        <div>
+          <div className="header h1" style={{ fontSize: '1.1rem', fontWeight: 800 }}>Q {idx + 1} / {questions.length}</div>
+          <span className="domain-badge" style={{ background: getDomainColor(q.domain), marginTop: '0.3rem' }}>{q.domain}</span>
+        </div>
+        {timeLeft !== null && <div className={`timer${urgent ? ' urgent' : ''}`}>{formatTime(timeLeft)}</div>}
+      </div>
+      <div className="container">
+        <div className="progress-bar-wrap">
+          <div className="progress-bar" style={{ width: progress + '%' }} />
+        </div>
+
+        <div className="card">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Question {idx + 1}</span>
+            <span className={`type-badge${isMulti ? ' multi' : ''}`}>{isMulti ? '⚡ MULTIPLE RESPONSE — SELECT TWO' : 'Single Choice'}</span>
+          </div>
+          <div className="question-text">{q.text}</div>
+          {q.options.map((opt, oi) => (
+            <button key={oi} className={getOptionClass(oi)} onClick={() => toggleAnswer(oi)}>
+              <span className={getIndicatorClass(oi)}>{getIndicatorContent(oi)}</span>
+              <span>{opt}</span>
+            </button>
+          ))}
+          {isSubmitted && (
+            <div className="explanation">
+              <strong>{isCorrect(q.id) ? '✅ Correct! ' : '❌ Incorrect. '}</strong>
+              {q.explanation}
+            </div>
+          )}
+          <div className="bottom-nav" style={{ marginTop: '1rem' }}>
+            {!isSubmitted ? (
+              <button className="btn btn-primary" onClick={submit} disabled={sel.length === 0}>Submit Answer</button>
+            ) : idx < questions.length - 1 ? (
+              <button className="btn btn-primary" onClick={() => setIdx(i => i + 1)}>Next Question →</button>
+            ) : (
+              <button className="btn btn-green" onClick={() => onFinish(answers)}>Finish Exam ✓</button>
+            )}
+          </div>
+        </div>
+
+        <div className="card">
+          <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '0.5rem' }}>Question Navigation</p>
+          <div className="nav-dots">
+            {questions.map((qq, i) => {
+              let cls = 'dot unanswered';
+              if (i === idx) cls = 'dot current';
+              else if (submitted[qq.id]) cls = isCorrect(qq.id) ? 'dot correct-dot' : 'dot wrong-dot';
+              return <button key={i} className={cls} onClick={() => setIdx(i)}>{i + 1}</button>;
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- SCORE ---
+function ScoreScreen({ questions, answers, onReview, onNew }) {
+  function isCorrect(q) {
+    const a = answers[q.id] || [];
+    return q.correct.length === a.length && q.correct.every(c => a.includes(c));
+  }
+  const total = questions.length;
+  const correct = questions.filter(isCorrect).length;
+  const pct = Math.round((correct / total) * 100);
+  const pass = pct >= 70;
+
+  const domainStats = Object.keys(DOMAIN_COLORS).map(d => {
+    const dqs = questions.filter(q => q.domain === d);
+    if (!dqs.length) return null;
+    const dc = dqs.filter(isCorrect).length;
+    return { d, correct: dc, total: dqs.length, pct: Math.round((dc / dqs.length) * 100) };
+  }).filter(Boolean);
+
+  return (
+    <div className="container">
+      <div className={`score-header ${pass ? 'pass' : 'fail'}`}>
+        <div className="score-pct" style={{ color: pass ? '#059669' : '#dc2626' }}>{pct}%</div>
+        <div className="score-pass-fail" style={{ color: pass ? '#065f46' : '#991b1b' }}>{pass ? '✅ PASS' : '❌ FAIL'}</div>
+        <div style={{ color: '#475569', fontSize: '0.95rem' }}>{correct} / {total} correct — {pass ? 'Great work!' : 'Keep studying!'}</div>
+      </div>
+
+      <div className="card">
+        <h3 style={{ marginBottom: '1rem' }}>Domain Breakdown</h3>
+        {domainStats.map(({ d, correct: dc, total: dt, pct: dp }) => (
+          <div key={d} className="domain-score-row">
+            <div className="domain-score-label">
+              <span className="domain-badge" style={{ background: getDomainColor(d) }}>{d}</span>
+            </div>
+            <div className="domain-score-bar-wrap">
+              <div className="domain-score-bar" style={{ width: dp + '%', background: getDomainColor(d) }} />
+            </div>
+            <div className="domain-score-num">{dc}/{dt}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <button className="btn btn-secondary" onClick={onReview}>📋 Review Answers</button>
+        <button className="btn btn-primary" onClick={onNew}>🔄 New Exam</button>
+        <a href="full-exam.html" className="btn btn-green" style={{ textDecoration: 'none' }}>📝 Full Mock Exam</a>
+      </div>
+    </div>
+  );
+}
+
+// --- REVIEW ---
+function ReviewScreen({ questions, answers, onBack }) {
+  function isCorrect(q) {
+    const a = answers[q.id] || [];
+    return q.correct.length === a.length && q.correct.every(c => a.includes(c));
+  }
+  return (
+    <div className="container">
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <h2>Answer Review</h2>
+        <button className="btn btn-secondary" onClick={onBack}>← Back to Score</button>
+      </div>
+      <div className="card">
+        {questions.map((q, i) => {
+          const correct = isCorrect(q);
+          const sel = answers[q.id] || [];
+          return (
+            <div key={q.id} className="review-q">
+              <div className="review-badges">
+                <span style={{ fontWeight: 700, fontSize: '0.85rem' }}>Q{i + 1}.</span>
+                <span className={correct ? 'correct-badge' : 'wrong-badge'}>{correct ? '✓ Correct' : '✗ Incorrect'}</span>
+                <span className="domain-badge" style={{ background: getDomainColor(q.domain) }}>{q.domain}</span>
+              </div>
+              <p style={{ fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '0.5rem' }}>{q.text}</p>
+              {q.options.map((opt, oi) => {
+                let cls = 'review-opt neutral';
+                if (q.correct.includes(oi)) cls = 'review-opt correct-opt';
+                else if (sel.includes(oi)) cls = 'review-opt wrong-opt';
+                return (
+                  <div key={oi} className={cls}>
+                    {q.correct.includes(oi) ? '✓ ' : sel.includes(oi) ? '✗ ' : '  '}{opt}
+                  </div>
+                );
+              })}
+              <div className="explanation" style={{ marginTop: '0.5rem' }}>
+                <strong>Explanation: </strong>{q.explanation}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [screen, setScreen] = useState('menu');
+  const [examQuestions, setExamQuestions] = useState([]);
+  const [timerOn, setTimerOn] = useState(true);
+  const [finalAnswers, setFinalAnswers] = useState({});
+
+  function handleStart({ count, domain, timerOn }) {
+    let pool = domain === 'All Domains' ? ALL_QUESTIONS : ALL_QUESTIONS.filter(q => q.domain === domain);
+    const qs = shuffle(pool).slice(0, Math.min(count, pool.length));
+    setExamQuestions(qs);
+    setTimerOn(timerOn);
+    setFinalAnswers({});
+    setScreen('exam');
+  }
+
+  if (screen === 'menu') return <div><div className="header"><div><div className="header h1" style={{fontSize:'1.3rem',fontWeight:800}}>☁️ AWS CLF-C02 Practice Exam</div><div className="header-meta">50 scenario-based questions · All 4 domains</div></div></div><MenuScreen onStart={handleStart} /></div>;
+  if (screen === 'exam') return <ExamScreen questions={examQuestions} timerOn={timerOn} onFinish={a => { setFinalAnswers(a); setScreen('score'); }} />;
+  if (screen === 'score') return <div><div className="header"><div><div style={{fontSize:'1.3rem',fontWeight:800,color:'white'}}>☁️ Exam Results</div></div></div><ScoreScreen questions={examQuestions} answers={finalAnswers} onReview={() => setScreen('review')} onNew={() => setScreen('menu')} /></div>;
+  if (screen === 'review') return <div><div className="header"><div><div style={{fontSize:'1.3rem',fontWeight:800,color:'white'}}>☁️ Answer Review</div></div></div><ReviewScreen questions={examQuestions} answers={finalAnswers} onBack={() => setScreen('score')} /></div>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
