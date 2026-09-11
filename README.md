@@ -41,3 +41,13 @@ Built with plain HTML, CSS, and React (loaded from CDN) — no frameworks, no bu
 ---
 
 *Good luck on your exam. You've got this.*
+
+---
+
+## ☕ Support This Project
+
+I built these tools from scratch while going through Per Scholas' AWS re/Start program — studying nights and weekends, juggling labs and mock exams until I finally passed CLF-C02. Every quiz question, every timer, every domain breakdown came from real study sessions where I wished a tool like this already existed.
+
+If this helped you pass (or even just helped you feel less lost), consider buying me a coffee. It keeps me motivated to build more free study tools for re/Start students and anyone grinding toward AWS certifications.
+
+**[☕ Buy me a coffee → buymeacoffee.com/BTThomas](https://buymeacoffee.com/BTThomas)**
