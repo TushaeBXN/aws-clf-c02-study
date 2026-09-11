@@ -58,9 +58,9 @@ open master-cheat-sheet.html
 
 ---
 
-## Confirmed Topics (from students who passed)
+## High-Priority Topics (from the Official CLF-C02 Exam Guide)
 
-Based on real exam feedback from multiple test-takers:
+These topics appear across all four domains and carry significant weight per the [official AWS exam guide](https://aws.amazon.com/certification/certified-cloud-practitioner/):
 
 - **Shared Responsibility Model** — know the shift by service (Amazon EC2 vs Amazon RDS vs AWS Lambda)
 - **Well-Architected Framework** — all 6 pillars and their trigger phrases (OSRPCS mnemonic)
@@ -75,7 +75,7 @@ Based on real exam feedback from multiple test-takers:
 
 ---
 
-## Study Tips from Test-Takers
+## Study Tips
 
 1. **Read every answer choice before clicking** — the real exam options are longer than practice exams
 2. **For SELECT TWO questions** — eliminate the two obviously wrong answers first, then choose from what's left
