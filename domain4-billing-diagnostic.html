@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain 4 · Billing, Pricing &amp; Support · CLF-C02</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090d16;--surface:#101726;--surface2:#1a2333;--surface3:#0a0f1a;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.13);
+  --text:#f1f5f9;--muted:#8ea0bf;--hint:#475569;
+  --accent:#a78bfa;--blue:#38bdf8;--green:#34d399;--red:#f87171;
+  --amber:#fbbf24;--purple:#a78bfa;
+  --radius:10px;--radius-lg:14px;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;min-height:100vh}
+.header{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(9,13,22,0.97);backdrop-filter:blur(12px);z-index:100;gap:10px;flex-wrap:wrap}
+.logo{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.05em}
+.logo span{color:var(--muted)}
+.hbadges{display:flex;gap:6px;flex-wrap:wrap}
+.hb{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;border:1px solid}
+.hb-p{border-color:var(--purple);color:var(--purple)}
+.hb-b{border-color:var(--blue);color:var(--blue)}
+.hb-g{border-color:var(--green);color:var(--green)}
+.hb-a{border-color:var(--amber);color:var(--amber)}
+.top-bar{background:var(--surface3);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.timer{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--text);min-width:64px}
+.timer.warn{color:var(--amber)}
+.timer.danger{color:var(--red);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.prog-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.prog-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);width:0%;transition:width 0.35s}
+.prog-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.task-lbl{font-family:var(--mono);font-size:10px;color:var(--purple);white-space:nowrap}
+
+/* START */
+.start-wrap{max-width:700px;margin:50px auto;padding:0 20px;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px}
+.start-wrap h1{font-family:var(--mono);font-size:clamp(22px,4vw,34px);font-weight:700;line-height:1.2;margin-bottom:8px}
+.start-wrap h1 em{font-style:normal;color:var(--accent)}
+.start-wrap p{color:var(--muted);font-size:14px;margin-bottom:24px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:22px;text-align:left}
+.ic{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.ic-l{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:4px}
+.ic-v{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text)}
+.ic-s{font-size:12px;color:var(--muted);margin-top:2px}
+.task-map{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:24px;text-align:left}
+.task-map h3{font-family:var(--mono);font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+.tm-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:9px}
+.tm-row:last-child{margin-bottom:0}
+.tm-num{font-family:var(--mono);font-size:9px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.28);color:var(--purple);padding:2px 7px;border-radius:4px;flex-shrink:0;margin-top:2px;white-space:nowrap}
+.tm-text{font-size:13px;color:var(--muted);line-height:1.45}
+.tm-text strong{color:var(--text)}
+.start-btn{display:inline-block;padding:13px 38px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:opacity 0.15s}
+.start-btn:hover{opacity:0.88}
+
+/* TABS */
+.tabs{display:flex;gap:2px;margin-bottom:18px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:4px;width:fit-content}
+.tab{padding:7px 16px;border-radius:7px;font-size:13px;font-family:var(--sans);cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all 0.2s}
+.tab:hover:not(.active){color:var(--text)}
+.tab.active{background:var(--surface2);color:var(--text);font-weight:500;border:1px solid var(--border2)}
+.panel{display:none}.panel.active{display:block;animation:fadeUp 0.2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.main{max-width:760px;margin:0 auto;padding:18px 20px 60px}
+.ribbon{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;text-align:center}
+.r-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px}
+.r-val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text)}
+.r-sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px}
+
+.qnav-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:14px}
+.qnav-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:7px}
+.qnav-grid{display:flex;flex-wrap:wrap;gap:4px}
+.qng{width:26px;height:26px;border-radius:5px;border:1px solid var(--border2);background:transparent;font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--muted);transition:all 0.15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qng:hover{background:var(--surface2);color:var(--text)}
+.qng.cur{border-color:var(--accent);color:var(--accent);background:rgba(167,139,250,0.1)}
+.qng.ok{background:rgba(52,211,153,0.14);border-color:rgba(52,211,153,0.38);color:var(--green)}
+.qng.err{background:rgba(248,113,113,0.11);border-color:rgba(248,113,113,0.32);color:var(--red)}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:14px}
+.q-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:11px}
+.q-num{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)}
+.task-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(167,139,250,0.09);border:1px solid rgba(167,139,250,0.25);color:var(--purple)}
+.diff-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px}
+.diff-e{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);color:var(--green)}
+.diff-m{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);color:var(--amber)}
+.diff-h{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.2);color:var(--red)}
+.scenario-lbl{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);color:var(--blue)}
+
+.q-txt{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:16px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;padding:11px 15px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);text-align:left;font-family:var(--sans);font-size:13.5px;cursor:pointer;transition:all 0.15s;display:flex;gap:10px;align-items:flex-start}
+.opt:hover:not(:disabled){background:var(--surface2);border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt-l{font-family:var(--mono);color:var(--hint);font-weight:700;min-width:18px;flex-shrink:0;margin-top:2px}
+.opt.correct{background:rgba(52,211,153,0.08);border-color:var(--green)!important}
+.opt.correct .opt-l{color:var(--green)}
+.opt.wrong{background:rgba(248,113,113,0.06);border-color:var(--red)!important}
+.opt.wrong .opt-l{color:var(--red)}
+.feedback{margin-top:12px;padding:12px 15px;border-radius:var(--radius);font-size:13px;display:none;line-height:1.65}
+.feedback.show{display:block}
+.feedback.ok{background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.16);color:var(--muted)}
+.feedback.ok .fb-head{color:var(--green);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+.feedback.err{background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.16);color:var(--muted)}
+.feedback.err .fb-head{color:var(--red);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+
+.phase-banner{background:var(--surface);border:1px solid rgba(167,139,250,0.3);border-radius:var(--radius-lg);padding:26px 22px;text-align:center;display:none;margin-bottom:14px}
+.phase-banner.show{display:block;animation:fadeUp 0.25s ease}
+.pb-score{font-family:var(--mono);font-size:38px;font-weight:700;color:var(--text);line-height:1}
+.pb-label{font-size:14px;color:var(--muted);margin-top:5px;margin-bottom:14px}
+.pb-bar-wrap{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:18px}
+.pb-bar{height:100%;border-radius:3px;transition:width 0.6s ease}
+.pb-btn{padding:10px 28px;background:transparent;border:1px solid var(--purple);color:var(--purple);border-radius:var(--radius);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.pb-btn:hover{background:rgba(167,139,250,0.1)}
+
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nav-btn{padding:9px 18px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--sans);font-size:13px;cursor:pointer;transition:all 0.15s}
+.nav-btn:hover{background:var(--surface2)}
+.nav-btn.pri{border-color:var(--accent);color:var(--accent)}
+
+/* CHEAT SHEET */
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cs-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.cs-card h3{font-family:var(--mono);font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border)}
+.ci{font-size:12px;color:var(--muted);padding:4px 0;display:flex;gap:7px;line-height:1.4;border-bottom:1px solid rgba(255,255,255,0.025)}
+.ci:last-child{border-bottom:none}
+.ci strong{color:var(--text);font-weight:500;min-width:116px;flex-shrink:0;font-family:var(--mono);font-size:10px}
+.tip-box{margin-top:12px;padding:12px 14px;border:1px solid rgba(167,139,250,0.2);border-radius:var(--radius);background:rgba(167,139,250,0.05);font-size:13px;color:var(--muted);line-height:1.65}
+.tip-box+.tip-box{margin-top:8px}
+.tip-box strong{color:var(--purple)}
+
+/* RESULTS */
+.results-page{display:none;max-width:760px;margin:18px auto;padding:0 20px 60px}
+.res-hero{text-align:center;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px}
+.res-pct{font-family:var(--mono);font-size:54px;font-weight:700;line-height:1}
+.res-lbl{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:14px}
+.res-grade{display:inline-block;font-family:var(--mono);font-size:12px;padding:4px 14px;border-radius:6px;margin-bottom:16px}
+.grade-pass{background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:var(--green)}
+.grade-mid{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:var(--amber)}
+.grade-low{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--red)}
+.res-stats{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.rs-item{text-align:center}
+.rs-val{font-family:var(--mono);font-size:24px;font-weight:700}
+.rs-lbl{font-size:12px;color:var(--muted)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:520px){.breakdown-grid{grid-template-columns:1fr}}
+.bd-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.bd-head{font-family:var(--mono);font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px}
+.bd-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:4px}
+.bd-row span:last-child{font-family:var(--mono);font-size:11px;color:var(--text)}
+.bd-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:2px;margin-bottom:7px}
+.bd-fill{height:100%;border-radius:2px}
+.blind-spot{background:var(--surface);border:1px solid rgba(248,113,113,0.2);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
+.bs-head{font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+.bs-item{border-bottom:1px solid var(--border);padding-bottom:13px;margin-bottom:13px}
+.bs-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.bs-q{font-size:14px;color:var(--text);margin-bottom:5px;line-height:1.5}
+.bs-tags{display:flex;gap:5px;margin-bottom:4px;flex-wrap:wrap}
+.bs-correct{font-family:var(--mono);font-size:11px;color:var(--green)}
+.bs-exp{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.6}
+.empty-bs{text-align:center;padding:22px;font-family:var(--mono);font-size:13px;color:var(--green)}
+.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.res-btn{padding:10px 24px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;cursor:pointer;background:transparent;color:var(--text);font-family:var(--sans);transition:all 0.15s}
+.res-btn:hover{background:var(--surface2)}
+.res-btn.pri{border-color:var(--accent);color:var(--accent)}
+.footer{border-top:1px solid var(--border);padding:14px 24px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--hint)}
+@media(max-width:560px){
+  .ribbon{grid-template-columns:repeat(2,1fr)}
+  .header,.main,.results-page{padding-left:14px;padding-right:14px}
+  .hbadges{display:none}.q-card{padding:16px 14px}
+  .tabs{width:100%}.tab{flex:1;text-align:center;font-size:11px;padding:7px 4px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">CLF-C02<span> · Domain 4 · Billing, Pricing &amp; Support</span></div>
+  <div class="hbadges">
+    <span class="hb hb-p">36 Questions</span>
+    <span class="hb hb-b">45 Min</span>
+    <span class="hb hb-a">3 Task Statements</span>
+    <span class="hb hb-g">Live Score</span>
+  </div>
+</header>
+
+<div class="top-bar" id="top-bar" style="display:none">
+  <div class="timer" id="timer-display">45:00</div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-lbl" id="prog-lbl">0 / 36 answered</div>
+  </div>
+  <div class="task-lbl" id="task-lbl">Task 4.1</div>
+</div>
+
+<!-- START SCREEN -->
+<div class="start-wrap" id="start-screen">
+  <div class="eyebrow">AWS Certified Cloud Practitioner · CLF-C02</div>
+  <h1>Domain 4 · <em>Billing, Pricing &amp; Support</em></h1>
+  <p>36 scenario-based questions mapped to all 3 official task statements. Click to reveal answer and explanation instantly. Full blind spot analysis at the end.</p>
+
+  <div class="info-grid">
+    <div class="ic"><div class="ic-l">Questions</div><div class="ic-v">36</div><div class="ic-s">Domain 4 only</div></div>
+    <div class="ic"><div class="ic-l">Time limit</div><div class="ic-v">45 min</div><div class="ic-s">~75 sec per Q</div></div>
+    <div class="ic"><div class="ic-l">Task statements</div><div class="ic-v">3</div><div class="ic-s">4.1 · 4.2 · 4.3</div></div>
+    <div class="ic"><div class="ic-l">Domain weight</div><div class="ic-v">12%</div><div class="ic-s">Of scored content</div></div>
+  </div>
+
+  <div class="task-map">
+    <h3>Official CLF-C02 Task Statements · Domain 4</h3>
+    <div class="tm-row"><span class="tm-num">4.1</span><div class="tm-text"><strong>Pricing Models</strong> — On-Demand, Reserved Instances (Standard &amp; Convertible), Spot, Savings Plans (Compute vs EC2), Dedicated Hosts, Dedicated Instances, Capacity Reservations, data transfer costs, S3 storage tiers</div></div>
+    <div class="tm-row"><span class="tm-num">4.2</span><div class="tm-text"><strong>Billing, Budget &amp; Cost Management</strong> — AWS Budgets, AWS Cost Explorer, AWS Pricing Calculator, AWS Cost &amp; Usage Report (CUR), AWS Organizations consolidated billing, Cost Allocation Tags, Free Tier, SCPs</div></div>
+    <div class="tm-row"><span class="tm-num">4.3</span><div class="tm-text"><strong>Technical Resources &amp; Support</strong> — Basic, Developer, Business, Enterprise On-Ramp, Enterprise support tiers; TAM; Trusted Advisor; Health Dashboard; Trust &amp; Safety team; AWS Marketplace; Professional Services; re:Post; Prescriptive Guidance</div></div>
+  </div>
+
+  <button class="start-btn" onclick="startExam()">Begin Practice &#8594;</button>
+</div>
+
+<!-- WORKSPACE -->
+<div class="main" id="workspace" style="display:none">
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('quiz',this)">Questions</button>
+    <button class="tab" onclick="switchTab('cheatsheet',this)">Cheat Sheet</button>
+  </div>
+
+  <!-- QUIZ PANEL -->
+  <div class="panel active" id="panel-quiz">
+    <div class="ribbon">
+      <div class="r-card"><div class="r-lbl">Question</div><div class="r-val" id="rb-num">1</div><div class="r-sub" id="rb-of">of 36</div></div>
+      <div class="r-card"><div class="r-lbl">Correct</div><div class="r-val" id="rb-ok" style="color:var(--green)">0</div><div class="r-sub" id="rb-ok-sub">—</div></div>
+      <div class="r-card"><div class="r-lbl">Incorrect</div><div class="r-val" id="rb-err" style="color:var(--red)">0</div><div class="r-sub" id="rb-err-sub">—</div></div>
+      <div class="r-card"><div class="r-lbl">Accuracy</div><div class="r-val" id="rb-pct">—</div><div class="r-sub" id="rb-pct-sub">live</div></div>
+    </div>
+    <div class="qnav-wrap">
+      <div class="qnav-lbl">Navigator &nbsp;·&nbsp; green = correct &nbsp;·&nbsp; red = incorrect</div>
+      <div class="qnav-grid" id="qnav-grid"></div>
+    </div>
+    <div id="q-area"></div>
+    <div class="phase-banner" id="phase-banner">
+      <div class="pb-score" id="pb-score">0/12</div>
+      <div class="pb-label" id="pb-label">Section complete</div>
+      <div class="pb-bar-wrap"><div class="pb-bar" id="pb-bar" style="width:0%"></div></div>
+      <button class="pb-btn" id="pb-btn" onclick="nextSection()">Continue &#8594;</button>
+    </div>
+    <div class="nav-row" id="nav-row">
+      <button class="nav-btn" onclick="goTo(currentIdx-1)">&#8592; Prev</button>
+      <button class="nav-btn pri" onclick="goTo(currentIdx+1)">Next &#8594;</button>
+    </div>
+  </div>
+
+  <!-- CHEAT SHEET PANEL -->
+  <div class="panel" id="panel-cheatsheet">
+    <div class="cs-grid">
+
+      <div class="cs-card">
+        <h3>4.1 · Compute Purchasing Options</h3>
+        <div class="ci"><strong>On-Demand</strong>No commitment, pay per second/hour. Best for short-term or unpredictable workloads.</div>
+        <div class="ci"><strong>Reserved (Standard)</strong>1 or 3 year commitment, up to 72% off. Locked to instance family/Region/OS. Best for steady-state.</div>
+        <div class="ci"><strong>Reserved (Convertible)</strong>1 or 3 year commitment, smaller discount. CAN change instance family, OS, or scope mid-term.</div>
+        <div class="ci"><strong>Spot Instances</strong>Up to 90% off. Can be INTERRUPTED by AWS with 2-min warning. For fault-tolerant, flexible workloads only.</div>
+        <div class="ci"><strong>Compute Savings Plans</strong>1 or 3 year hourly spend commitment. Applies to EC2 + Fargate + Lambda regardless of Region/OS/family.</div>
+        <div class="ci"><strong>EC2 Instance Savings</strong>1 or 3 year commit. Applies to specific EC2 instance family in a Region only. Higher discount than Compute.</div>
+        <div class="ci"><strong>Dedicated Instances</strong>Hardware isolated from OTHER customers. No host-level visibility. For compliance isolation requirements.</div>
+        <div class="ci"><strong>Dedicated Hosts</strong>Physical server FULLY dedicated to you. Gives socket/core visibility. Required for BYOL per-core licensing.</div>
+        <div class="ci"><strong>Capacity Reservations</strong>Reserve capacity in a SPECIFIC AZ. No commitment term needed. No automatic discount — pay On-Demand rate.</div>
+      </div>
+
+      <div class="cs-card">
+        <h3>4.1 · Storage Tiers &amp; Data Transfer</h3>
+        <div class="ci"><strong>S3 Standard</strong>Frequently accessed. No retrieval fee. Lowest latency.</div>
+        <div class="ci"><strong>S3 Standard-IA</strong>Infrequent access. Has per-GB retrieval fee. Lower storage cost than Standard.</div>
+        <div class="ci"><strong>S3 Glacier</strong>Archival. Very low storage cost. Retrieval takes minutes to hours.</div>
+        <div class="ci"><strong>S3 Intelligent-Tier</strong>Auto-moves objects based on access. No retrieval fees.</div>
+        <div class="ci"><strong>Data IN (ingress)</strong>Data transferred INTO AWS from internet = FREE.</div>
+        <div class="ci"><strong>Data OUT (egress)</strong>Data transferred OUT to internet = CHARGED.</div>
+        <div class="ci"><strong>Cross-Region</strong>Data transferred between Regions = CHARGED.</div>
+        <div class="ci"><strong>Same-Region AZs</strong>Data between AZs in same Region = CHARGED (small fee).</div>
+        <div class="ci"><strong>Same AZ</strong>Data within same AZ = FREE.</div>
+        <div class="ci"><strong>Spot billing</strong>User stops = pay exact seconds used. AWS interrupts = partial hour FREE.</div>
+      </div>
+
+      <div class="cs-card">
+        <h3>4.2 · Cost Management Tools</h3>
+        <div class="ci"><strong>AWS Pricing Calculator</strong>PRE-deployment cost estimation. Build architectural estimates before launching anything.</div>
+        <div class="ci"><strong>AWS Cost Explorer</strong>POST-deployment visualization. Charts historical spend by service, Region, tag. Includes forecasting and rightsizing recommendations.</div>
+        <div class="ci"><strong>AWS Budgets</strong>Set custom cost/usage thresholds. Sends alerts via email or SNS when actual or forecasted spend hits threshold.</div>
+        <div class="ci"><strong>Cost &amp; Usage Report</strong>Most detailed billing data available. Every resource, tag, and charge in CSV/Parquet. Load into Athena/Redshift for analysis.</div>
+        <div class="ci"><strong>Cost Allocation Tags</strong>Metadata labels (key:value) on resources. Must be ACTIVATED in Management Account billing console to appear in reports.</div>
+        <div class="ci"><strong>AWS Pricing APIs</strong>Programmatic access to current service pricing data across all Regions.</div>
+      </div>
+
+      <div class="cs-card">
+        <h3>4.2 · AWS Organizations &amp; Billing</h3>
+        <div class="ci"><strong>Consolidated billing</strong>Single invoice for all member accounts. Paid by the Management Account (formerly master account).</div>
+        <div class="ci"><strong>Volume discounts</strong>Combined usage across ALL accounts in the org to hit lower pricing tiers faster (e.g., S3 storage).</div>
+        <div class="ci"><strong>Free Tier</strong>Shared across the org — ONE set of Free Tier limits for the entire organization, not multiplied per account.</div>
+        <div class="ci"><strong>Cost Allocation Tags</strong>Must be activated from the Management Account billing console for org-wide aggregation.</div>
+        <div class="ci"><strong>SCPs</strong>Service Control Policies — restrict what member accounts are ALLOWED to do. Can block expensive instance types. NOT a billing tool but used for cost governance.</div>
+        <div class="ci"><strong>No extra charge</strong>AWS Organizations itself is free. Consolidated billing feature is free.</div>
+      </div>
+
+      <div class="cs-card">
+        <h3>4.3 · AWS Support Plans</h3>
+        <div class="ci"><strong>Basic (free)</strong>Documentation, forums, billing cases only. No technical support tickets. Trusted Advisor core checks.</div>
+        <div class="ci"><strong>Developer</strong>Email access to support during business hours. 1 primary contact. For development/testing.</div>
+        <div class="ci"><strong>Business</strong>24/7 phone + chat + email. Multiple contacts. Trusted Advisor full checks. 1-hour SLA for urgent. No TAM.</div>
+        <div class="ci"><strong>Enterprise On-Ramp</strong>24/7 support. POOLED TAM team. 30-min SLA for critical. Architectural guidance.</div>
+        <div class="ci"><strong>Enterprise</strong>24/7 support. DEDICATED TAM. 15-min SLA for critical. Support Concierge for billing. Highest tier.</div>
+      </div>
+
+      <div class="cs-card">
+        <h3>4.3 · Support Tools &amp; Resources</h3>
+        <div class="ci"><strong>Trusted Advisor</strong>Automated inspection across 5 pillars: Cost, Security, Performance, Fault Tolerance, Service Limits. Real-time recommendations.</div>
+        <div class="ci"><strong>Health Dashboard</strong>Real-time AWS service availability and outage status by Region. Personalized view of events affecting YOUR resources.</div>
+        <div class="ci"><strong>Trust &amp; Safety Team</strong>Report ABUSE of AWS resources — spam, port scanning, malware, DDoS attacks originating from AWS IPs.</div>
+        <div class="ci"><strong>AWS Marketplace</strong>Buy third-party software (firewalls, SaaS tools, ML models). Billed on your AWS invoice.</div>
+        <div class="ci"><strong>Professional Services</strong>AWS expert team for hands-on project execution — migrations, transformations. Engaged as a consulting team.</div>
+        <div class="ci"><strong>Support Concierge</strong>Enterprise plan only. Billing and account specialist. Handles invoice questions, credits, non-technical account queries.</div>
+        <div class="ci"><strong>AWS re:Post</strong>Community-driven, AWS-moderated Q&amp;A forum for technical AWS questions.</div>
+        <div class="ci"><strong>Prescriptive Guidance</strong>Curated AWS-authored reference architectures, migration patterns, and best-practice guides.</div>
+        <div class="ci"><strong>Knowledge Center</strong>AWS-written answers to frequently asked questions about AWS services.</div>
+      </div>
+
+    </div>
+
+    <div class="tip-box" style="margin-top:14px">
+      <strong>Pricing model confusables:</strong>
+      Dedicated Hosts = physical server dedicated to you, BYOL/per-core licensing. Dedicated Instances = hardware isolated from other customers, no host visibility.
+      Compute Savings Plans = applies to EC2 + Fargate + Lambda, any Region/OS/family.
+      EC2 Instance Savings Plans = EC2 only, specific instance family and Region.
+      Standard RIs = locked configuration, biggest discount. Convertible RIs = can change family/OS, smaller discount.
+      Spot = cheapest but interruptible. Capacity Reservations = guaranteed capacity, no discount, no commitment.
+    </div>
+    <div class="tip-box">
+      <strong>Cost tool confusables:</strong>
+      AWS Pricing Calculator = BEFORE deployment (estimates future spend).
+      AWS Cost Explorer = AFTER deployment (visualizes historical + forecasted spend, rightsizing).
+      AWS Budgets = ALERT tool (sends email/SNS when threshold is hit).
+      Cost &amp; Usage Report = MOST DETAILED raw billing data (CSV, every resource and tag).
+      These four are tested against each other constantly — know the primary job of each.
+    </div>
+    <div class="tip-box">
+      <strong>Support plan confusables:</strong>
+      Basic = free, billing cases only, no technical support.
+      Developer = business hours email only.
+      Business = 24/7 phone/chat, MINIMUM for around-the-clock technical support.
+      Enterprise On-Ramp = pooled TAM, 30-min critical SLA.
+      Enterprise = dedicated TAM, 15-min critical SLA, Support Concierge.
+      Trust &amp; Safety = report ABUSE of AWS resources (not general support).
+      AWS Marketplace = buy third-party software, billed on AWS invoice.
+      Professional Services = AWS experts hired for complex project work.
+    </div>
+  </div>
+
+</div>
+
+<!-- RESULTS PAGE -->
+<div class="results-page" id="results-page">
+  <div class="res-hero">
+    <div class="res-pct" id="res-pct">—</div>
+    <div class="res-lbl" id="res-lbl">Diagnostic complete. Your profile is below.</div>
+    <div><span class="res-grade" id="res-grade"></span></div>
+    <div class="res-stats">
+      <div class="rs-item"><div class="rs-val" id="rs-ok" style="color:var(--green)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-err" style="color:var(--red)">0</div><div class="rs-lbl">Incorrect</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-skip" style="color:var(--amber)">0</div><div class="rs-lbl">Not answered</div></div>
+    </div>
+  </div>
+  <div class="breakdown-grid">
+    <div class="bd-card"><div class="bd-head">Score by Task Statement</div><div id="bd-tasks"></div></div>
+    <div class="bd-card"><div class="bd-head">Score by Section</div><div id="bd-sections"></div></div>
+  </div>
+  <div class="blind-spot" id="bs-section">
+    <div class="bs-head">Blind Spot Analysis — Every Question You Missed</div>
+    <div id="bs-list"></div>
+  </div>
+  <div class="res-actions">
+    <button class="res-btn pri" onclick="restartExam()">Retake</button>
+    <button class="res-btn" onclick="enterReviewMode()">Review All Answers</button>
+    <button class="res-btn" onclick="openCheatSheet()">Study Cheat Sheet</button>
+  </div>
+</div>
+
+<footer class="footer">
+  AWS Certified Cloud Practitioner · Domain 4 · Billing, Pricing &amp; Support · CLF-C02 · Task Statements 4.1 · 4.2 · 4.3
+</footer>
+
+<script>
+const DIFF_CLS={e:'diff-e',m:'diff-m',h:'diff-h'};
+const DIFF_LBL={e:'Easy',m:'Medium',h:'Hard'};
+const SECTION_NAMES={1:'Task 4.1 · Pricing Models',2:'Task 4.2 · Cost Management',3:'Task 4.3 · Support & Resources'};
+const TASK_NAMES={'4.1':'Pricing Models','4.2':'Cost Management','4.3':'Support & Resources'};
+
+const QS=[
+
+// ── SECTION 1: TASK 4.1 — PRICING MODELS (12 questions) ─────────────────────
+
+{sec:1,task:'4.1',diff:'m',
+ q:"A company needs to deploy a legacy software application that requires a physical server completely dedicated to their use, explicitly allowing them to use their existing per-core software licenses. Which compute option meets this requirement?",
+ opts:["A) Dedicated Instances","B) Dedicated Hosts","C) Reserved Instances","D) Capacity Reservations"],
+ ans:1,
+ exp:"Dedicated Hosts provide a physical server FULLY dedicated to your use and give you visibility into socket and core counts — required for BYOL (Bring Your Own License) per-core or per-socket licensing models. Dedicated Instances run on dedicated hardware but do NOT expose host-level details needed for per-core licensing."},
+
+{sec:1,task:'4.1',diff:'m',
+ q:"A development team wants to ensure they have guaranteed EC2 compute capacity available in a specific Availability Zone for an upcoming launch next week. They do NOT want a long-term contract or a pricing discount. Which option should they select?",
+ opts:["A) Savings Plans","B) Spot Instances","C) On-Demand Capacity Reservations","D) Standard Reserved Instances"],
+ ans:2,
+ exp:"On-Demand Capacity Reservations reserve compute capacity in a specific AZ for any duration — no 1-year or 3-year commitment required. Unlike RIs or Savings Plans, they provide a capacity guarantee without requiring a term commitment. You pay the On-Demand rate for reserved capacity whether you use it or not."},
+
+{sec:1,task:'4.1',diff:'e',
+ q:"A financial firm runs a steady-state web platform with highly predictable CPU usage 24/7. They want to commit to a 3-year term to achieve the maximum cost savings on their EC2 instances. Which compute option is optimized for this scenario?",
+ opts:["A) Spot Instances","B) On-Demand Instances","C) Reserved Instances","D) Capacity Reservations"],
+ ans:2,
+ exp:"Reserved Instances are ideal for predictable, steady-state workloads running continuously. A 3-year All-Upfront Reserved Instance provides the maximum discount (up to 72% vs On-Demand). Spot can be interrupted. On-Demand has no commitment discount. Capacity Reservations guarantee capacity but offer no discount."},
+
+{sec:1,task:'4.1',diff:'e',
+ q:"An analytics company processes batch background jobs that can be paused and resumed at any time without data loss. Which compute option offers up to 90% discount for this fault-tolerant workload?",
+ opts:["A) AWS Savings Plans","B) Spot Instances","C) Dedicated Instances","D) On-Demand Instances"],
+ ans:1,
+ exp:"Spot Instances leverage spare AWS compute capacity at discounts up to 90% off On-Demand pricing. AWS can reclaim Spot capacity with a 2-minute warning — making them perfect for stateless, fault-tolerant, flexible workloads like batch processing that can be interrupted and restarted."},
+
+{sec:1,task:'4.1',diff:'m',
+ q:"A corporation wants a flexible 1-year commitment plan that lowers compute costs across Amazon EC2, AWS Fargate, and AWS Lambda simultaneously, regardless of Region or instance family. Which option fulfills this requirement?",
+ opts:["A) EC2 Instance Savings Plans","B) Regional Reserved Instances","C) Compute Savings Plans","D) Convertible Reserved Instances"],
+ ans:2,
+ exp:"Compute Savings Plans apply automatically across EC2, Fargate, AND Lambda regardless of Region, instance size, OS, or family — the broadest coverage. EC2 Instance Savings Plans only apply to a specific instance family in a specific Region. Reserved Instances are locked to specific configurations."},
+
+{sec:1,task:'4.1',diff:'m',
+ q:"A compliance rule requires that an enterprise application's instances be isolated at the hardware level from instances belonging to other AWS customer accounts. The company does NOT need physical host-level visibility or per-core licensing support. Which option satisfies this?",
+ opts:["A) Dedicated Instances","B) Dedicated Hosts","C) Spot Instances","D) Capacity Reservations"],
+ ans:0,
+ exp:"Dedicated Instances run on hardware dedicated to a single customer account — providing hardware-level isolation from other customers without exposing host-level details. Dedicated Hosts go further by providing full physical server visibility (needed for BYOL), which this company doesn't need and which costs more."},
+
+{sec:1,task:'4.1',diff:'e',
+ q:"A media company is reviewing data transfer fees on their monthly invoice. Which of the following network data movements is generally FREE of charge under AWS pricing principles?",
+ opts:["A) Data transferred OUT from an Amazon S3 bucket to the internet","B) Data transferred INTO an Amazon S3 bucket from the internet","C) Data transferred across different AWS Regions","D) Data transferred between different Availability Zones in the same Region"],
+ ans:1,
+ exp:"Inbound data transfer FROM the internet INTO AWS is always free. Outbound data to the internet is charged. Cross-Region transfers are charged. Data transferred between AZs in the same Region incurs a small per-GB charge. The key rule: data coming IN is free, data going OUT costs money."},
+
+{sec:1,task:'4.1',diff:'m',
+ q:"A company is switching an EC2 instance from Linux to Windows. Which purchasing model automatically continues applying its discount coverage after this operating system change — with NO action required?",
+ opts:["A) Standard Reserved Instances","B) Compute Savings Plans","C) Scheduled Reserved Instances","D) On-Demand Instances"],
+ ans:1,
+ exp:"Compute Savings Plans are OS-agnostic — they apply automatically to eligible compute usage regardless of whether the instance runs Linux or Windows. Standard Reserved Instances are locked to a specific OS at purchase time and would NOT automatically apply after switching from Linux to Windows."},
+
+{sec:1,task:'4.1',diff:'e',
+ q:"An organization needs to store archival logs that are rarely accessed but must be retained for 5 years. Which Amazon S3 storage class optimizes cost for this scenario?",
+ opts:["A) Amazon S3 Standard","B) Amazon S3 Standard-Infrequent Access (S3 Standard-IA)","C) Amazon S3 Glacier","D) Amazon EBS General Purpose SSD"],
+ ans:2,
+ exp:"Amazon S3 Glacier classes provide the lowest per-GB storage cost — designed specifically for archival data that is rarely accessed. The trade-off is retrieval time (minutes to hours). For data retained 5 years but rarely read, Glacier is far cheaper than Standard or Standard-IA. EBS is block storage for EC2, not archival."},
+
+{sec:1,task:'4.1',diff:'m',
+ q:"An administrator manually stops an EC2 Spot Instance after it has been running for 20 minutes. How is the usage billed?",
+ opts:["A) The full hour is charged at On-Demand rates","B) The partial hour is billed down to the exact second of usage","C) The entire hour is free of charge","D) A standard termination fee is applied"],
+ ans:1,
+ exp:"When a USER manually stops or terminates a Spot Instance, they pay for the exact seconds of compute time used (per-second billing). However, if AWS interrupts a Spot Instance due to capacity needs, the partial hour's usage is free of charge. The billing direction depends on WHO initiated the termination."},
+
+{sec:1,task:'4.1',diff:'m',
+ q:"A team wants a pricing commitment option that allows them to exchange their reservation mid-term for a completely different EC2 instance family (e.g., switching from c5 to m5). Which purchasing model supports this specific flexibility?",
+ opts:["A) Standard Reserved Instances","B) Convertible Reserved Instances","C) Capacity Reservations","D) Spot Instances"],
+ ans:1,
+ exp:"Convertible Reserved Instances allow you to exchange the reservation for a different instance family, OS, scope, or tenancy during the active term — trading a slightly lower discount for flexibility. Standard Reserved Instances lock you to the original instance configuration for the entire term."},
+
+{sec:1,task:'4.1',diff:'e',
+ q:"A company is deploying a small prototype web application that will only run for 3 days and then be permanently deleted. Which compute model minimizes cost and avoids any commitment overhead?",
+ opts:["A) AWS Savings Plans","B) Reserved Instances","C) On-Demand Instances","D) Dedicated Hosts"],
+ ans:2,
+ exp:"On-Demand Instances have zero upfront fees and zero commitment — you pay only for the hours or seconds used. For short-term or temporary workloads (3 days, ad-hoc testing, prototypes), On-Demand is the most appropriate and waste-free option. Savings Plans and RIs require 1 or 3 year commitments."},
+
+// ── SECTION 2: TASK 4.2 — COST MANAGEMENT TOOLS (12 questions) ───────────────
+
+{sec:2,task:'4.2',diff:'m',
+ q:"A financial officer wants to download a detailed CSV report that breaks down every single resource charge, metadata tag, and cost item across all accounts in the company. Which resource meets this requirement?",
+ opts:["A) AWS Pricing Calculator","B) AWS Budgets","C) AWS Cost and Usage Report (CUR)","D) AWS Trusted Advisor"],
+ ans:2,
+ exp:"The AWS Cost and Usage Report (CUR) is the most comprehensive billing dataset available — containing every line-item charge with resource IDs, tags, usage types, and hourly data across all accounts. It can be exported to S3 and analyzed with Amazon Athena or Redshift. Budgets is for alerts, not raw data exports."},
+
+{sec:2,task:'4.2',diff:'e',
+ q:"A manager needs to configure a rule that alerts the DevOps team via email if the month's forecasted database spend is projected to exceed $10,000. Which tool should they use?",
+ opts:["A) AWS Cost Explorer","B) AWS Budgets","C) AWS Pricing Calculator","D) AWS Systems Manager"],
+ ans:1,
+ exp:"AWS Budgets allows you to create custom cost or usage thresholds that trigger automated email or SNS notifications when actual or FORECASTED spend hits the threshold. Cost Explorer visualizes and analyzes historical spend but does not send proactive cost alerts."},
+
+{sec:2,task:'4.2',diff:'e',
+ q:"A startup is designing a new cloud architecture and needs to build an estimated monthly cost model before launching anything in production. Which native AWS tool is purpose-built for pre-deployment cost estimation?",
+ opts:["A) AWS Cost Explorer","B) AWS Cost and Usage Report","C) AWS Pricing Calculator","D) AWS Service Catalog"],
+ ans:2,
+ exp:"AWS Pricing Calculator is the purpose-built tool for pre-deployment cost estimation — you configure services, regions, usage quantities, and pricing models to generate architectural cost estimates before provisioning. Cost Explorer analyzes EXISTING (historical) spend, not future estimates."},
+
+{sec:2,task:'4.2',diff:'e',
+ q:"A developer wants to view a graph showing their month-to-month EC2 cost trends over the past year, filtered specifically by individual AWS Regions. Which dashboard provides this visualization natively?",
+ opts:["A) AWS Pricing Calculator","B) AWS Cost Explorer","C) AWS Artifact","D) AWS Config"],
+ ans:1,
+ exp:"AWS Cost Explorer provides a visual, interactive interface to analyze and chart historical AWS spend with filters by service, Region, account, tag, and more. It also includes a forecasting feature based on past usage trends. It is the go-to tool for visual cost analysis of existing spend."},
+
+{sec:2,task:'4.2',diff:'m',
+ q:"A cloud architect assigns metadata labels like 'Environment: Production' and 'Department: Finance' to EC2 instances. What must be activated in AWS to include these labels in billing reports?",
+ opts:["A) Service Control Policies (SCPs)","B) AWS Trusted Advisor Checks","C) Cost Allocation Tags","D) Amazon CloudWatch Metrics"],
+ ans:2,
+ exp:"Cost Allocation Tags are AWS resource tags that have been activated for cost tracking. Once activated in the billing console (from the Management Account in an Organization), they appear as columns in billing reports — allowing you to filter and allocate costs by environment, department, project, or any custom dimension."},
+
+{sec:2,task:'4.2',diff:'m',
+ q:"A parent company uses AWS Organizations with 20 linked accounts under consolidated billing. How does AWS calculate tiered volume storage discounts for Amazon S3 across this organization?",
+ opts:["A) Each account's S3 storage is calculated entirely independently","B) The storage volume of all member accounts is combined, allowing the org to reach cheaper pricing tiers faster","C) S3 volume discounts are disabled under consolidated billing","D) Only the management account receives volume tier discounts"],
+ ans:1,
+ exp:"Consolidated billing aggregates usage across ALL member accounts. For services with volume pricing tiers (like S3), the combined storage across all accounts is used to determine the tier — so the organization reaches lower-cost tiers faster than any single account would individually."},
+
+{sec:2,task:'4.2',diff:'e',
+ q:"Who is legally and financially responsible for paying the single unified invoice generated for an entire AWS Organization?",
+ opts:["A) The AWS Support Concierge","B) The owner of the Management Account","C) Each member account owner split equally","D) The IAM administrative group"],
+ ans:1,
+ exp:"The Management Account (formerly called the master account) is the account that creates the AWS Organization and consolidates billing. It receives and pays the single invoice that aggregates all usage charges from all linked member accounts in the organization."},
+
+{sec:2,task:'4.2',diff:'m',
+ q:"A finance director wants member account cost allocation tags to appear on the aggregated master invoice. From where must the administrator activate these tags for the organization?",
+ opts:["A) From each individual member account console separately","B) Solely within the Billing console of the Management Account","C) Using AWS Systems Manager in the root organizational unit","D) Via AWS IAM Identity Center settings"],
+ ans:1,
+ exp:"Cost Allocation Tags for an AWS Organization must be activated from the Management Account's billing console — not from individual member accounts. This ensures they are included in the consolidated billing reports that aggregate costs across all member accounts."},
+
+{sec:2,task:'4.2',diff:'m',
+ q:"A company wants to enforce strict limits and prevent member accounts from provisioning high-cost EC2 instance types entirely. Which feature of AWS Organizations should be implemented?",
+ opts:["A) Consolidated Billing","B) Service Control Policies (SCPs)","C) Cost Allocation Tracking","D) AWS Budgets Alerts"],
+ ans:1,
+ exp:"Service Control Policies (SCPs) define the maximum permissions available to accounts within an AWS Organization. An SCP can explicitly DENY the ability to launch certain expensive instance types (e.g., p4d.24xlarge GPU instances) — preventing any user in any member account from provisioning them regardless of their IAM permissions."},
+
+{sec:2,task:'4.2',diff:'m',
+ q:"A company joins an AWS Organization that uses consolidated billing. How does this affect the individual accounts' AWS Free Tier allowances?",
+ opts:["A) Each account retains its own full Free Tier allowance independently","B) The entire organization shares one unified set of Free Tier allowances across all accounts","C) The Free Tier is permanently revoked for all accounts in the organization","D) Only the management account can access Free Tier resources"],
+ ans:1,
+ exp:"For billing purposes, AWS treats all consolidated accounts as a single account — meaning Free Tier limits are shared across the ENTIRE organization, not multiplied per account. If the combined usage across all accounts exceeds the Free Tier limits, charges apply."},
+
+{sec:2,task:'4.2',diff:'e',
+ q:"Which AWS tool allows you to visually identify cost anomalies and see recommended rightsizing actions based on historical usage data directly within the AWS Billing Console?",
+ opts:["A) AWS Pricing Calculator","B) AWS Cost Explorer","C) AWS CloudFormation","D) AWS Marketplace"],
+ ans:1,
+ exp:"AWS Cost Explorer includes cost anomaly detection and rightsizing recommendation features based on historical usage patterns. It is embedded in the billing console and provides visual charts, filters, and forecasting. Pricing Calculator is for pre-deployment estimates only."},
+
+{sec:2,task:'4.2',diff:'m',
+ q:"A company wants to verify current pricing information for AWS services across different Regions before writing an automated deployment script. Which resource provides this pricing data programmatically?",
+ opts:["A) AWS Cost and Usage Report","B) AWS Pricing Calculator and AWS Pricing APIs","C) AWS Trusted Advisor Core Checks","D) AWS Service Quotas"],
+ ans:1,
+ exp:"AWS Pricing APIs provide programmatic access to current pricing data across all AWS services and Regions — ideal for scripts or applications that need to fetch up-to-date pricing. The AWS Pricing Calculator provides the same data interactively. CUR provides historical actual charges, not list pricing."},
+
+// ── SECTION 3: TASK 4.3 — SUPPORT & RESOURCES (12 questions) ─────────────────
+
+{sec:3,task:'4.3',diff:'e',
+ q:"A company requires round-the-clock (24/7) phone and chat access to Cloud Support Engineers for technical issues, but does NOT want to pay for a dedicated Technical Account Manager (TAM). What is the minimum AWS Support plan required?",
+ opts:["A) Developer Support","B) Business Support","C) Enterprise On-Ramp Support","D) Enterprise Support"],
+ ans:1,
+ exp:"Business Support is the minimum tier offering 24/7 phone, chat, and email access to Cloud Support Engineers. Developer Support only provides business-hours email access. Enterprise On-Ramp and Enterprise both add TAM access, which this company doesn't need — and cost significantly more."},
+
+{sec:3,task:'4.3',diff:'m',
+ q:"A company wants access to a pooled group of Technical Account Managers for proactive health reviews and architectural guidance, with a 30-minute response time for critical issues. Which support plan meets this requirement?",
+ opts:["A) Business Support","B) Enterprise On-Ramp Support","C) Developer Support","D) Basic Support"],
+ ans:1,
+ exp:"Enterprise On-Ramp Support provides access to a POOLED team of Technical Account Managers (shared, not dedicated) along with proactive guidance, Well-Architected reviews, and a 30-minute SLA for critical system-down scenarios. Full Enterprise Support provides a DEDICATED TAM and a 15-minute SLA."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"An enterprise account experiences a production-critical system crash that stalls all operations. They hold a full Enterprise Support plan. What is the guaranteed response time SLA for this critical scenario?",
+ opts:["A) Within 15 minutes","B) Within 30 minutes","C) Within 1 hour","D) Within 4 hours"],
+ ans:0,
+ exp:"The Enterprise Support plan provides a 15-minute response SLA for business-critical system-down events. Enterprise On-Ramp is 30 minutes. Business Support is 1 hour for urgent/production system impaired. Developer is business-hours only. 15 minutes is the fastest SLA available."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"A security administrator receives an alert that an external entity is using an AWS IP address to conduct malicious port scanning attacks against their on-premises network. Which AWS team should they contact to report this abuse?",
+ opts:["A) AWS Support Concierge","B) AWS Solutions Architects","C) AWS Trust and Safety Team","D) AWS Professional Services"],
+ ans:2,
+ exp:"The AWS Trust and Safety team handles reports of AWS resource ABUSE — including spam, port scanning, malware distribution, DDoS attacks, and other malicious activity originating from AWS-owned IP addresses. This is distinct from technical support or account management."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"A company wants an automated online tool that analyzes their AWS infrastructure across five pillars: cost optimization, security, fault tolerance, performance, and service limits. Which tool provides this?",
+ opts:["A) AWS Health Dashboard","B) AWS Trusted Advisor","C) AWS Systems Manager","D) AWS Support Center"],
+ ans:1,
+ exp:"AWS Trusted Advisor inspects your AWS environment and provides real-time recommendations across five pillars: Cost Optimization, Performance, Security, Fault Tolerance, and Service Limits. It highlights over-provisioned resources, open security gaps, underutilized instances, and service quota concerns."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"A developer needs to check if there is an ongoing service degradation or outage affecting an entire AWS Region. Which interface displays this real-time regional status?",
+ opts:["A) AWS Trusted Advisor","B) AWS Health Dashboard","C) AWS Trust and Safety Console","D) AWS Support Center Case Manager"],
+ ans:1,
+ exp:"The AWS Health Dashboard (formerly Service Health Dashboard) displays real-time status of all AWS services across all Regions — showing active incidents, degradations, and maintenance events. It also provides a personalized view of events that specifically affect resources in your AWS account."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"A business wants to buy and provision pre-configured third-party software, firewall appliances, and developer tools directly from a centralized catalog, with charges appearing on their existing AWS invoice. What platform should they use?",
+ opts:["A) AWS Partner Network","B) AWS Marketplace","C) AWS Service Catalog","D) AWS Systems Manager"],
+ ans:1,
+ exp:"AWS Marketplace is a digital catalog of thousands of third-party software products — including security tools, SaaS applications, ML models, and DevOps tools. Products are deployed directly to AWS and charges are consolidated onto the standard AWS bill. AWS Service Catalog is for managing internally approved CloudFormation products."},
+
+{sec:3,task:'4.3',diff:'m',
+ q:"A firm requires comprehensive hands-on technical assistance to plan and execute a large database migration over 6 months. They want dedicated AWS experts working alongside their internal team throughout the project. Who should they engage?",
+ opts:["A) AWS Prescriptive Guidance","B) AWS Professional Services","C) AWS Trust and Safety Team","D) AWS Support Concierge"],
+ ans:1,
+ exp:"AWS Professional Services (ProServ) is a global team of AWS experts that partners with customers to provide hands-on consulting, project management, and technical execution for complex cloud transformations including migrations, modernizations, and large-scale deployments. Prescriptive Guidance provides written frameworks, not a team."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"A company is on the Basic (free) support plan. What level of access do they have when opening cases in the AWS Support Center?",
+ opts:["A) They can open cases only for billing, invoicing, and account limits","B) They can open full technical troubleshooting tickets during business hours","C) Support ticket creation is disabled entirely","D) They must use AWS re:Post for all account actions"],
+ ans:0,
+ exp:"The Basic Support tier allows customers to open non-technical cases for billing, invoicing, and service limit increase requests — but NOT technical troubleshooting cases. For technical support tickets, a paid plan (Developer, Business, or Enterprise) is required."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"Where can a cloud engineer access curated reference architectures, verified migration frameworks, and official best-practice guides authored directly by AWS experts?",
+ opts:["A) AWS re:Post and the Abuse portal","B) AWS Prescriptive Guidance and official AWS documentation","C) AWS Marketplace Catalog","D) AWS Systems Manager Command Console"],
+ ans:1,
+ exp:"AWS Prescriptive Guidance provides time-tested strategies, patterns, and guides authored by AWS experts specifically to help accelerate cloud adoption — including migration playbooks, modernization patterns, and architecture best practices. Official AWS documentation covers service-specific technical reference material."},
+
+{sec:3,task:'4.3',diff:'m',
+ q:"A company has an active Enterprise Support plan. Which dedicated resource acts as their primary billing and account advocate — assisting with complex invoice explanations and operational billing inquiries?",
+ opts:["A) Technical Account Manager (TAM)","B) Support Concierge","C) Solutions Architect","D) AWS Systems Integrator"],
+ ans:1,
+ exp:"The Support Concierge is a specialized billing and account management team available exclusively to Enterprise Support customers. They handle non-technical account queries — including invoice explanations, billing adjustments, credit applications, and account-level operational inquiries. The TAM focuses on technical guidance and architecture, not billing advocacy."},
+
+{sec:3,task:'4.3',diff:'e',
+ q:"A developer wants to interact with a community-driven, AWS-moderated Q&A platform to get crowd-sourced technical assistance on specific AWS API errors and configurations. Which resource should they visit?",
+ opts:["A) AWS Knowledge Center","B) AWS re:Post","C) AWS Prescriptive Guidance","D) AWS Security Blog"],
+ ans:1,
+ exp:"AWS re:Post is a community-driven Q&A platform moderated by AWS where developers and cloud practitioners ask and answer technical questions — similar to Stack Overflow but specific to AWS. AWS Knowledge Center contains AWS-authored answers to common questions. Prescriptive Guidance has architectural guidance, not Q&A."}
+
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentIdx=0;
+let userAns=new Array(QS.length).fill(null);
+let timerSec=2700;
+let timerInterval=null;
+let isReview=false;
+
+function fmt(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+function startTimer(){
+  const el=document.getElementById('timer-display');
+  timerInterval=setInterval(()=>{
+    timerSec--;el.textContent=fmt(timerSec);
+    if(timerSec<=120)el.className='timer danger';
+    else if(timerSec<=300)el.className='timer warn';
+    if(timerSec<=0){clearInterval(timerInterval);showResults();}
+  },1000);
+}
+function startExam(){
+  document.getElementById('start-screen').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  buildNavGrid();renderQ();startTimer();
+}
+function buildNavGrid(){
+  const g=document.getElementById('qnav-grid');g.innerHTML='';
+  QS.forEach((_,i)=>{
+    const b=document.createElement('div');b.className='qng';b.textContent=i+1;b.id='qng-'+i;
+    b.onclick=()=>goTo(i);g.appendChild(b);
+  });refreshNav();
+}
+function refreshNav(){
+  QS.forEach((_,i)=>{
+    const b=document.getElementById('qng-'+i);if(!b)return;
+    b.className='qng';
+    if(i===currentIdx)b.classList.add('cur');
+    else if(userAns[i]!==null)b.classList.add(userAns[i]===QS[i].ans?'ok':'err');
+  });
+}
+function getStats(){
+  let ok=0,err=0,done=0;
+  userAns.forEach((a,i)=>{if(a!==null){done++;if(a===QS[i].ans)ok++;else err++;}});
+  return{ok,err,done};
+}
+function updateRibbon(){
+  const{ok,err,done}=getStats();
+  const pct=done>0?Math.round(ok/done*100):0;
+  document.getElementById('rb-num').textContent=currentIdx+1;
+  document.getElementById('rb-ok').textContent=ok;
+  document.getElementById('rb-err').textContent=err;
+  document.getElementById('rb-pct').textContent=done>0?pct+'%':'—';
+  document.getElementById('rb-ok-sub').textContent=done>0?Math.round(ok/QS.length*100)+'% total':'—';
+  document.getElementById('rb-err-sub').textContent=done>0?(100-pct)+'% incorrect':'—';
+  document.getElementById('rb-pct-sub').textContent=done>0?done+' answered':'live';
+  document.getElementById('prog-fill').style.width=Math.round(done/QS.length*100)+'%';
+  document.getElementById('prog-lbl').textContent=done+' / '+QS.length+' answered';
+  document.getElementById('task-lbl').textContent='Task '+QS[currentIdx].task;
+  refreshNav();
+}
+function renderQ(){
+  document.getElementById('phase-banner').className='phase-banner';
+  document.getElementById('nav-row').style.display='flex';
+  if(currentIdx>=QS.length){showResults();return;}
+  const q=QS[currentIdx];const prev=userAns[currentIdx];const isAns=prev!==null;
+  let meta='<span class="q-num">Q'+(currentIdx+1)+' / '+QS.length+'</span>';
+  meta+='<span class="task-tag">Task '+q.task+'</span>';
+  meta+='<span class="diff-tag '+DIFF_CLS[q.diff]+'">'+DIFF_LBL[q.diff]+'</span>';
+  meta+='<span class="scenario-lbl">Scenario</span>';
+  const optsHTML=q.opts.map((opt,i)=>{
+    let cls='opt',dis='';
+    if(isAns){dis='disabled';if(i===q.ans)cls+=' correct';else if(i===prev&&i!==q.ans)cls+=' wrong';}
+    return'<button class="'+cls+'" '+dis+' onclick="pickAnswer('+i+')"><span class="opt-l">'+opt.substring(0,2)+'</span>'+opt.substring(3)+'</button>';
+  }).join('');
+  const fb=isAns?`<div class="feedback ${prev===q.ans?'ok':'err'} show"><div class="fb-head">${prev===q.ans?'Correct':'Incorrect'}</div>${q.exp}</div>`:'';
+  document.getElementById('q-area').innerHTML=`<div class="q-card"><div class="q-meta">${meta}</div><div class="q-txt">${q.q}</div><div class="opts">${optsHTML}</div>${fb}</div>`;
+  updateRibbon();
+}
+function pickAnswer(i){
+  if(userAns[currentIdx]!==null)return;
+  userAns[currentIdx]=i;renderQ();
+  if(isReview)return;
+  const sec=QS[currentIdx].sec;
+  const secStart=QS.findIndex(q=>q.sec===sec);
+  const secQs=QS.filter(q=>q.sec===sec);
+  const isLast=currentIdx===QS.map(q=>q.sec).lastIndexOf(sec);
+  const allDone=secQs.every((_,xi)=>userAns[secStart+xi]!==null);
+  if(isLast&&allDone)setTimeout(()=>showSectionBanner(sec),300);
+}
+function showSectionBanner(sec){
+  const secStart=QS.findIndex(q=>q.sec===sec);
+  const secQs=QS.filter(q=>q.sec===sec);
+  let sOk=0;secQs.forEach((_,i)=>{if(userAns[secStart+i]===QS[secStart+i].ans)sOk++;});
+  const pct=Math.round(sOk/secQs.length*100);
+  document.getElementById('pb-score').textContent=sOk+'/'+secQs.length;
+  document.getElementById('pb-label').textContent=SECTION_NAMES[sec]+' — '+pct+'%';
+  const bar=document.getElementById('pb-bar');
+  bar.style.width=pct+'%';bar.style.background=pct>=75?'var(--green)':pct>=50?'var(--amber)':'var(--red)';
+  const btn=document.getElementById('pb-btn');
+  if(sec===3){btn.textContent='See Results &#8594;';btn.onclick=()=>showResults();}
+  else{btn.textContent='Continue &#8594;';btn.onclick=()=>nextSection();}
+  document.getElementById('phase-banner').classList.add('show');
+  document.getElementById('nav-row').style.display='none';
+}
+function nextSection(){
+  const cur=QS[currentIdx].sec;const ni=QS.findIndex(q=>q.sec===cur+1);
+  if(ni>=0){currentIdx=ni;document.getElementById('phase-banner').className='phase-banner';document.getElementById('nav-row').style.display='flex';renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+  else showResults();
+}
+function goTo(idx){
+  if(idx<0||idx>=QS.length)return;
+  currentIdx=idx;document.getElementById('phase-banner').className='phase-banner';document.getElementById('nav-row').style.display='flex';
+  renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+function switchTab(id,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');document.getElementById('panel-'+id).classList.add('active');
+}
+function showResults(){
+  clearInterval(timerInterval);
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  document.getElementById('results-page').style.display='block';
+  const{ok,err,done}=getStats();const pct=Math.round(ok/QS.length*100);
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('rs-ok').textContent=ok;document.getElementById('rs-err').textContent=err;document.getElementById('rs-skip').textContent=QS.length-done;
+  const grade=document.getElementById('res-grade');const lbl=document.getElementById('res-lbl');
+  if(pct>=80){grade.textContent='Domain 4 Ready — Strong performance';grade.className='res-grade grade-pass';lbl.textContent='Excellent across all three task statements.';}
+  else if(pct>=60){grade.textContent='Good foundation — review blind spots below';grade.className='res-grade grade-mid';lbl.textContent='Solid progress. Focus on the red task statements.';}
+  else{grade.textContent='Keep drilling — study cheat sheet then retake';grade.className='res-grade grade-low';lbl.textContent='Review the cheat sheet for each missed task, then retake.';}
+  const taskStats={};
+  QS.forEach((q,i)=>{if(!taskStats[q.task])taskStats[q.task]={ok:0,t:0};taskStats[q.task].t++;if(userAns[i]===q.ans)taskStats[q.task].ok++;});
+  document.getElementById('bd-tasks').innerHTML=Object.entries(taskStats).sort().map(([t,s])=>{
+    const dp=s.t>0?Math.round(s.ok/s.t*100):0;const col=dp>=80?'var(--green)':dp>=60?'var(--amber)':'var(--red)';
+    return`<div class="bd-row"><span>Task ${t} · ${TASK_NAMES[t]}</span><span>${s.ok}/${s.t} (${dp}%)</span></div><div class="bd-bar"><div class="bd-fill" style="width:${dp}%;background:${col}"></div></div>`;
+  }).join('');
+  document.getElementById('bd-sections').innerHTML=[1,2,3].map(s=>{
+    const sStart=QS.findIndex(q=>q.sec===s);const sQs=QS.filter(q=>q.sec===s);
+    let sOk=0;sQs.forEach((_,i)=>{if(userAns[sStart+i]===QS[sStart+i].ans)sOk++;});
+    const sp=sQs.length>0?Math.round(sOk/sQs.length*100):0;const col=sp>=80?'var(--green)':sp>=60?'var(--amber)':'var(--red)';
+    return`<div class="bd-row"><span>${SECTION_NAMES[s]}</span><span>${sOk}/${sQs.length} (${sp}%)</span></div><div class="bd-bar"><div class="bd-fill" style="width:${sp}%;background:${col}"></div></div>`;
+  }).join('');
+  const missed=QS.filter((q,i)=>userAns[i]!==null&&userAns[i]!==q.ans);
+  const bsList=document.getElementById('bs-list');
+  if(missed.length===0){bsList.innerHTML='<div class="empty-bs">No blind spots — perfect score!</div>';}
+  else{bsList.innerHTML=missed.map(q=>{
+    const gi=QS.indexOf(q);const corrText=q.opts[q.ans].substring(3);
+    return`<div class="bs-item"><div class="bs-q"><strong>Q${gi+1}:</strong> ${q.q}</div><div class="bs-tags"><span class="task-tag">Task ${q.task}</span><span class="q-num">Section ${q.sec}</span></div><div class="bs-correct">Correct: ${corrText}</div><div class="bs-exp">${q.exp}</div></div>`;
+  }).join('');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function enterReviewMode(){
+  isReview=true;
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  document.getElementById('phase-banner').className='phase-banner';
+  document.getElementById('nav-row').style.display='flex';
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab')[0].classList.add('active');
+  document.getElementById('panel-quiz').classList.add('active');
+  currentIdx=0;renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+function openCheatSheet(){
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab')[1].classList.add('active');
+  document.getElementById('panel-cheatsheet').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function restartExam(){
+  clearInterval(timerInterval);timerSec=2700;isReview=false;
+  userAns=new Array(QS.length).fill(null);currentIdx=0;
+  const td=document.getElementById('timer-display');td.textContent='45:00';td.className='timer';
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  document.getElementById('start-screen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

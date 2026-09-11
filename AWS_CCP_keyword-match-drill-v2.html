@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zero-Tech Keyword Match v2 — CLF-C02</title>
+<style>
+  :root{--bg:#0B1220;--panel:#111A2B;--panel2:#0E1626;--border:#22314A;--text:#E8EDF6;--muted:#8A9AB8;--orange:#FF9900;--green:#3DDC84;--red:#FF5D6C;--blue:#5AA9FF}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.55;padding-bottom:5rem}
+  header{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem}
+  .logo{font-family:'Space Mono',monospace;font-size:.9rem}
+  .logo b{color:var(--orange)}
+  #tracker{font-family:'Space Mono',monospace;font-size:.8rem;color:var(--muted)}
+  #tracker span{color:var(--orange);font-weight:700}
+  .main{max-width:820px;margin:0 auto;padding:2rem 1.5rem}
+  h1{font-size:1.7rem;font-weight:800;margin-bottom:.3rem}
+  h1 em{color:var(--orange);font-style:normal}
+  .lede{color:var(--muted);font-size:.95rem;margin-bottom:.5rem}
+  .lede b{color:var(--text)}
+  .pass-bar-wrap{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin:1.25rem 0 2rem}
+  .pass-bar-label{display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);margin-bottom:.5rem}
+  .pass-track{height:10px;background:var(--panel2);border-radius:99px;overflow:hidden;position:relative}
+  .pass-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--green));width:0%;transition:width .4s ease}
+  .pass-mark{position:absolute;top:-4px;left:70%;width:2px;height:18px;background:var(--text)}
+  .pass-mark-label{position:absolute;top:16px;left:70%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text)}
+  .cheat-toc{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;flex-wrap:wrap;gap:.4rem}
+  .cheat-toc a{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);text-decoration:none;padding:.3rem .6rem;border:1px solid var(--border);border-radius:99px;transition:.12s}
+  .cheat-toc a:hover{border-color:var(--orange);color:var(--text)}
+  h2.section-title{font-size:1.05rem;font-weight:800;margin:2rem 0 1rem;display:flex;align-items:center;gap:.5rem;scroll-margin-top:5rem}
+  h2.section-title .num{font-family:'Space Mono',monospace;background:var(--orange);color:#1A1200;font-size:.72rem;font-weight:800;min-width:1.6rem;height:1.6rem;padding:0 .4rem;border-radius:99px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cheat-group{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem;margin-bottom:.9rem}
+  .cheat-row{display:flex;gap:.6rem;align-items:baseline;font-size:.86rem;padding:.4rem 0;border-top:1px solid var(--border)}
+  .cheat-row:first-of-type{border-top:none}
+  .trigger{color:var(--text)}
+  .trigger b{color:var(--blue)}
+  .arrow{color:var(--muted);flex-shrink:0}
+  .answer-chip{font-family:'Space Mono',monospace;font-size:.76rem;font-weight:700;color:var(--orange);background:rgba(255,153,0,.12);padding:.15rem .55rem;border-radius:6px;white-space:nowrap}
+  .rapid-intro{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:0 10px 10px 0;padding:1.1rem 1.3rem;margin:2rem 0 1.5rem;font-size:.9rem;color:var(--muted);scroll-margin-top:5rem}
+  .rapid-intro b{color:var(--text)}
+  .q-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:1.3rem 1.4rem;margin-bottom:1rem}
+  .q-num{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);margin-bottom:.5rem;display:block}
+  .q-text{font-size:.98rem;font-weight:600;margin-bottom:.9rem}
+  .options{display:flex;flex-direction:column;gap:.5rem}
+  .opt{text-align:left;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:.65rem .85rem;border-radius:8px;cursor:pointer;font-size:.88rem;display:flex;gap:.55rem;transition:.12s}
+  .opt:hover:not(.locked){border-color:var(--orange)}
+  .opt.correct{background:rgba(61,220,132,.12);border-color:var(--green);color:var(--green)}
+  .opt.wrong{background:rgba(255,93,108,.12);border-color:var(--red);color:var(--red)}
+  .opt.locked{cursor:default}
+  .opt .letter{font-family:'Space Mono',monospace;font-weight:700;opacity:.6}
+  .keyword-hit{margin-top:.8rem;padding:.7rem .9rem;background:var(--panel2);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;font-size:.82rem;color:var(--muted);display:none}
+  .keyword-hit.show{display:block}
+  .keyword-hit b{color:var(--text)}
+  footer.done{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:2rem 1.5rem;text-align:center;margin-top:1.5rem}
+  footer.done h2{font-size:1.4rem;margin-bottom:.5rem}
+  .big-score{font-family:'Space Mono',monospace;font-size:2.4rem;color:var(--orange);font-weight:800;margin:.6rem 0}
+  .verdict{font-size:1rem;font-weight:700;margin-bottom:.5rem}
+  .verdict.pass{color:var(--green)}
+  .verdict.close{color:var(--orange)}
+  .verdict.study{color:var(--red)}
+  .reset-btn{margin-top:1rem;background:var(--orange);color:#1A1200;border:none;font-weight:700;padding:.7rem 1.4rem;border-radius:8px;cursor:pointer;font-size:.85rem}
+  .filter-nav{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1.25rem;position:sticky;top:3.6rem;background:var(--bg);padding:.5rem 0;z-index:40}
+  .filter-tab{background:var(--panel);border:1px solid var(--border);color:var(--muted);font-family:'Space Mono',monospace;font-size:.68rem;padding:.35rem .65rem;border-radius:99px;cursor:pointer}
+  .filter-tab.active{background:var(--orange);color:#1A1200;border-color:var(--orange);font-weight:700}
+  @media(max-width:600px){.main{padding:1.25rem 1rem}header{padding:.8rem 1rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CLF-C02 · <b>Keyword Match v2</b></div>
+  <div id="tracker">Points banked: <span id="live-score">0</span>/<span id="live-total">65</span></div>
+</header>
+
+<div class="main">
+  <h1>Zero-Tech <em>Keyword Match v2</em></h1>
+  <p class="lede">Expanded: <b>13 cheat sheet categories</b>, <b>65 rapid-fire questions</b>. You need <b>~70% raw correct</b> to clear 700/1000. Memorize the trigger phrase, click the answer, move on.</p>
+
+  <div class="pass-bar-wrap">
+    <div class="pass-bar-label"><span>YOUR PROGRESS</span><span>PASS LINE ≈ 70%</span></div>
+    <div class="pass-track"><div class="pass-fill" id="pass-fill"></div><div class="pass-mark"></div><div class="pass-mark-label">700</div></div>
+  </div>
+
+  <div class="cheat-toc">
+    <a href="#s1">1 Storage</a><a href="#s2">2 Network</a><a href="#s3">3 Monitoring</a><a href="#s4">4 Load Balancers</a><a href="#s5">5 Databases</a><a href="#s6">6 Deployment</a><a href="#s7">7 Security &amp; IAM</a><a href="#s8">8 Compute</a><a href="#s9">9 Migration</a><a href="#s10">10 Analytics</a><a href="#s11">11 Billing &amp; Support</a><a href="#s12">12 Global Infra</a><a href="#s13">13 Well-Arch &amp; Shared Resp</a><a href="#quiz-start">→ Skip to questions</a>
+  </div>
+
+  <h2 id="s1" class="section-title"><span class="num">1</span>Storage</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Object storage"</b> · <b>"Static website hosting"</b> · <b>"11 nines durability"</b></span><span class="arrow">→</span><span class="answer-chip">Amazon S3</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Virtual hard drive"</b> · <b>"Single EC2 instance"</b> · <b>"Block storage"</b></span><span class="arrow">→</span><span class="answer-chip">Amazon EBS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Shared file system"</b> · <b>"POSIX"</b> · <b>"Concurrent access from many EC2s"</b></span><span class="arrow">→</span><span class="answer-chip">Amazon EFS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Windows file shares"</b> · <b>"SMB"</b> · <b>"Lustre for HPC"</b></span><span class="arrow">→</span><span class="answer-chip">Amazon FSx</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Long-term archive"</b> · <b>"Compliance"</b> · <b>"Hours to retrieve"</b></span><span class="arrow">→</span><span class="answer-chip">S3 Glacier</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Cheapest tier"</b> · <b>"12-48 hour retrieval"</b></span><span class="arrow">→</span><span class="answer-chip">Glacier Deep Archive</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"On-prem app needs cloud storage"</b> · <b>"Hybrid file/tape gateway"</b></span><span class="arrow">→</span><span class="answer-chip">Storage Gateway</span></div>
+  </div>
+
+  <h2 id="s2" class="section-title"><span class="num">2</span>Network &amp; Connections</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Physical connection"</b> · <b>"Bypasses the internet"</b> · <b>"Predictable performance"</b></span><span class="arrow">→</span><span class="answer-chip">Direct Connect</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Encrypted tunnel"</b> · <b>"Over the public internet"</b> · <b>"Quick to set up"</b></span><span class="arrow">→</span><span class="answer-chip">Site-to-Site VPN</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Hub and spoke"</b> · <b>"Many VPCs + on-prem"</b> · <b>"Simplify the mesh"</b></span><span class="arrow">→</span><span class="answer-chip">Transit Gateway</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Two VPCs talk directly"</b>, no on-prem</span><span class="arrow">→</span><span class="answer-chip">VPC Peering</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Private subnet, outbound internet only"</b> (IPv4)</span><span class="arrow">→</span><span class="answer-chip">NAT Gateway</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"IPv6, outbound only"</b></span><span class="arrow">→</span><span class="answer-chip">Egress-Only IGW</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"DNS"</b> · <b>"Domain registration"</b> · <b>"Latency/geo routing"</b></span><span class="arrow">→</span><span class="answer-chip">Route 53</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"CDN"</b> · <b>"Edge locations"</b> · <b>"Cache close to users"</b></span><span class="arrow">→</span><span class="answer-chip">CloudFront</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Private link to S3/DynamoDB"</b> without internet</span><span class="arrow">→</span><span class="answer-chip">VPC Endpoint</span></div>
+  </div>
+
+  <h2 id="s3" class="section-title"><span class="num">3</span>Monitoring &amp; Management</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"CPU utilization"</b> · <b>"Metrics"</b> · <b>"Application logs"</b> · <b>"Alarms"</b></span><span class="arrow">→</span><span class="answer-chip">CloudWatch</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"API calls"</b> · <b>"Who did what/when/from where"</b> · <b>"Audit"</b></span><span class="arrow">→</span><span class="answer-chip">CloudTrail</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Config history"</b> · <b>"Resource compliance drift"</b></span><span class="arrow">→</span><span class="answer-chip">AWS Config</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Best-practice recommendations"</b> (cost/security/perf/fault-tol/limits)</span><span class="arrow">→</span><span class="answer-chip">Trusted Advisor</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Compliance reports (SOC/PCI/ISO)"</b> for download</span><span class="arrow">→</span><span class="answer-chip">AWS Artifact</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Manage many AWS accounts centrally"</b> · <b>"Consolidated billing"</b></span><span class="arrow">→</span><span class="answer-chip">Organizations</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Set up multi-account landing zone"</b> · <b>"Guardrails"</b></span><span class="arrow">→</span><span class="answer-chip">Control Tower</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Patch/run commands across fleet"</b> · <b>"Parameter Store"</b></span><span class="arrow">→</span><span class="answer-chip">Systems Manager</span></div>
+  </div>
+
+  <h2 id="s4" class="section-title"><span class="num">4</span>Load Balancers</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"HTTP/HTTPS"</b> · <b>"URL path routing"</b> · <b>"Host-based"</b> · <b>"Layer 7"</b></span><span class="arrow">→</span><span class="answer-chip">ALB</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Ultra-low latency"</b> · <b>"Millions of req/sec"</b> · <b>"TCP/UDP"</b> · <b>"Static IP"</b> · <b>"Layer 4"</b></span><span class="arrow">→</span><span class="answer-chip">NLB</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"EC2-Classic legacy"</b></span><span class="arrow">→</span><span class="answer-chip">Classic LB</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Deploy 3rd-party virtual appliances"</b> inline</span><span class="arrow">→</span><span class="answer-chip">Gateway LB</span></div>
+  </div>
+
+  <h2 id="s5" class="section-title"><span class="num">5</span>Databases</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"MySQL/PostgreSQL compatible"</b> + <b>"5x throughput"</b> or <b>"15 read replicas"</b></span><span class="arrow">→</span><span class="answer-chip">Aurora</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Managed relational"</b> · <b>"MySQL/Postgres/SQL Server/Oracle/MariaDB"</b></span><span class="arrow">→</span><span class="answer-chip">RDS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"NoSQL"</b> · <b>"Single-digit millisecond"</b> · <b>"Unpredictable scale"</b></span><span class="arrow">→</span><span class="answer-chip">DynamoDB</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"DynamoDB caching"</b> · <b>"Microsecond latency"</b></span><span class="arrow">→</span><span class="answer-chip">DAX</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"In-memory cache"</b> · <b>"Redis/Memcached"</b> · <b>"Speed up SQL reads"</b></span><span class="arrow">→</span><span class="answer-chip">ElastiCache</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Data warehouse"</b> · <b>"OLAP"</b> · <b>"BI dashboards"</b></span><span class="arrow">→</span><span class="answer-chip">Redshift</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"MongoDB compatible"</b> · <b>"Document database"</b></span><span class="arrow">→</span><span class="answer-chip">DocumentDB</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Customer manages guest OS"</b> for database</span><span class="arrow">→</span><span class="answer-chip">EC2</span></div>
+  </div>
+
+  <h2 id="s6" class="section-title"><span class="num">6</span>Deployment &amp; DevOps</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Upload code, AWS provisions everything"</b> (EC2/ELB/scaling auto)</span><span class="arrow">→</span><span class="answer-chip">Elastic Beanstalk</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Deploy to on-premises too"</b></span><span class="arrow">→</span><span class="answer-chip">CodeDeploy</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Chef/Puppet"</b> config management</span><span class="arrow">→</span><span class="answer-chip">OpsWorks</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Infrastructure as code"</b> · <b>"Templates"</b> · <b>"Stack"</b></span><span class="arrow">→</span><span class="answer-chip">CloudFormation</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Git repo hosting"</b></span><span class="arrow">→</span><span class="answer-chip">CodeCommit</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Compile/test build artifacts"</b></span><span class="arrow">→</span><span class="answer-chip">CodeBuild</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"End-to-end CI/CD pipeline"</b></span><span class="arrow">→</span><span class="answer-chip">CodePipeline</span></div>
+  </div>
+
+  <h2 id="s7" class="section-title"><span class="num">7</span>Security &amp; Identity</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Users, groups, roles, policies"</b> · <b>"Who can do what"</b></span><span class="arrow">→</span><span class="answer-chip">IAM</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Extra login factor"</b> · <b>"6-digit code + password"</b></span><span class="arrow">→</span><span class="answer-chip">MFA</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Manage encryption keys"</b> · <b>"KMS"</b></span><span class="arrow">→</span><span class="answer-chip">AWS KMS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Store DB passwords / API keys"</b> · <b>"Auto rotation"</b></span><span class="arrow">→</span><span class="answer-chip">Secrets Manager</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Block SQL injection / XSS"</b> · <b>"Filter web requests"</b></span><span class="arrow">→</span><span class="answer-chip">AWS WAF</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"DDoS protection"</b></span><span class="arrow">→</span><span class="answer-chip">AWS Shield</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Threat detection"</b> · <b>"Malicious activity in account"</b></span><span class="arrow">→</span><span class="answer-chip">GuardDuty</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Discover PII in S3"</b> · <b>"Sensitive data classification"</b></span><span class="arrow">→</span><span class="answer-chip">Amazon Macie</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Vulnerability assessments"</b> · <b>"Scan EC2/containers"</b></span><span class="arrow">→</span><span class="answer-chip">Inspector</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Central security dashboard"</b> · <b>"Aggregate findings"</b></span><span class="arrow">→</span><span class="answer-chip">Security Hub</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Provision SSL/TLS certificates"</b> free</span><span class="arrow">→</span><span class="answer-chip">ACM</span></div>
+  </div>
+
+  <h2 id="s8" class="section-title"><span class="num">8</span>Compute Options</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Virtual server in the cloud"</b> · <b>"Full OS control"</b></span><span class="arrow">→</span><span class="answer-chip">EC2</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Run code, no servers"</b> · <b>"Event-triggered"</b> · <b>"Pay per ms"</b></span><span class="arrow">→</span><span class="answer-chip">Lambda</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Run Docker containers"</b>, AWS-native orchestration</span><span class="arrow">→</span><span class="answer-chip">ECS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Managed Kubernetes"</b></span><span class="arrow">→</span><span class="answer-chip">EKS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Serverless containers"</b> (no EC2 to manage)</span><span class="arrow">→</span><span class="answer-chip">Fargate</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Simple VPS"</b> · <b>"Fixed monthly price"</b> · <b>"WordPress"</b></span><span class="arrow">→</span><span class="answer-chip">Lightsail</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Batch computing jobs"</b> at scale</span><span class="arrow">→</span><span class="answer-chip">AWS Batch</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Unused capacity, up to 90% off"</b>, can be reclaimed</span><span class="arrow">→</span><span class="answer-chip">Spot Instance</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"1 or 3 year commit"</b> for discount</span><span class="arrow">→</span><span class="answer-chip">Reserved Instance</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Bring your own license"</b> · <b>"Physical server"</b></span><span class="arrow">→</span><span class="answer-chip">Dedicated Host</span></div>
+  </div>
+
+  <h2 id="s9" class="section-title"><span class="num">9</span>Migration &amp; Data Transfer</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Physical device to ship data"</b> · <b>"Terabytes/petabytes"</b></span><span class="arrow">→</span><span class="answer-chip">Snowball / Snowmobile</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Migrate databases with minimal downtime"</b></span><span class="arrow">→</span><span class="answer-chip">DMS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Convert schema between DB engines"</b></span><span class="arrow">→</span><span class="answer-chip">SCT</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Sync files on-prem ↔ AWS"</b> over network</span><span class="arrow">→</span><span class="answer-chip">DataSync</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Lift-and-shift servers to AWS"</b></span><span class="arrow">→</span><span class="answer-chip">AWS MGN / SMS</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Track migration progress across services"</b></span><span class="arrow">→</span><span class="answer-chip">Migration Hub</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Disaster recovery"</b> · <b>"Fast failover of on-prem to AWS"</b></span><span class="arrow">→</span><span class="answer-chip">Elastic DR (CloudEndure)</span></div>
+  </div>
+
+  <h2 id="s10" class="section-title"><span class="num">10</span>Analytics &amp; Streaming</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Query S3 with SQL"</b>, serverless</span><span class="arrow">→</span><span class="answer-chip">Athena</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"BI dashboards / visualizations"</b></span><span class="arrow">→</span><span class="answer-chip">QuickSight</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"ETL"</b> · <b>"Data catalog"</b> · <b>"Prepare data for analytics"</b></span><span class="arrow">→</span><span class="answer-chip">AWS Glue</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Real-time streaming data"</b> · <b>"Ingest at scale"</b></span><span class="arrow">→</span><span class="answer-chip">Kinesis</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Managed Hadoop/Spark"</b> · <b>"Big data clusters"</b></span><span class="arrow">→</span><span class="answer-chip">EMR</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Log/full-text search"</b> · <b>"Elasticsearch-compatible"</b></span><span class="arrow">→</span><span class="answer-chip">OpenSearch</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Managed Kafka"</b></span><span class="arrow">→</span><span class="answer-chip">Amazon MSK</span></div>
+  </div>
+
+  <h2 id="s11" class="section-title"><span class="num">11</span>Billing &amp; Support</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Visualize and analyze past costs"</b> · <b>"Forecast"</b></span><span class="arrow">→</span><span class="answer-chip">Cost Explorer</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Set custom budget"</b> · <b>"Alert when I exceed"</b></span><span class="arrow">→</span><span class="answer-chip">AWS Budgets</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Most granular hourly cost/usage data"</b> · <b>"Load into Athena/Redshift"</b></span><span class="arrow">→</span><span class="answer-chip">Cost &amp; Usage Report</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Estimate costs before deploying"</b></span><span class="arrow">→</span><span class="answer-chip">Pricing Calculator</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Categorize/track costs by project/team"</b></span><span class="arrow">→</span><span class="answer-chip">Cost Allocation Tags</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Free plan"</b> · <b>"Only billing questions"</b></span><span class="arrow">→</span><span class="answer-chip">Basic Support</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Just testing/experimenting"</b></span><span class="arrow">→</span><span class="answer-chip">Developer Support</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Production workloads"</b> · <b>"Full Trusted Advisor"</b> · <b>"Support API"</b></span><span class="arrow">→</span><span class="answer-chip">Business Support</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Business-critical"</b> · <b>"TAM"</b> · <b>"15-min response"</b></span><span class="arrow">→</span><span class="answer-chip">Enterprise Support</span></div>
+  </div>
+
+  <h2 id="s12" class="section-title"><span class="num">12</span>Global Infrastructure</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Geographic area"</b> containing multiple AZs</span><span class="arrow">→</span><span class="answer-chip">AWS Region</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"One or more data centers with redundant power/networking"</b>, isolated</span><span class="arrow">→</span><span class="answer-chip">Availability Zone</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Cache content close to users"</b> · <b>"CloudFront POP"</b></span><span class="arrow">→</span><span class="answer-chip">Edge Location</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"AWS hardware in your own data center"</b> · <b>"Hybrid"</b></span><span class="arrow">→</span><span class="answer-chip">Outposts</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Extend AWS closer to metro users"</b> for ultra-low latency</span><span class="arrow">→</span><span class="answer-chip">Local Zones</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"AWS at the 5G edge"</b> for mobile apps</span><span class="arrow">→</span><span class="answer-chip">Wavelength</span></div>
+  </div>
+
+  <h2 id="s13" class="section-title"><span class="num">13</span>Well-Architected &amp; Shared Responsibility</h2>
+  <div class="cheat-group">
+    <div class="cheat-row"><span class="trigger"><b>"Recover from disruption"</b> · <b>"Scale to demand"</b></span><span class="arrow">→</span><span class="answer-chip">Reliability</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Run and monitor workloads"</b> · <b>"Continuous improvement"</b></span><span class="arrow">→</span><span class="answer-chip">Operational Excellence</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Use resources efficiently"</b> as tech/demand evolves</span><span class="arrow">→</span><span class="answer-chip">Performance Efficiency</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Protect data / systems / assets"</b></span><span class="arrow">→</span><span class="answer-chip">Security Pillar</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Minimize environmental impact"</b></span><span class="arrow">→</span><span class="answer-chip">Sustainability</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Physical security of data centers"</b> · <b>"Hardware"</b> · <b>"Host OS"</b></span><span class="arrow">→</span><span class="answer-chip">AWS (Security OF the Cloud)</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Guest OS patching"</b> · <b>"Data encryption choice"</b> · <b>"IAM setup"</b> · <b>"Security groups"</b></span><span class="arrow">→</span><span class="answer-chip">Customer (Security IN the Cloud)</span></div>
+    <div class="cheat-row"><span class="trigger"><b>"Awareness training"</b> · <b>"Config management"</b> · <b>"Patching"</b></span><span class="arrow">→</span><span class="answer-chip">Shared Control</span></div>
+  </div>
+
+  <div id="quiz-start" class="rapid-intro">Cheat sheets loaded. Now lock in points — <b>65 rapid-fire questions</b> across all 13 categories. Filter by topic if you want to drill one area at a time.</div>
+
+  <div class="filter-nav" id="filter-nav"></div>
+
+  <div id="quiz"></div>
+  <div id="results"></div>
+</div>
+
+<script>
+const CATS = {
+  storage:"Storage", network:"Network", monitor:"Monitoring", lb:"Load Balancers",
+  db:"Databases", deploy:"Deployment", sec:"Security & IAM", compute:"Compute",
+  migrate:"Migration", analytics:"Analytics", billing:"Billing & Support",
+  global:"Global Infra", warch:"Well-Arch & Shared Resp"
+};
+
+const QUESTIONS = [
+  // STORAGE (7)
+  {id:1, c:"storage", q:'A company needs storage concurrently accessed by hundreds of EC2 instances as a shared file system. Best fit?', opts:['Amazon EBS','Amazon S3','Amazon EFS','S3 Glacier'], correct:2, hit:'<b>"Concurrent access by hundreds of EC2s"</b> → EFS.'},
+  {id:2, c:"storage", q:'A media site hosts a static website directly from storage with no web server. Best service?', opts:['Amazon EBS','Amazon S3','Amazon EFS','Amazon EC2'], correct:1, hit:'<b>"Static website hosting"</b> → S3.'},
+  {id:3, c:"storage", q:'A single EC2 instance needs a virtual hard drive for its root/data volume. Which?', opts:['Amazon S3','Amazon EBS','Amazon EFS','S3 Glacier'], correct:1, hit:'<b>"Virtual hard drive," single EC2</b> → EBS.'},
+  {id:4, c:"storage", q:'A hospital archives compliance records rarely accessed, tolerating 12-48 hour retrieval, at lowest possible cost.', opts:['S3 Standard','S3 Glacier Instant Retrieval','S3 Glacier Deep Archive','Amazon EFS'], correct:2, hit:'<b>"Cheapest, 12-48 hour retrieval"</b> → Glacier Deep Archive.'},
+  {id:5, c:"storage", q:'Users upload millions of photos needing global reach and 11 nines of durability.', opts:['Amazon EBS','Amazon EFS','Amazon S3','Amazon RDS'], correct:2, hit:'<b>"Object storage, 11 nines"</b> → S3.'},
+  {id:6, c:"storage", q:'An on-premises application needs seamless access to cloud storage via SMB, mounting AWS storage locally.', opts:['Amazon S3','Storage Gateway','Amazon EFS','Snowball'], correct:1, hit:'<b>"On-prem app + hybrid cloud storage"</b> → Storage Gateway.'},
+  {id:7, c:"storage", q:'A Windows-based workload needs a fully managed SMB file share.', opts:['Amazon EFS','Amazon FSx','Amazon S3','Amazon EBS'], correct:1, hit:'<b>"Windows file shares / SMB"</b> → FSx.'},
+
+  // NETWORK (7)
+  {id:8, c:"network", q:'On-prem to AWS: dedicated, physical network connection that bypasses the public internet.', opts:['Site-to-Site VPN','Direct Connect','Transit Gateway','Route 53'], correct:1, hit:'<b>"Dedicated, physical, bypasses internet"</b> → Direct Connect.'},
+  {id:9, c:"network", q:'Encrypted tunnel from an office network to AWS over the public internet, set up quickly.', opts:['Direct Connect','Site-to-Site VPN','Transit Gateway','VPC Peering'], correct:1, hit:'<b>"Encrypted tunnel over the public internet"</b> → VPN.'},
+  {id:10, c:"network", q:'A company has 40 VPCs and multiple on-prem sites that all need to talk to each other without a mesh of point-to-point links.', opts:['VPC Peering','Transit Gateway','NAT Gateway','Internet Gateway'], correct:1, hit:'<b>"Hub and spoke"</b> → Transit Gateway.'},
+  {id:11, c:"network", q:'Two VPCs in the same account communicate over private IPs, no on-prem involved.', opts:['Transit Gateway','VPC Peering','Direct Connect','VPN'], correct:1, hit:'<b>"Two VPCs, direct"</b> → VPC Peering.'},
+  {id:12, c:"network", q:'Private subnet instances need outbound internet for updates, but internet must never initiate connections in.', opts:['Internet Gateway','NAT Gateway','Virtual Private Gateway','Egress-Only IGW'], correct:1, hit:'<b>"Private subnet, outbound only"</b> → NAT Gateway.'},
+  {id:13, c:"network", q:'A global site wants images cached close to users worldwide to reduce latency.', opts:['Route 53','CloudFront','ELB','Global Accelerator'], correct:1, hit:'<b>"CDN, cache close to users"</b> → CloudFront.'},
+  {id:14, c:"network", q:'A company registers a domain and wants to route users to different regional endpoints based on latency.', opts:['CloudFront','Route 53','ALB','Direct Connect'], correct:1, hit:'<b>"DNS, latency routing"</b> → Route 53.'},
+
+  // MONITORING (6)
+  {id:15, c:"monitor", q:'Ops team wants CPU/memory dashboards and alarms on thresholds for EC2 fleet.', opts:['CloudTrail','CloudWatch','Config','Artifact'], correct:1, hit:'<b>"Metrics, alarms"</b> → CloudWatch.'},
+  {id:16, c:"monitor", q:'A CISO needs who deleted an EC2 instance at 3PM yesterday, from what IP.', opts:['CloudWatch','CloudTrail','Config','Trusted Advisor'], correct:1, hit:'<b>"Who did what, when, from where"</b> → CloudTrail.'},
+  {id:17, c:"monitor", q:'A compliance officer needs config drift history for security groups against a baseline.', opts:['CloudWatch','CloudTrail','AWS Config','Artifact'], correct:2, hit:'<b>"Config history, resource compliance"</b> → AWS Config.'},
+  {id:18, c:"monitor", q:'The team wants real-time recommendations across cost, security, fault tolerance, performance limits.', opts:['Config','CloudTrail','Trusted Advisor','CloudWatch'], correct:2, hit:'<b>"Best-practice recommendations"</b> → Trusted Advisor.'},
+  {id:19, c:"monitor", q:'Auditors need to download SOC 2 and PCI DSS compliance reports for AWS.', opts:['AWS Artifact','Trusted Advisor','Security Hub','Compliance Center'], correct:0, hit:'<b>"Compliance reports (SOC/PCI/ISO)"</b> → Artifact.'},
+  {id:20, c:"monitor", q:'A holding company wants centralized billing and policy control across 30 AWS accounts.', opts:['AWS Organizations','Control Tower','Config','IAM'], correct:0, hit:'<b>"Manage many accounts, consolidated billing"</b> → Organizations.'},
+
+  // LOAD BALANCERS (4)
+  {id:21, c:"lb", q:'Route /images to one target group and /api to another, based on URL path.', opts:['NLB','ALB','Classic LB','GWLB'], correct:1, hit:'<b>"URL path routing, Layer 7"</b> → ALB.'},
+  {id:22, c:"lb", q:'Trading platform: millions of requests/sec, ultra-low latency, TCP with static IP.', opts:['ALB','NLB','Classic LB','Route 53'], correct:1, hit:'<b>"Ultra-low latency, static IP, TCP"</b> → NLB.'},
+  {id:23, c:"lb", q:'Minimum AZs for a highly available load balancer setup?', opts:['1','2','3','4'], correct:1, hit:'Always <b>at least 2 AZs</b>.'},
+  {id:24, c:"lb", q:'Legacy app still in EC2-Classic needing basic load balancing.', opts:['ALB','NLB','Classic LB','GWLB'], correct:2, hit:'<b>"EC2-Classic legacy"</b> → Classic LB.'},
+
+  // DATABASES (6)
+  {id:25, c:"db", q:'MySQL-compatible engine with 5x throughput of standard MySQL and up to 15 read replicas.', opts:['RDS for MySQL','Aurora','DynamoDB','Redshift'], correct:1, hit:'<b>"5x throughput, 15 replicas"</b> → Aurora.'},
+  {id:26, c:"db", q:'Single-digit millisecond latency at unpredictable scale, flexible schema.', opts:['RDS','Aurora','DynamoDB','ElastiCache'], correct:2, hit:'<b>"NoSQL, single-digit ms"</b> → DynamoDB.'},
+  {id:27, c:"db", q:'Data warehouse for BI dashboards running SQL against TB of historical data.', opts:['Aurora','Redshift','RDS','DynamoDB'], correct:1, hit:'<b>"Data warehouse, BI, OLAP"</b> → Redshift.'},
+  {id:28, c:"db", q:'App needs sub-millisecond read cache in front of a SQL database.', opts:['DAX','ElastiCache','Redshift','RDS'], correct:1, hit:'<b>"In-memory cache for SQL reads"</b> → ElastiCache. (DAX is for DynamoDB.)'},
+  {id:29, c:"db", q:'MongoDB-compatible managed document database.', opts:['DynamoDB','DocumentDB','Aurora','Redshift'], correct:1, hit:'<b>"MongoDB compatible"</b> → DocumentDB.'},
+  {id:30, c:"db", q:'Team wants full control of guest OS on a database server they patch themselves.', opts:['RDS','EC2','Aurora','DynamoDB'], correct:1, hit:'<b>"Customer manages guest OS"</b> → EC2.'},
+
+  // DEPLOYMENT (5)
+  {id:31, c:"deploy", q:'Upload code and let AWS auto-provision EC2, ELB, and Auto Scaling.', opts:['CloudFormation','Elastic Beanstalk','OpsWorks','EC2'], correct:1, hit:'<b>"Upload code, AWS handles the rest"</b> → Beanstalk.'},
+  {id:32, c:"deploy", q:'Deploy the same application update to EC2 fleet AND on-premises servers.', opts:['CloudFormation','Beanstalk','CodeDeploy','Batch'], correct:2, hit:'<b>"Deploy to on-premises too"</b> → CodeDeploy.'},
+  {id:33, c:"deploy", q:'Team already uses Chef cookbooks and wants a managed AWS service that understands Chef.', opts:['CloudFormation','OpsWorks','Beanstalk','CodeDeploy'], correct:1, hit:'<b>"Chef/Puppet"</b> → OpsWorks.'},
+  {id:34, c:"deploy", q:'Define VPC, EC2, RDS, IAM roles as one repeatable text template.', opts:['OpsWorks','CodeDeploy','CloudFormation','Batch'], correct:2, hit:'<b>"Infrastructure as code, templates"</b> → CloudFormation.'},
+  {id:35, c:"deploy", q:'A team wants a managed private Git repo hosted on AWS.', opts:['CodeBuild','CodeCommit','CodeDeploy','CodePipeline'], correct:1, hit:'<b>"Git repo hosting"</b> → CodeCommit.'},
+
+  // SECURITY (7)
+  {id:36, c:"sec", q:'Which service manages users, groups, roles, and access policies?', opts:['IAM','KMS','GuardDuty','WAF'], correct:0, hit:'<b>"Who can do what"</b> → IAM.'},
+  {id:37, c:"sec", q:'A company wants to store database passwords with automatic rotation and secure retrieval.', opts:['KMS','Systems Manager Parameter Store','Secrets Manager','S3 with encryption'], correct:2, hit:'<b>"Store DB passwords with auto rotation"</b> → Secrets Manager.'},
+  {id:38, c:"sec", q:'Block SQL injection and cross-site scripting attacks against a public web application.', opts:['Shield','WAF','GuardDuty','Inspector'], correct:1, hit:'<b>"Block SQL injection / XSS"</b> → WAF.'},
+  {id:39, c:"sec", q:'Automatically detect malicious/unauthorized activity in AWS accounts using threat intel.', opts:['GuardDuty','Macie','Inspector','Config'], correct:0, hit:'<b>"Threat detection in account"</b> → GuardDuty.'},
+  {id:40, c:"sec", q:'Discover and classify sensitive PII sitting in S3 buckets.', opts:['GuardDuty','Macie','Inspector','KMS'], correct:1, hit:'<b>"PII in S3"</b> → Macie.'},
+  {id:41, c:"sec", q:'Scan EC2 instances and container images for known vulnerabilities.', opts:['GuardDuty','Macie','Inspector','Security Hub'], correct:2, hit:'<b>"Vulnerability scans on EC2/containers"</b> → Inspector.'},
+  {id:42, c:"sec", q:'Provision free public SSL/TLS certificates for a load balancer.', opts:['ACM','KMS','Secrets Manager','Shield'], correct:0, hit:'<b>"SSL/TLS certificates"</b> → ACM.'},
+
+  // COMPUTE (6)
+  {id:43, c:"compute", q:'Run code in response to events without provisioning servers, billed per millisecond.', opts:['EC2','Lambda','ECS','Batch'], correct:1, hit:'<b>"Run code, no servers, pay per ms"</b> → Lambda.'},
+  {id:44, c:"compute", q:'Run Docker containers with AWS-native orchestration (not Kubernetes).', opts:['EKS','ECS','Beanstalk','Batch'], correct:1, hit:'<b>"Docker containers, AWS-native"</b> → ECS.'},
+  {id:45, c:"compute", q:'Managed Kubernetes control plane on AWS.', opts:['ECS','EKS','Fargate','Batch'], correct:1, hit:'<b>"Managed Kubernetes"</b> → EKS.'},
+  {id:46, c:"compute", q:'Run containers without managing any EC2 hosts (serverless containers).', opts:['ECS on EC2','Fargate','Lambda','Batch'], correct:1, hit:'<b>"Serverless containers, no EC2"</b> → Fargate.'},
+  {id:47, c:"compute", q:'A dev wants a simple VPS with fixed monthly price to host WordPress.', opts:['EC2','Lightsail','Beanstalk','ECS'], correct:1, hit:'<b>"Simple VPS, fixed price, WordPress"</b> → Lightsail.'},
+  {id:48, c:"compute", q:'A fault-tolerant batch workload where the company wants up to 90% off, accepting AWS may reclaim capacity.', opts:['On-Demand','Reserved Instance','Spot Instance','Dedicated Host'], correct:2, hit:'<b>"Up to 90% off, reclaimable"</b> → Spot.'},
+
+  // MIGRATION (5)
+  {id:49, c:"migrate", q:'Ship 80 TB of data to AWS with a physical device (network too slow).', opts:['DataSync','Snowball','Storage Gateway','DMS'], correct:1, hit:'<b>"Physical device, terabytes"</b> → Snowball.'},
+  {id:50, c:"migrate", q:'Migrate a production Oracle DB to Aurora with minimal downtime.', opts:['DMS','SCT','DataSync','Migration Hub'], correct:0, hit:'<b>"Migrate DB with minimal downtime"</b> → DMS.'},
+  {id:51, c:"migrate", q:'Convert Oracle schema/stored procedures to PostgreSQL syntax before the migration.', opts:['DMS','SCT (Schema Conversion Tool)','Glue','DataSync'], correct:1, hit:'<b>"Convert schema between engines"</b> → SCT.'},
+  {id:52, c:"migrate", q:'Continuously sync files from an on-prem NAS to Amazon S3 over the network.', opts:['Snowball','DataSync','Storage Gateway','Direct Connect'], correct:1, hit:'<b>"Sync files on-prem to AWS"</b> → DataSync.'},
+  {id:53, c:"migrate", q:'Track progress of a multi-workload migration across DMS, MGN, and other services.', opts:['CloudWatch','Migration Hub','CloudFormation','Control Tower'], correct:1, hit:'<b>"Track migration progress"</b> → Migration Hub.'},
+
+  // ANALYTICS (4)
+  {id:54, c:"analytics", q:'Query data sitting in S3 using standard SQL, serverless (no infrastructure).', opts:['Redshift','Athena','EMR','QuickSight'], correct:1, hit:'<b>"Query S3 with SQL, serverless"</b> → Athena.'},
+  {id:55, c:"analytics", q:'Build interactive BI dashboards on AWS data sources.', opts:['Athena','QuickSight','Glue','Kinesis'], correct:1, hit:'<b>"BI dashboards, visualizations"</b> → QuickSight.'},
+  {id:56, c:"analytics", q:'Ingest real-time streaming clickstream data from a website at scale.', opts:['Kinesis','EMR','Glue','MSK'], correct:0, hit:'<b>"Real-time streaming ingest"</b> → Kinesis.'},
+  {id:57, c:"analytics", q:'Run managed Hadoop/Spark clusters for large-scale data processing.', opts:['EMR','Redshift','Glue','Athena'], correct:0, hit:'<b>"Managed Hadoop/Spark"</b> → EMR.'},
+
+  // BILLING & SUPPORT (5)
+  {id:58, c:"billing", q:'Visualize and analyze past AWS costs, forecast future spending, break down by service.', opts:['Cost Explorer','Budgets','CUR','Pricing Calculator'], correct:0, hit:'<b>"Visualize past costs, forecast"</b> → Cost Explorer.'},
+  {id:59, c:"billing", q:'Set a $500/mo custom budget and get alerted when forecasted spend exceeds it.', opts:['Cost Explorer','AWS Budgets','CUR','Trusted Advisor'], correct:1, hit:'<b>"Custom budget with alerts"</b> → Budgets.'},
+  {id:60, c:"billing", q:'A company estimates cost of a new architecture (EC2, S3, RDS) *before* deploying.', opts:['Cost Explorer','Pricing Calculator','Budgets','CUR'], correct:1, hit:'<b>"Estimate costs before deploying"</b> → Pricing Calculator.'},
+  {id:61, c:"billing", q:'Business-critical prod workload needs a Technical Account Manager and 15-min response on outages.', opts:['Developer','Business','Enterprise On-Ramp','Enterprise'], correct:3, hit:'<b>"TAM, 15-min response, business-critical"</b> → Enterprise Support.'},
+  {id:62, c:"billing", q:'Cheapest plan that still gives access to the AWS Support API programmatically.', opts:['Basic','Developer','Business','Enterprise'], correct:2, hit:'<b>"Cheapest with Support API"</b> → Business (API starts here).'},
+
+  // GLOBAL INFRA (2)
+  {id:63, c:"global", q:'A discrete, isolated set of data centers with redundant power and networking within a Region.', opts:['Region','Availability Zone','Edge Location','Outpost'], correct:1, hit:'<b>"Isolated DCs within a region"</b> → AZ.'},
+  {id:64, c:"global", q:'A CloudFront cache site that serves content close to end users worldwide.', opts:['Region','Availability Zone','Edge Location','Local Zone'], correct:2, hit:'<b>"CloudFront cache, close to users"</b> → Edge Location.'},
+
+  // WELL-ARCH & SHARED RESP (1)
+  {id:65, c:"warch", q:'Under the Shared Responsibility Model, which task is solely the CUSTOMER\'s responsibility?', opts:['Patching the host hypervisor','Physical security of AWS data centers','Configuring IAM users and security groups','Maintaining the underlying network hardware'], correct:2, hit:'Customer = Security <b>IN</b> the Cloud (IAM, guest OS, data). AWS = Security <b>OF</b> the Cloud (hardware, host OS, physical).'}
+];
+
+let answered = {};
+let currentFilter = "all";
+
+function buildFilterNav(){
+  const nav = document.getElementById('filter-nav');
+  const counts = {};
+  QUESTIONS.forEach(q=>{counts[q.c]=(counts[q.c]||0)+1});
+  let html = `<button class="filter-tab active" data-c="all" onclick="filterCat('all')">ALL (${QUESTIONS.length})</button>`;
+  Object.keys(CATS).forEach(c=>{
+    if(counts[c]) html += `<button class="filter-tab" data-c="${c}" onclick="filterCat('${c}')">${CATS[c]} (${counts[c]})</button>`;
+  });
+  nav.innerHTML = html;
+}
+function filterCat(c){
+  currentFilter=c;
+  document.querySelectorAll('.filter-tab').forEach(el=>el.classList.toggle('active', el.dataset.c===c));
+  renderQuiz();
+}
+
+function renderQuiz(){
+  const list = QUESTIONS.filter(q => currentFilter==='all' || q.c===currentFilter);
+  document.getElementById('quiz').innerHTML = list.map(q => {
+    const state = answered[q.id];
+    const optsHtml = q.opts.map((opt,i)=>{
+      let cls = 'opt';
+      if(state !== undefined){
+        cls += ' locked';
+        if(i===q.correct) cls += ' correct';
+        else if(i===state) cls += ' wrong';
+      }
+      return `<button class="${cls}" onclick="selectAnswer(${q.id},${i})" ${state!==undefined?'disabled':''}><span class="letter">${String.fromCharCode(65+i)}</span> ${opt}</button>`;
+    }).join('');
+    return `<div class="q-card" id="qcard-${q.id}">
+      <span class="q-num">Q${q.id} · ${CATS[q.c]}</span>
+      <div class="q-text">${q.q}</div>
+      <div class="options">${optsHtml}</div>
+      <div class="keyword-hit ${state!==undefined?'show':''}">${q.hit}</div>
+    </div>`;
+  }).join('');
+  updateScore();
+  maybeShowResults();
+}
+
+function selectAnswer(id, idx){
+  if(answered[id]!==undefined) return;
+  answered[id]=idx;
+  renderQuiz();
+  const el = document.getElementById('qcard-'+id);
+  if(el){
+    const next = el.nextElementSibling;
+    if(next) setTimeout(()=>next.scrollIntoView({behavior:'smooth',block:'center'}), 250);
+  }
+}
+
+function correctCount(){
+  return Object.entries(answered).filter(([id,idx])=>{
+    const q=QUESTIONS.find(q=>q.id==id);
+    return q && q.correct===idx;
+  }).length;
+}
+function updateScore(){
+  const c=correctCount();
+  document.getElementById('live-score').textContent=c;
+  const pct=Math.min(100,Math.round((c/QUESTIONS.length)*100));
+  document.getElementById('pass-fill').style.width=pct+'%';
+}
+function maybeShowResults(){
+  const results=document.getElementById('results');
+  if(Object.keys(answered).length===QUESTIONS.length){
+    const c=correctCount();
+    const pct=Math.round((c/QUESTIONS.length)*100);
+    let vc='study', vt='Below the line — but you now have the pattern. Reread misses above, rerun.';
+    if(pct>=70){vc='pass'; vt="Passing-range on keyword match alone. The pattern is working.";}
+    else if(pct>=55){vc='close'; vt="Close. A handful of pairings still to lock in — check misses above.";}
+    results.innerHTML=`<footer class="done">
+      <h2>Drill complete</h2>
+      <div class="big-score">${c}/${QUESTIONS.length} (${pct}%)</div>
+      <div class="verdict ${vc}">${vt}</div>
+      <p style="color:var(--muted);font-size:.85rem">Re-run any specific category using the filter chips above.</p>
+      <button class="reset-btn" onclick="resetDrill()">Retake drill</button>
+    </footer>`;
+  } else { results.innerHTML=''; }
+}
+function resetDrill(){answered={}; renderQuiz(); window.scrollTo({top:0,behavior:'smooth'});}
+
+buildFilterNav();
+renderQuiz();
+</script>
+</body>
+</html>

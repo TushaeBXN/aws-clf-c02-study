@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS CLF-C02 · Full Mock Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090d16;--surface:#101726;--surface2:#1a2333;--surface3:#0a0f1a;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.13);
+  --text:#f1f5f9;--muted:#8ea0bf;--hint:#475569;
+  --accent:#ff6b35;--blue:#38bdf8;--green:#34d399;--red:#f87171;
+  --amber:#fbbf24;--purple:#a78bfa;
+  --radius:10px;--radius-lg:14px;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;min-height:100vh}
+.header{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(9,13,22,0.97);backdrop-filter:blur(12px);z-index:100;gap:10px;flex-wrap:wrap}
+.logo{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.05em}
+.logo span{color:var(--muted)}
+.hbadges{display:flex;gap:6px;flex-wrap:wrap}
+.hb{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;border:1px solid}
+.hb-o{border-color:var(--accent);color:var(--accent)}
+.hb-b{border-color:var(--blue);color:var(--blue)}
+.hb-p{border-color:var(--purple);color:var(--purple)}
+.hb-g{border-color:var(--green);color:var(--green)}
+.top-bar{background:var(--surface3);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.timer{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--text);min-width:64px}
+.timer.warn{color:var(--amber)}
+.timer.danger{color:var(--red);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.prog-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.prog-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);width:0%;transition:width 0.35s}
+.prog-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.domain-lbl{font-family:var(--mono);font-size:10px;color:var(--purple);white-space:nowrap}
+
+/* START SCREEN */
+.start-wrap{max-width:720px;margin:50px auto;padding:0 20px;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px}
+.start-wrap h1{font-family:var(--mono);font-size:clamp(22px,4vw,36px);font-weight:700;line-height:1.2;margin-bottom:8px}
+.start-wrap h1 em{font-style:normal;color:var(--accent)}
+.start-wrap p{color:var(--muted);font-size:14px;margin-bottom:24px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:22px;text-align:left}
+.ic{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.ic-l{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:4px}
+.ic-v{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text)}
+.ic-s{font-size:12px;color:var(--muted);margin-top:2px}
+.domain-breakdown{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:24px;text-align:left}
+.domain-breakdown h3{font-family:var(--mono);font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+.db-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.db-row:last-child{margin-bottom:0}
+.db-name{font-size:13px;color:var(--text);min-width:240px}
+.db-bar-wrap{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.db-bar{height:100%;border-radius:3px}
+.db-pct{font-family:var(--mono);font-size:10px;color:var(--muted);min-width:36px;text-align:right}
+.start-btn{display:inline-block;padding:13px 38px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:opacity 0.15s}
+.start-btn:hover{opacity:0.88}
+
+/* MAIN */
+.main{max-width:780px;margin:0 auto;padding:18px 20px 60px}
+.ribbon{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;text-align:center}
+.r-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px}
+.r-val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text)}
+.r-sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px}
+.qnav-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:14px}
+.qnav-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:7px}
+.qnav-grid{display:flex;flex-wrap:wrap;gap:4px}
+.qng{width:26px;height:26px;border-radius:5px;border:1px solid var(--border2);background:transparent;font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--muted);transition:all 0.15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qng:hover{background:var(--surface2);color:var(--text)}
+.qng.cur{border-color:var(--accent);color:var(--accent);background:rgba(255,107,53,0.1)}
+.qng.ok{background:rgba(52,211,153,0.14);border-color:rgba(52,211,153,0.38);color:var(--green)}
+.qng.err{background:rgba(248,113,113,0.11);border-color:rgba(248,113,113,0.32);color:var(--red)}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:14px}
+.q-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:11px}
+.q-num{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)}
+.d-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px}
+.d1{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);color:var(--amber)}
+.d2{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.25);color:var(--green)}
+.d3{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.25);color:var(--blue)}
+.d4{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.25);color:var(--purple)}
+.diff-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px}
+.diff-e{background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.2);color:var(--green)}
+.diff-m{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);color:var(--amber)}
+.multi-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(56,189,248,0.08);border:1px solid rgba(56,189,248,0.2);color:var(--blue)}
+.q-txt{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:16px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;padding:11px 15px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);text-align:left;font-family:var(--sans);font-size:13.5px;cursor:pointer;transition:all 0.15s;display:flex;gap:10px;align-items:flex-start}
+.opt:hover:not(:disabled){background:var(--surface2);border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt-l{font-family:var(--mono);color:var(--hint);font-weight:700;min-width:18px;flex-shrink:0;margin-top:2px}
+.opt.correct{background:rgba(52,211,153,0.08);border-color:var(--green)!important}
+.opt.correct .opt-l{color:var(--green)}
+.opt.wrong{background:rgba(248,113,113,0.06);border-color:var(--red)!important}
+.opt.wrong .opt-l{color:var(--red)}
+.feedback{margin-top:12px;padding:12px 15px;border-radius:var(--radius);font-size:13px;display:none;line-height:1.65}
+.feedback.show{display:block}
+.feedback.ok{background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.16);color:var(--muted)}
+.feedback.ok .fb-head{color:var(--green);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+.feedback.err{background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.16);color:var(--muted)}
+.feedback.err .fb-head{color:var(--red);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nav-btn{padding:9px 18px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--sans);font-size:13px;cursor:pointer;transition:all 0.15s}
+.nav-btn:hover{background:var(--surface2)}
+.nav-btn.pri{border-color:var(--accent);color:var(--accent)}
+
+/* RESULTS */
+.results-page{display:none;max-width:780px;margin:18px auto;padding:0 20px 60px}
+.res-hero{text-align:center;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px}
+.res-pct{font-family:var(--mono);font-size:54px;font-weight:700;line-height:1}
+.res-lbl{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:14px}
+.res-grade{display:inline-block;font-family:var(--mono);font-size:12px;padding:4px 14px;border-radius:6px;margin-bottom:16px}
+.grade-pass{background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:var(--green)}
+.grade-mid{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:var(--amber)}
+.grade-low{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--red)}
+.res-stats{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.rs-item{text-align:center}
+.rs-val{font-family:var(--mono);font-size:24px;font-weight:700}
+.rs-lbl{font-size:12px;color:var(--muted)}
+.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:520px){.breakdown-grid{grid-template-columns:1fr}}
+.bd-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.bd-head{font-family:var(--mono);font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px}
+.bd-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:4px}
+.bd-row span:last-child{font-family:var(--mono);font-size:11px;color:var(--text)}
+.bd-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:2px;margin-bottom:7px}
+.bd-fill{height:100%;border-radius:2px}
+.blind-spot{background:var(--surface);border:1px solid rgba(248,113,113,0.2);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
+.bs-head{font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+.bs-item{border-bottom:1px solid var(--border);padding-bottom:13px;margin-bottom:13px}
+.bs-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.bs-q{font-size:14px;color:var(--text);margin-bottom:5px;line-height:1.5}
+.bs-tags{display:flex;gap:5px;margin-bottom:4px;flex-wrap:wrap}
+.bs-correct{font-family:var(--mono);font-size:11px;color:var(--green)}
+.bs-exp{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.6}
+.empty-bs{text-align:center;padding:22px;font-family:var(--mono);font-size:13px;color:var(--green)}
+.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.res-btn{padding:10px 24px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;cursor:pointer;background:transparent;color:var(--text);font-family:var(--sans);transition:all 0.15s}
+.res-btn:hover{background:var(--surface2)}
+.res-btn.pri{border-color:var(--accent);color:var(--accent)}
+.footer{border-top:1px solid var(--border);padding:14px 24px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--hint)}
+@media(max-width:560px){
+  .ribbon{grid-template-columns:repeat(2,1fr)}
+  .header,.main,.results-page{padding-left:14px;padding-right:14px}
+  .hbadges{display:none}.q-card{padding:16px 14px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">CLF-C02<span> · Mock Exam</span></div>
+  <div class="hbadges">
+    <span class="hb hb-o">70 Questions</span>
+    <span class="hb hb-b">90 Min</span>
+    <span class="hb hb-p">All 4 Domains</span>
+    <span class="hb hb-g">Live Score</span>
+  </div>
+</header>
+
+<div class="top-bar" id="top-bar" style="display:none">
+  <div class="timer" id="timer-display">90:00</div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-lbl" id="prog-lbl">0 / 70 answered</div>
+  </div>
+  <div class="domain-lbl" id="domain-lbl">Domain 1 · Cloud Concepts</div>
+</div>
+
+<!-- START SCREEN -->
+<div class="start-wrap" id="start-screen">
+  <div class="eyebrow">AWS Certified Cloud Practitioner · CLF-C02</div>
+  <h1>Full <em>Mock Exam</em></h1>
+  <p>70 questions across all 4 domains. Instant feedback every answer. Score and accuracy tracked live. Full blind spot analysis at the end.</p>
+
+  <div class="info-grid">
+    <div class="ic"><div class="ic-l">Questions</div><div class="ic-v">70</div><div class="ic-s">50 scored on real exam</div></div>
+    <div class="ic"><div class="ic-l">Time limit</div><div class="ic-v">90 min</div><div class="ic-s">~77 sec per question</div></div>
+    <div class="ic"><div class="ic-l">Passing score</div><div class="ic-v">700</div><div class="ic-s">Out of 1,000</div></div>
+    <div class="ic"><div class="ic-l">Format</div><div class="ic-v">MCQ</div><div class="ic-s">Single + multi-select</div></div>
+  </div>
+
+  <div class="domain-breakdown">
+    <h3>Domain Breakdown · Official CLF-C02 Weights</h3>
+    <div class="db-row"><div class="db-name">Domain 1 · Cloud Concepts (24%)</div><div class="db-bar-wrap"><div class="db-bar" style="width:24%;background:var(--amber)"></div></div><div class="db-pct">17 Qs</div></div>
+    <div class="db-row"><div class="db-name">Domain 2 · Security &amp; Compliance (30%)</div><div class="db-bar-wrap"><div class="db-bar" style="width:30%;background:var(--green)"></div></div><div class="db-pct">21 Qs</div></div>
+    <div class="db-row"><div class="db-name">Domain 3 · Cloud Technology (34%)</div><div class="db-bar-wrap"><div class="db-bar" style="width:34%;background:var(--blue)"></div></div><div class="db-pct">24 Qs</div></div>
+    <div class="db-row"><div class="db-name">Domain 4 · Billing, Pricing &amp; Support (12%)</div><div class="db-bar-wrap"><div class="db-bar" style="width:12%;background:var(--purple)"></div></div><div class="db-pct">8 Qs</div></div>
+  </div>
+
+  <button class="start-btn" onclick="startExam()">Begin Mock Exam &#8594;</button>
+</div>
+
+<!-- EXAM AREA -->
+<div class="main" id="workspace" style="display:none">
+  <div class="ribbon">
+    <div class="r-card"><div class="r-lbl">Question</div><div class="r-val" id="rb-num">1</div><div class="r-sub" id="rb-of">of 70</div></div>
+    <div class="r-card"><div class="r-lbl">Correct</div><div class="r-val" id="rb-ok" style="color:var(--green)">0</div><div class="r-sub" id="rb-ok-sub">—</div></div>
+    <div class="r-card"><div class="r-lbl">Incorrect</div><div class="r-val" id="rb-err" style="color:var(--red)">0</div><div class="r-sub" id="rb-err-sub">—</div></div>
+    <div class="r-card"><div class="r-lbl">Accuracy</div><div class="r-val" id="rb-pct">—</div><div class="r-sub" id="rb-pct-sub">live</div></div>
+  </div>
+  <div class="qnav-wrap">
+    <div class="qnav-lbl">Navigator · green = correct · red = incorrect</div>
+    <div class="qnav-grid" id="qnav-grid"></div>
+  </div>
+  <div id="q-area"></div>
+  <div class="nav-row">
+    <button class="nav-btn" onclick="goTo(currentIdx-1)">&#8592; Prev</button>
+    <button class="nav-btn pri" onclick="goTo(currentIdx+1)">Next &#8594;</button>
+    <button class="nav-btn" style="border-color:var(--purple);color:var(--purple)" onclick="finishExam()">Finish &amp; Review</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-page" id="results-page">
+  <div class="res-hero">
+    <div class="res-pct" id="res-pct">—</div>
+    <div class="res-lbl" id="res-lbl">Exam complete.</div>
+    <div><span class="res-grade" id="res-grade"></span></div>
+    <div class="res-stats">
+      <div class="rs-item"><div class="rs-val" id="rs-ok" style="color:var(--green)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-err" style="color:var(--red)">0</div><div class="rs-lbl">Incorrect</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-skip" style="color:var(--amber)">0</div><div class="rs-lbl">Not answered</div></div>
+    </div>
+  </div>
+  <div class="breakdown-grid">
+    <div class="bd-card"><div class="bd-head">Score by Domain</div><div id="bd-domains"></div></div>
+    <div class="bd-card"><div class="bd-head">Estimated Scaled Score</div><div id="bd-scaled" style="padding-top:8px"></div></div>
+  </div>
+  <div class="blind-spot" id="bs-section">
+    <div class="bs-head">Blind Spot Analysis — Questions You Missed</div>
+    <div id="bs-list"></div>
+  </div>
+  <div class="res-actions">
+    <button class="res-btn pri" onclick="restartExam()">Retake Exam</button>
+    <button class="res-btn" onclick="reviewAll()">Review All Answers</button>
+  </div>
+</div>
+
+<footer class="footer">
+  AWS Certified Cloud Practitioner · CLF-C02 · Full Mock Exam · All 4 Domains · Based on Official Exam Guide
+</footer>
+
+<script>
+const LETTERS=['A','B','C','D','E'];
+const DIFF_CLS={e:'diff-e',m:'diff-m'};
+const DIFF_LBL={e:'Easy',m:'Medium'};
+const DOMAIN_NAMES={1:'Cloud Concepts',2:'Security & Compliance',3:'Cloud Technology',4:'Billing & Support'};
+const DOMAIN_CLS={1:'d1',2:'d2',3:'d3',4:'d4'};
+const DOMAIN_COLORS={1:'var(--amber)',2:'var(--green)',3:'var(--blue)',4:'var(--purple)'};
+
+const QS=[
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DOMAIN 1: CLOUD CONCEPTS (17 questions) — 24% of exam
+// Task 1.1: Benefits of the AWS Cloud
+// Task 1.2: Design principles / Well-Architected Framework
+// Task 1.3: Migration strategies / AWS CAF
+// Task 1.4: Cloud economics
+// ══════════════════════════════════════════════════════════════════════════════
+
+{id:1,dom:1,diff:'e',multi:false,
+ q:"Which cloud architecture design concept is supported by distributing workloads across multiple Availability Zones?",
+ opts:["A) Automation","B) Agility","C) Design for failure","D) Elasticity"],
+ ans:2,
+ exp:"Distributing workloads across multiple Availability Zones implements the 'design for failure' principle — anticipating that components will fail and architecting so the system keeps running when one AZ goes down. It is not about elasticity, agility, or automation."},
+
+{id:2,dom:1,diff:'e',multi:false,
+ q:"What is raised when a business deploys web servers across multiple AWS Regions?",
+ opts:["A) Coupling","B) Availability","C) Security","D) Durability"],
+ ans:1,
+ exp:"Deploying web servers across multiple AWS Regions increases availability and business continuity. If one Region experiences an outage, the other Regions continue serving traffic, keeping the business running."},
+
+{id:3,dom:1,diff:'e',multi:false,
+ q:"Which pillar of the AWS Well-Architected Framework is supported by the design philosophy of 'performing operations as code'?",
+ opts:["A) Security","B) Operational Excellence","C) Performance Efficiency","D) Reliability"],
+ ans:1,
+ exp:"Performing operations as code is a design principle of the Operational Excellence pillar. It means automating and executing operational procedures through code to reduce human error and enable consistent, repeatable operations."},
+
+{id:4,dom:1,diff:'m',multi:false,
+ q:"A company has fluctuating workloads including DynamoDB tables and ECS services with peak loads at times 10x the regular level. Which cloud feature allows the infrastructure to adapt to these demands?",
+ opts:["A) Agility","B) Global reach","C) Scalability","D) Security"],
+ ans:2,
+ exp:"Scalability allows infrastructure to expand and contract based on actual demand. Rather than provisioning for peak load permanently (and overpaying), AWS lets you scale resources up during peak periods and back down when demand drops."},
+
+{id:5,dom:1,diff:'e',multi:false,
+ q:"Which of the following is NOT one of the six advantages of cloud computing?",
+ opts:["A) Go global in minutes","B) The ability to trade variable expense for fixed expense","C) Benefit from massive economies of scale","D) Stop spending money running and maintaining data centers"],
+ ans:1,
+ exp:"The six advantages include trading FIXED expense for VARIABLE expense — not the other way around. The cloud converts upfront CapEx to variable OpEx. 'Trade variable expense for fixed expense' reverses the actual benefit."},
+
+{id:6,dom:1,diff:'e',multi:false,
+ q:"Which option is a benefit of the economies of scale based on the advantages of cloud computing?",
+ opts:["A) The ability to trade variable expense for fixed expense","B) Increased speed and agility","C) Lower variable costs over time due to AWS's aggregated usage across customers","D) No need to guess about capacity"],
+ ans:2,
+ exp:"Economies of scale means AWS can achieve lower per-unit costs by aggregating usage across hundreds of thousands of customers, passing these savings on as lower variable costs. This is the specific benefit of 'economies of scale' as an advantage."},
+
+{id:7,dom:1,diff:'m',multi:false,
+ q:"A company is building an application that needs to deliver images and videos globally with minimal latency. Which approach accomplishes this in a cost-effective manner?",
+ opts:["A) Deliver the content through Amazon CloudFront","B) Deploy the application in multiple Regions manually","C) Use AWS Direct Connect to all global users","D) Store content in Amazon EBS and replicate across Regions"],
+ ans:0,
+ exp:"Amazon CloudFront is a global CDN that caches content at edge locations worldwide. Users access content from the nearest edge location, delivering low latency at minimal cost without needing to deploy full infrastructure in every Region."},
+
+{id:8,dom:1,diff:'e',multi:false,
+ q:"A company is exploring AWS and needs to create a cost estimate for a project before the infrastructure is provisioned. Which AWS service or feature can be used to estimate costs before deployment?",
+ opts:["A) AWS Free Tier","B) AWS Cost Explorer","C) AWS Pricing Calculator","D) AWS Budgets"],
+ ans:2,
+ exp:"AWS Pricing Calculator is the purpose-built tool for estimating AWS costs before deploying resources. Cost Explorer analyzes existing spend. Budgets sets alerts. Free Tier provides limited free usage but is not an estimation tool."},
+
+{id:9,dom:1,diff:'m',multi:false,
+ q:"A company wants to make an upfront commitment for continued use of its production EC2 instances in exchange for the lowest overall cost. Which TWO pricing options meet this requirement? (Choose TWO)",
+ opts:["A) Spot Instances","B) Reserved Instances","C) On-Demand Instances","D) Compute Savings Plans","E) Dedicated Hosts"],
+ ans:[1,3],
+ exp:"Reserved Instances and Savings Plans both require an upfront commitment (1 or 3 years) in exchange for significant discounts (up to 72%). Spot Instances can be interrupted. On-Demand has no commitment but is more expensive. Dedicated Hosts are for specific licensing/compliance needs."},
+
+{id:10,dom:1,diff:'e',multi:false,
+ q:"Which AWS Cloud Adoption Framework (AWS CAF) capability belongs to the People perspective?",
+ opts:["A) Data architecture","B) Event management","C) Cloud fluency","D) Strategic partnership"],
+ ans:2,
+ exp:"Cloud fluency is a capability of the People perspective in AWS CAF. It focuses on building a cloud-competent workforce — ensuring people have the knowledge, skills, and behaviors needed to support cloud adoption. Data architecture is Platform perspective; Event management is Operations; Strategic partnership is Business perspective."},
+
+{id:11,dom:1,diff:'e',multi:false,
+ q:"Which of the following is an advantage a user experiences when they move workloads to the AWS Cloud?",
+ opts:["A) Having to manage data center infrastructure","B) Elimination of over-provisioning of infrastructure","C) Increased complexity of managing hardware","D) Higher fixed costs for compute resources"],
+ ans:1,
+ exp:"On-premises environments require guessing capacity and often lead to over-provisioning. AWS allows you to provision exactly what you need and scale dynamically, eliminating the waste of idle over-provisioned infrastructure."},
+
+{id:12,dom:1,diff:'m',multi:false,
+ q:"Which of the following are advantages of moving to the AWS Cloud? (Choose TWO)",
+ opts:["A) Users can implement AWS resources in all countries without any restrictions","B) AWS handles infrastructure patching and maintenance","C) Trade fixed infrastructure expenses for variable costs","D) Users never need to update applications","E) AWS operates all applications automatically"],
+ ans:[1,2],
+ exp:"Two real advantages: AWS manages the underlying infrastructure patching and maintenance (reducing operational overhead), and cloud computing converts fixed CapEx infrastructure costs to variable OpEx. AWS does not automatically run your applications or allow unrestricted global access without compliance considerations."},
+
+{id:13,dom:1,diff:'e',multi:false,
+ q:"What does the concept of agility mean in the context of AWS Cloud computing? (Choose TWO)",
+ opts:["A) The speed at which AWS delivers physical hardware","B) The ability to experiment and innovate more quickly with reduced cost of failure","C) The ability to access new technology resources within minutes","D) The ability to run workloads without any configuration","E) Fixed provisioning cycles measured in months"],
+ ans:[1,2],
+ exp:"Agility in cloud means: (1) experiments and innovations are cheap because failures can be quickly reversed, and (2) new technology resources are available within minutes rather than weeks or months of procurement cycles."},
+
+{id:14,dom:1,diff:'m',multi:false,
+ q:"An organization is moving to the AWS Cloud and wants to reduce costs by migrating from a NoSQL database solution to AWS. Which AWS service is fully managed and can automatically scale throughput capacity to meet database workload demands?",
+ opts:["A) Amazon RDS","B) Amazon Redshift","C) Amazon DynamoDB","D) Amazon Aurora"],
+ ans:2,
+ exp:"Amazon DynamoDB is a fully managed NoSQL database that automatically scales throughput capacity up or down based on demand with no server management. RDS and Aurora are relational (SQL). Redshift is a data warehouse."},
+
+{id:15,dom:1,diff:'m',multi:false,
+ q:"A company wants to migrate its monolithic on-premises application to AWS and divide it into microservices. Which cloud best practice does this represent?",
+ opts:["A) Use automation wherever possible","B) Remove single points of failure","C) Decouple components to reduce interdependencies","D) Design for failure and redundancy"],
+ ans:2,
+ exp:"Breaking a monolith into microservices is a direct implementation of decoupling — separating tightly coupled components into independent services that can be developed, deployed, and scaled independently. This reduces interdependencies so a failure in one service doesn't cascade to others."},
+
+{id:16,dom:1,diff:'e',multi:false,
+ q:"Which AWS cloud benefit directly references the ability to withstand failure with minimal downtime?",
+ opts:["A) Agility","B) Elasticity","C) High availability","D) Global reach"],
+ ans:2,
+ exp:"High availability is the cloud benefit that describes a system's ability to withstand failures with minimal downtime. It uses redundancy across multiple AZs or Regions to keep services running even when individual components fail."},
+
+{id:17,dom:1,diff:'m',multi:false,
+ q:"A software development framework allows a company to define cloud resources as code and provision them through AWS CloudFormation. Which AWS service is this?",
+ opts:["A) AWS CLI","B) AWS Developer Center","C) AWS Cloud Development Kit (CDK)","D) AWS CodeStar"],
+ ans:2,
+ exp:"AWS CDK (Cloud Development Kit) is an open-source framework that allows developers to define cloud infrastructure using familiar programming languages (Python, TypeScript, Java) and provisions it through CloudFormation. The CLI is for command-line operations. CodeStar is a developer collaboration service."},
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DOMAIN 2: SECURITY & COMPLIANCE (21 questions) — 30% of exam
+// Task 2.1: Shared Responsibility Model
+// Task 2.2: Security, governance, compliance
+// Task 2.3: Access management
+// Task 2.4: Security components and resources
+// ══════════════════════════════════════════════════════════════════════════════
+
+{id:18,dom:2,diff:'e',multi:false,
+ q:"Who is accountable for security and compliance under the AWS Shared Responsibility Model?",
+ opts:["A) AWS only","B) The customer only","C) Both AWS and the customer (shared)","D) A third-party governing body"],
+ ans:2,
+ exp:"Security and compliance is a SHARED responsibility. AWS is responsible for 'security of the cloud' (hardware, infrastructure, facilities). The customer is responsible for 'security in the cloud' (data, applications, OS configuration, IAM). Neither bears sole responsibility."},
+
+{id:19,dom:2,diff:'e',multi:false,
+ q:"A company is using Amazon DynamoDB. Which task is the CUSTOMER'S responsibility according to the AWS Shared Responsibility Model?",
+ opts:["A) Patching the DynamoDB database engine","B) Maintaining the physical hardware running DynamoDB","C) Managing access permissions and user authorization to the DynamoDB tables","D) Ensuring availability of the DynamoDB service across Regions"],
+ ans:2,
+ exp:"For managed services like DynamoDB, AWS handles the engine patching, physical hardware, and service availability. The customer is responsible for managing who has access — configuring IAM policies, roles, and permissions to control access to the DynamoDB tables."},
+
+{id:20,dom:2,diff:'m',multi:false,
+ q:"An e-commerce company has migrated its IT infrastructure from on-premises to the AWS Cloud. Which cost is the company's DIRECT responsibility?",
+ opts:["A) Costs of the underlying server hardware","B) Cost of the physical data center facilities","C) Cost of application software licenses","D) Cost of network infrastructure hardware"],
+ ans:2,
+ exp:"In the cloud, AWS owns the hardware, facilities, and network infrastructure. Application software licenses are the customer's direct responsibility — the company still needs to purchase and manage licenses for the software running ON their cloud infrastructure."},
+
+{id:21,dom:2,diff:'m',multi:false,
+ q:"A company is running a NoSQL database on an Amazon EC2 instance. Which task is AWS's responsibility in this scenario?",
+ opts:["A) Patching the NoSQL database software","B) Managing database user permissions","C) Maintaining the underlying virtualization infrastructure and physical hardware","D) Configuring security groups for the EC2 instance"],
+ ans:2,
+ exp:"When running a database ON EC2 (not a managed service), AWS is still responsible for the physical hardware and virtualization layer. The customer manages everything from the OS up — patching the database, configuring security groups, and managing user permissions."},
+
+{id:22,dom:2,diff:'m',multi:false,
+ q:"Which tasks are CUSTOMER responsibilities according to the AWS Shared Responsibility Model? (Choose TWO)",
+ opts:["A) Physical security of data center facilities","B) Patching the underlying server hardware","C) Managing IAM user permissions and access policies","D) Patching the guest operating system on EC2 instances","E) Maintaining the hypervisor layer"],
+ ans:[2,3],
+ exp:"Customers are responsible for security IN the cloud: managing IAM permissions (who can access what) and patching the guest OS on EC2 instances. Physical security, hardware patching, and hypervisor maintenance are all AWS's responsibility."},
+
+{id:23,dom:2,diff:'e',multi:false,
+ q:"Which AWS service can identify the person who made an API request when an Amazon EC2 instance was terminated?",
+ opts:["A) Amazon CloudWatch","B) AWS CloudTrail","C) AWS Compute Optimizer","D) Amazon EventBridge"],
+ ans:1,
+ exp:"AWS CloudTrail tracks user activity and API usage across your AWS account — recording who made each API call, when it was made, from which IP, and what action was taken. This includes EC2 TerminateInstances calls."},
+
+{id:24,dom:2,diff:'m',multi:false,
+ q:"Which of the following services can be used to block network traffic to an EC2 instance? (Choose TWO)",
+ opts:["A) Security Groups","B) Amazon VPC Flow Logs","C) Network ACLs","D) Amazon CloudWatch","E) AWS CloudTrail"],
+ ans:[0,2],
+ exp:"Security Groups are stateful firewalls at the instance level. Network ACLs are stateless firewalls at the subnet level. Both control inbound and outbound traffic. VPC Flow Logs capture traffic metadata but cannot block it. CloudWatch and CloudTrail are monitoring and auditing tools."},
+
+{id:25,dom:2,diff:'e',multi:false,
+ q:"Which AWS service gives users the ability to discover and protect sensitive data stored in Amazon S3 buckets?",
+ opts:["A) Amazon Detective","B) Amazon Macie","C) Amazon GuardDuty","D) AWS IAM"],
+ ans:1,
+ exp:"Amazon Macie uses machine learning and pattern matching to automatically discover, classify, and protect sensitive data such as PII and financial data in S3. GuardDuty detects threats. Detective investigates security incidents. IAM manages access but doesn't scan for sensitive data."},
+
+{id:26,dom:2,diff:'m',multi:false,
+ q:"Which AWS service is a cloud security posture management service that aggregates alerts from various AWS services and partner products in a standardized format?",
+ opts:["A) Amazon GuardDuty","B) AWS Config","C) Amazon Inspector","D) AWS Security Hub"],
+ ans:3,
+ exp:"AWS Security Hub aggregates, organizes, and prioritizes security alerts and findings from multiple AWS services (GuardDuty, Inspector, Macie) and partner products into a standardized format, providing a comprehensive view of security posture."},
+
+{id:27,dom:2,diff:'m',multi:false,
+ q:"A company is developing an application that uses multiple AWS services. The application needs to use temporary, limited-privilege credentials for authentication with other AWS APIs. Which option provides this?",
+ opts:["A) AWS IAM long-term access keys","B) IAM user accounts","C) AWS Security Token Service (STS)","D) Instance profiles for API Gateway"],
+ ans:2,
+ exp:"AWS Security Token Service (STS) provides temporary, limited-privilege security credentials. These expire automatically, reducing security risk compared to long-term IAM access keys. STS is the standard mechanism for temporary credential generation."},
+
+{id:28,dom:2,diff:'m',multi:false,
+ q:"Which recommendation complies with IAM security best practices when setting up an AWS account?",
+ opts:["A) Use the root user account for daily administrative tasks","B) Create one IAM user and share it across multiple administrators","C) Enable MFA on the root user and create individual IAM users with least-privilege permissions","D) Disable MFA for administrative users to speed up access"],
+ ans:2,
+ exp:"IAM best practices: protect the root account with MFA and avoid using it for daily tasks; create individual IAM users (not shared) with only the permissions they need (principle of least privilege); enable MFA for all privileged users."},
+
+{id:29,dom:2,diff:'e',multi:false,
+ q:"According to security best practices, how should an Amazon EC2 instance be given access to an Amazon S3 bucket?",
+ opts:["A) Hardcode IAM user access keys in the application code","B) Store access keys in an S3 bucket that the EC2 instance reads","C) Attach an IAM role with the required S3 permissions to the EC2 instance","D) Create a new IAM user and assign credentials to the EC2 instance"],
+ ans:2,
+ exp:"Attaching an IAM role to the EC2 instance is the best practice. The instance automatically receives temporary credentials via the instance metadata service — no long-term keys to manage or risk leaking. Hardcoding keys is a major security vulnerability."},
+
+{id:30,dom:2,diff:'m',multi:false,
+ q:"A company needs to obtain AWS compliance reports before migrating an environment to the AWS Cloud. How can these reports be accessed?",
+ opts:["A) AWS Trusted Advisor","B) AWS Artifact","C) AWS Config","D) AWS Inspector"],
+ ans:1,
+ exp:"AWS Artifact is the central resource for compliance-related information — providing on-demand access to AWS security and compliance reports including ISO certifications, PCI DSS reports, SOC reports, and other compliance documentation."},
+
+{id:31,dom:2,diff:'m',multi:false,
+ q:"Which AWS service provides automated security vulnerability assessments throughout your development and deployment pipelines?",
+ opts:["A) AWS Shield","B) Amazon Inspector","C) Amazon Macie","D) Amazon GuardDuty"],
+ ans:1,
+ exp:"Amazon Inspector is an automated vulnerability assessment service that scans EC2 instances and container images for software vulnerabilities and deviations from security best practices. Macie finds sensitive data. GuardDuty detects threats. Shield provides DDoS protection."},
+
+{id:32,dom:2,diff:'e',multi:false,
+ q:"Which AWS service protects web applications from common web exploits such as SQL injection and cross-site scripting (XSS)?",
+ opts:["A) AWS Shield Standard","B) Amazon GuardDuty","C) AWS WAF","D) AWS Firewall Manager"],
+ ans:2,
+ exp:"AWS WAF (Web Application Firewall) protects web applications from common web exploits by filtering malicious traffic based on customizable rules. Shield protects against DDoS attacks. GuardDuty detects threats. Firewall Manager manages WAF rules centrally."},
+
+{id:33,dom:2,diff:'e',multi:false,
+ q:"A company wants to monitor for misconfigured security groups that are allowing unrestricted access to specific ports. Which AWS service will meet this requirement?",
+ opts:["A) AWS Health Dashboard","B) Amazon Inspector","C) AWS Config","D) Amazon Detective"],
+ ans:2,
+ exp:"AWS Config continuously monitors and records AWS resource configurations and can evaluate them against desired rules. You can create Config rules that detect misconfigured security groups (e.g., those allowing unrestricted 0.0.0.0/0 access on specific ports)."},
+
+{id:34,dom:2,diff:'m',multi:false,
+ q:"A company wants to audit its password and access key rotation details for compliance purposes. Which AWS service or tool meets this requirement?",
+ opts:["A) AWS CloudTrail","B) Amazon CloudWatch","C) IAM Credential Report","D) AWS Security Hub"],
+ ans:2,
+ exp:"The IAM Credential Report is a downloadable report that lists all IAM users and the status of their credentials — including passwords, access keys, MFA devices, and when each was last rotated — making it ideal for compliance audits."},
+
+{id:35,dom:2,diff:'m',multi:false,
+ q:"A company wants to grant users in one AWS account access to resources in a second AWS account. Which is the MOST secure and operationally efficient approach?",
+ opts:["A) Create duplicate IAM users in each account","B) Share access keys between accounts","C) Use cross-account IAM roles with least privilege","D) Make the S3 buckets publicly accessible"],
+ ans:2,
+ exp:"Cross-account IAM roles are the best practice for granting access across accounts. Users assume the role temporarily, receiving scoped credentials — no static credentials to manage or share. This follows least-privilege principles and is far more secure than sharing access keys."},
+
+{id:36,dom:2,diff:'m',multi:false,
+ q:"A company has an AWS account and wants to manage users across multiple accounts centrally with single sign-on. Which service provides this capability?",
+ opts:["A) AWS IAM","B) AWS IAM Identity Center (AWS Single Sign-On)","C) Amazon Cognito","D) AWS Directory Service"],
+ ans:1,
+ exp:"AWS IAM Identity Center (formerly AWS Single Sign-On) provides centralized access management across multiple AWS accounts and applications. Users sign in once and access all assigned accounts and applications. Cognito is for app end-user authentication, not AWS account federation."},
+
+{id:37,dom:2,diff:'e',multi:false,
+ q:"Which AWS service is used to provide encryption for Amazon EBS volumes?",
+ opts:["A) AWS Secrets Manager","B) AWS Key Management Service (AWS KMS)","C) AWS Certificate Manager","D) Amazon Inspector"],
+ ans:1,
+ exp:"AWS KMS (Key Management Service) manages the encryption keys used to encrypt EBS volumes (and many other AWS services). You can create, manage, and control the use of cryptographic keys. Certificate Manager is for TLS/SSL certificates. Secrets Manager stores secrets like API keys and passwords."},
+
+{id:38,dom:2,diff:'m',multi:false,
+ q:"Which of the following are benefits of using AWS Trusted Advisor? (Choose TWO)",
+ opts:["A) Stores and manages application secrets","B) Identifies underutilized EC2 instances to reduce costs","C) Detects publicly accessible S3 buckets as a security concern","D) Provides real-time DDoS protection","E) Manages IAM user credentials"],
+ ans:[1,2],
+ exp:"AWS Trusted Advisor inspects your environment and provides recommendations across five pillars. It can identify underutilized EC2 instances (cost optimization) and flag security issues like publicly accessible S3 buckets (security). It does not store secrets, provide DDoS protection, or manage IAM credentials."},
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DOMAIN 3: CLOUD TECHNOLOGY & SERVICES (24 questions) — 34% of exam
+// Task 3.1: Deploying and operating
+// Task 3.2: Global infrastructure
+// Task 3.3: Compute
+// Task 3.4: Databases
+// Task 3.5: Networking
+// Task 3.6: Storage
+// Task 3.7: AI/ML and analytics
+// Task 3.8: Other in-scope categories
+// ══════════════════════════════════════════════════════════════════════════════
+
+{id:39,dom:3,diff:'e',multi:false,
+ q:"Which is a physical location of the AWS global infrastructure?",
+ opts:["A) Availability Zone","B) AWS Region","C) Edge Location","D) Local Zone"],
+ ans:1,
+ exp:"AWS Regions are physical geographic locations around the world where AWS data centers are clustered. Each Region consists of multiple, isolated Availability Zones. Edge Locations, Local Zones, and Wavelength Zones are extensions of Regions, not independent physical locations."},
+
+{id:40,dom:3,diff:'e',multi:false,
+ q:"What is the purpose of having an Internet Gateway in an Amazon VPC?",
+ opts:["A) To establish a private connection between two VPCs","B) To connect a VPC to an on-premises network","C) To allow communication between the VPC and the internet","D) To filter traffic between subnets in a VPC"],
+ ans:2,
+ exp:"An Internet Gateway (IGW) is a horizontally scaled, redundant VPC component that enables communication between the VPC and the internet. Without an IGW, resources in the VPC cannot send or receive traffic from the public internet."},
+
+{id:41,dom:3,diff:'e',multi:false,
+ q:"Which AWS service provides the ability to manage infrastructure as code?",
+ opts:["A) AWS Systems Manager","B) Amazon CloudWatch","C) AWS CloudFormation","D) AWS Trusted Advisor"],
+ ans:2,
+ exp:"AWS CloudFormation is the native Infrastructure as Code (IaC) service. You write declarative JSON or YAML templates describing your desired infrastructure, and CloudFormation provisions and manages the entire stack. Systems Manager manages operations, CloudWatch monitors, Trusted Advisor recommends best practices."},
+
+{id:42,dom:3,diff:'m',multi:false,
+ q:"An online gaming company needs to choose a purchasing option for EC2 instances for one year. Traffic is consistent and increases are predictable. The EC2 instances must be online and available without any interruption. Which option provides the LOWEST cost?",
+ opts:["A) On-Demand Instances","B) Spot Instances","C) Reserved Instances","D) Dedicated Hosts"],
+ ans:2,
+ exp:"Reserved Instances are ideal for steady, predictable workloads running continuously for 1 or 3 years — providing up to 72% discount vs On-Demand. Spot Instances can be interrupted so they're unsuitable for a 'must be online' requirement. On-Demand is more expensive for predictable long-term usage."},
+
+{id:43,dom:3,diff:'m',multi:false,
+ q:"A company runs thousands of simultaneous simulations using AWS Batch. Each simulation is stateless, fault-tolerant, and runs for up to 3 hours. Which pricing model enables the company to optimize cost?",
+ opts:["A) Reserved Instances","B) Dedicated Hosts","C) Spot Instances","D) On-Demand Instances"],
+ ans:2,
+ exp:"Spot Instances are perfect for fault-tolerant, stateless batch workloads that can be interrupted. They can be up to 90% cheaper than On-Demand. Since each simulation is stateless and can be restarted, interruptions are acceptable, making Spot the most cost-effective choice."},
+
+{id:44,dom:3,diff:'m',multi:false,
+ q:"A company deploying a machine learning research project will need high compute power over several months. The ML processing jobs do not need to run at specific times. Which EC2 instance purchasing option is MOST cost-effective?",
+ opts:["A) On-Demand Instances","B) Spot Instances","C) Reserved Instances","D) Dedicated Hosts"],
+ ans:1,
+ exp:"ML training jobs that can tolerate interruptions and don't need to run at specific times are ideal for Spot Instances — offering the highest discount (up to 90% off On-Demand). The non-time-sensitive nature means interruptions from Spot reclamation are acceptable."},
+
+{id:45,dom:3,diff:'e',multi:false,
+ q:"A company's running and managing its own Docker environment on Amazon EC2. What does AWS manage in this scenario according to the Shared Responsibility Model?",
+ opts:["A) The Docker container configuration","B) The application code running inside containers","C) The EC2 instance's operating system patches","D) The underlying physical hardware and virtualization infrastructure"],
+ ans:3,
+ exp:"When running Docker on EC2 (not a managed container service), the customer manages the OS, Docker configuration, and containers. AWS manages everything below — the physical servers, network infrastructure, and the hypervisor layer that enables virtualization."},
+
+{id:46,dom:3,diff:'e',multi:false,
+ q:"Which AWS service is a fully managed MySQL-compatible relational database with high performance?",
+ opts:["A) Amazon DynamoDB","B) Amazon Aurora","C) Amazon Redshift","D) Amazon ElastiCache"],
+ ans:1,
+ exp:"Amazon Aurora is a fully managed, high-performance relational database compatible with both MySQL and PostgreSQL, offering up to 5x the throughput of standard MySQL. DynamoDB is NoSQL. Redshift is a data warehouse. ElastiCache is an in-memory caching service."},
+
+{id:47,dom:3,diff:'m',multi:false,
+ q:"A company wants to operate a data warehouse to analyze data without managing the data warehouse infrastructure. Which AWS service meets this requirement?",
+ opts:["A) Amazon Aurora","B) Amazon DynamoDB","C) Amazon RDS","D) Amazon Redshift"],
+ ans:3,
+ exp:"Amazon Redshift is a fully managed data warehouse service optimized for complex analytical queries (OLAP) on large datasets. It handles infrastructure management so you can focus on analysis. Aurora and RDS are for transactional (OLTP) workloads. DynamoDB is NoSQL."},
+
+{id:48,dom:3,diff:'e',multi:false,
+ q:"Which AWS service or feature allows a user to establish a dedicated network connection between an on-premises data center and the AWS Cloud?",
+ opts:["A) AWS Site-to-Site VPN","B) Amazon CloudFront","C) AWS Direct Connect","D) AWS Transit Gateway"],
+ ans:2,
+ exp:"AWS Direct Connect establishes a dedicated private physical connection from your on-premises data center to AWS, bypassing the public internet. It provides consistent performance, lower latency, and reduced bandwidth costs. Site-to-Site VPN uses the internet with IPsec encryption."},
+
+{id:49,dom:3,diff:'e',multi:false,
+ q:"A company has 5 terabytes of data stored in Amazon S3 and plans to occasionally run queries on the data for analysis. Which AWS service should the company use to run these queries in the most cost-effective manner?",
+ opts:["A) Amazon Redshift","B) Amazon RDS","C) Amazon Athena","D) Amazon DynamoDB"],
+ ans:2,
+ exp:"Amazon Athena is a serverless interactive query service that runs SQL queries directly against S3 data — no need to load it into a database. You pay only for the data scanned per query. For occasional queries on S3 data, this is far more cost-effective than provisioning Redshift or RDS."},
+
+{id:50,dom:3,diff:'m',multi:false,
+ q:"A company has a centralized group of users with large file storage requirements that exceed on-premises space. The company wants to extend its file storage capability while retaining local performance benefits for sharing content. Which AWS service should they use?",
+ opts:["A) Amazon S3","B) Amazon EBS","C) AWS Storage Gateway","D) Amazon FSx"],
+ ans:2,
+ exp:"AWS Storage Gateway provides hybrid cloud storage — it creates a local cache of frequently accessed data for fast on-premises access while storing the actual data in AWS. This extends capacity to the cloud while maintaining local performance for active content."},
+
+{id:51,dom:3,diff:'e',multi:false,
+ q:"Which AWS service or tool can identify right-sizing opportunities for Amazon EC2 instances? (Choose TWO)",
+ opts:["A) AWS Cost Explorer","B) AWS Trusted Advisor","C) Amazon CloudWatch","D) AWS Pricing Calculator","E) Amazon Inspector"],
+ ans:[0,1],
+ exp:"AWS Cost Explorer has a rightsizing recommendations feature that analyzes EC2 usage and suggests downsizing opportunities. AWS Trusted Advisor also provides recommendations to identify underutilized or idle EC2 instances. CloudWatch provides metrics. Inspector does vulnerability scanning."},
+
+{id:52,dom:3,diff:'m',multi:false,
+ q:"A company wants to manage Windows virtual desktops and applications for its remote employees over secure network connections. Which AWS service provides this capability?",
+ opts:["A) Amazon AppStream 2.0","B) Amazon WorkSpaces","C) AWS Lambda","D) Amazon Lightsail"],
+ ans:1,
+ exp:"Amazon WorkSpaces is a fully managed Desktop-as-a-Service (DaaS) solution that provides Windows or Linux virtual desktops to remote employees over secure connections. AppStream 2.0 is for streaming specific applications (not full desktops). Lambda is serverless compute."},
+
+{id:53,dom:3,diff:'m',multi:false,
+ q:"A user needs programmatic access to AWS resources through the AWS CLI or AWS API. Which option provides the appropriate access?",
+ opts:["A) Amazon Inspector","B) IAM username and password","C) Access keys (Access Key ID + Secret Access Key)","D) AWS Management Console login"],
+ ans:2,
+ exp:"Access keys (consisting of an Access Key ID and Secret Access Key) are the credentials used for programmatic access via the CLI, SDKs, and direct API calls. Username/password is for Console access. Inspector is a security tool."},
+
+{id:54,dom:3,diff:'m',multi:false,
+ q:"A company has deployed applications on Amazon EC2 instances and needs to assess application vulnerabilities and identify infrastructure deployments that do not meet best practices. Which service meets this requirement?",
+ opts:["A) AWS Trusted Advisor","B) Amazon Inspector","C) AWS Config","D) Amazon GuardDuty"],
+ ans:1,
+ exp:"Amazon Inspector is an automated vulnerability management service that continuously scans EC2 instances and container images for software vulnerabilities and unintended network exposure. It specifically assesses against security best practices."},
+
+{id:55,dom:3,diff:'e',multi:false,
+ q:"Which tool should a developer use to integrate AWS service features directly into an application during development?",
+ opts:["A) AWS CodeDeploy","B) AWS Lambda","C) AWS SDK","D) AWS CloudFormation"],
+ ans:2,
+ exp:"AWS SDKs (Software Development Kits) are libraries for various programming languages (Python, Java, JavaScript, etc.) that allow developers to integrate AWS service functionality directly into their application code through API calls. CodeDeploy automates deployments. CloudFormation provisions infrastructure."},
+
+{id:56,dom:3,diff:'e',multi:false,
+ q:"Which AWS AI/ML service can be used to build conversational interfaces using voice and text?",
+ opts:["A) Amazon Polly","B) Amazon Transcribe","C) Amazon Lex","D) Amazon Comprehend"],
+ ans:2,
+ exp:"Amazon Lex is the service for building conversational interfaces (chatbots) using voice and text — it's the same technology that powers Amazon Alexa. Polly converts text to speech. Transcribe converts speech to text. Comprehend performs NLP on text."},
+
+{id:57,dom:3,diff:'m',multi:false,
+ q:"A company wants to receive a notification when its AWS costs are projected to exceed a specific threshold. Which TWO AWS services can the company use? (Choose TWO)",
+ opts:["A) AWS Trusted Advisor","B) AWS Budgets","C) Amazon CloudWatch","D) AWS Cost Explorer","E) AWS Pricing Calculator"],
+ ans:[1,2],
+ exp:"AWS Budgets can send alerts when actual or forecasted costs exceed defined thresholds (via email or SNS). Amazon CloudWatch can also trigger alarms based on billing metrics. Cost Explorer visualizes trends but doesn't proactively send threshold alerts. Pricing Calculator is for pre-deployment estimates."},
+
+{id:58,dom:3,diff:'e',multi:false,
+ q:"Which of the following are advantages of moving to AWS Cloud? (Choose TWO)",
+ opts:["A) AWS eliminates all security responsibilities for the customer","B) No need to manage underlying hardware or data center facilities","C) Ability to deploy applications globally in minutes","D) Fixed monthly pricing regardless of usage","E) Customers gain physical access to AWS data centers"],
+ ans:[1,2],
+ exp:"Two clear advantages: AWS manages physical hardware and data center operations (you no longer need to), and AWS's global infrastructure lets you deploy applications in multiple Regions worldwide in minutes. AWS does not eliminate your security responsibilities, pricing is variable not fixed, and customers don't get physical data center access."},
+
+{id:59,dom:3,diff:'m',multi:false,
+ q:"A company wants to grant users in one AWS account temporary access to resources in another AWS account. Which approach is the MOST secure?",
+ opts:["A) Create IAM users in the second account and share credentials","B) Make the resources in the second account publicly accessible","C) Use AWS IAM roles with cross-account trust relationships","D) Store credentials in AWS Secrets Manager and share them"],
+ ans:2,
+ exp:"Cross-account IAM roles are the AWS-recommended approach. A role in the target account trusts the source account, and users assume it to receive temporary credentials scoped to exactly what they need. No long-term credentials are shared, and access is time-limited."},
+
+{id:60,dom:3,diff:'m',multi:false,
+ q:"A company is using a centralized data platform to manage multiple types of data. They need a service for discovering, preparing, and integrating data for analytics. Which AWS service is purpose-built for this?",
+ opts:["A) Amazon Kinesis","B) AWS Glue","C) Amazon QuickSight","D) Amazon Athena"],
+ ans:1,
+ exp:"AWS Glue is a serverless data integration (ETL) service for discovering, preparing, and combining data for analytics and ML. Kinesis is for real-time data streaming. QuickSight is for BI visualization. Athena queries data in S3 using SQL."},
+
+{id:61,dom:3,diff:'e',multi:false,
+ q:"Which AWS service is always provided at no additional charge?",
+ opts:["A) Amazon SageMaker","B) AWS Config","C) AWS Organizations","D) Amazon CloudWatch"],
+ ans:2,
+ exp:"AWS Organizations is available at no additional charge. You can create and manage multiple AWS accounts, apply service control policies, and use consolidated billing — all without paying extra for the Organizations service itself."},
+
+{id:62,dom:3,diff:'m',multi:false,
+ q:"A company wants to establish a schedule for rotating database user credentials. Which AWS service supports automatic credential rotation?",
+ opts:["A) AWS KMS","B) AWS Secrets Manager","C) AWS Certificate Manager","D) AWS IAM"],
+ ans:1,
+ exp:"AWS Secrets Manager is specifically designed to store, manage, and automatically rotate secrets including database credentials, API keys, and passwords. It natively integrates with RDS, Aurora, and Redshift for automated rotation. KMS manages encryption keys, not application secrets."},
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DOMAIN 4: BILLING, PRICING & SUPPORT (8 questions) — 12% of exam
+// Task 4.1: Pricing models
+// Task 4.2: Billing, budget, and cost management tools
+// Task 4.3: Technical resources and support options
+// ══════════════════════════════════════════════════════════════════════════════
+
+{id:63,dom:4,diff:'m',multi:false,
+ q:"A company needs to deploy a legacy software application that requires a physical server completely dedicated to their use and must use existing per-core software licenses. Which compute option meets this requirement?",
+ opts:["A) Dedicated Instances","B) Reserved Instances","C) Dedicated Hosts","D) Capacity Reservations"],
+ ans:2,
+ exp:"Dedicated Hosts provide a physical server fully dedicated to your use and give you visibility into socket and core counts — required for per-core or per-socket BYOL (Bring Your Own License) scenarios. Dedicated Instances run on dedicated hardware but don't expose host-level details needed for BYOL licensing."},
+
+{id:64,dom:4,diff:'m',multi:false,
+ q:"A corporation wants a flexible commitment plan that lowers compute costs across Amazon EC2, AWS Fargate, and AWS Lambda simultaneously, regardless of Region or instance family. Which option fulfills this?",
+ opts:["A) EC2 Instance Savings Plans","B) Standard Reserved Instances","C) Compute Savings Plans","D) Convertible Reserved Instances"],
+ ans:2,
+ exp:"Compute Savings Plans apply automatically across EC2, Fargate, and Lambda regardless of Region, instance size, or OS — providing the most flexibility. EC2 Instance Savings Plans only apply to EC2 within a specific instance family and Region. Reserved Instances are tied to specific instance configurations."},
+
+{id:65,dom:4,diff:'m',multi:false,
+ q:"A financial firm runs a steady-state web platform with highly predictable 24/7 CPU usage and wants the maximum cost savings on EC2 instances with a 3-year term commitment. Which pricing option is BEST?",
+ opts:["A) Spot Instances","B) On-Demand Instances","C) Reserved Instances — All Upfront","D) Dedicated Hosts — On-Demand"],
+ ans:2,
+ exp:"Reserved Instances with All Upfront payment for a 3-year term provide the maximum discount — significantly more than No Upfront or Partial Upfront options. For a 24/7 steady-state workload, this is the most cost-effective choice. The discount hierarchy is: All Upfront > Partial Upfront > No Upfront."},
+
+{id:66,dom:4,diff:'m',multi:false,
+ q:"A team wants a purchasing model that allows them to exchange their reservation mid-term for a completely different instance family (e.g., switching from c5 to m5). Which model supports this?",
+ opts:["A) Standard Reserved Instances","B) Convertible Reserved Instances","C) Capacity Reservations","D) Spot Instances"],
+ ans:1,
+ exp:"Convertible Reserved Instances allow you to change the instance family, OS, scope, or tenancy during the term commitment — in exchange for a slightly lower discount than Standard RIs. Standard RIs are locked to a specific instance configuration."},
+
+{id:67,dom:4,diff:'e',multi:false,
+ q:"Which AWS tool provides a visual interface to analyze, chart, and interpret historical AWS cost data and predict future spending?",
+ opts:["A) AWS Pricing Calculator","B) AWS Cost and Usage Report","C) AWS Cost Explorer","D) AWS Budgets"],
+ ans:2,
+ exp:"AWS Cost Explorer provides visualizations of historical AWS spending with filtering by service, Region, tag, or account. It includes a forecasting feature based on historical usage patterns. Pricing Calculator is for pre-deployment estimates. Budgets sets alerts. CUR provides raw detailed data."},
+
+{id:68,dom:4,diff:'m',multi:false,
+ q:"Which AWS service delivers the MOST comprehensive raw data for every AWS resource charge and can be loaded into a data analytics tool for custom analysis?",
+ opts:["A) AWS Pricing Calculator","B) AWS Budgets","C) AWS Cost and Usage Report (CUR)","D) AWS Cost Explorer"],
+ ans:2,
+ exp:"The AWS Cost and Usage Report (CUR) is the most detailed billing dataset available — containing every line-item charge, resource ID, tag, usage type, and pricing details. It can be loaded into Amazon Athena, Redshift, or QuickSight for custom analysis."},
+
+{id:69,dom:4,diff:'m',multi:false,
+ q:"A company requires 24/7 phone and chat access to Cloud Support Engineers but does not want to pay for a dedicated Technical Account Manager (TAM). What is the MINIMUM AWS Support plan required?",
+ opts:["A) Basic Support","B) Developer Support","C) Business Support","D) Enterprise On-Ramp Support"],
+ ans:2,
+ exp:"Business Support is the minimum tier with 24/7 phone, chat, and email access to Cloud Support Engineers. Basic support only includes documentation and billing support. Developer support offers email support during business hours only. Enterprise plans add TAMs and higher response SLAs."},
+
+{id:70,dom:4,diff:'m',multi:false,
+ q:"A company holds a full Enterprise Support plan. Their production system crashes and stalls all operations. What is the target response time SLA for this critical scenario?",
+ opts:["A) Within 15 minutes","B) Within 30 minutes","C) Within 1 hour","D) Within 4 hours"],
+ ans:0,
+ exp:"The Enterprise Support plan provides a 15-minute response SLA for business-critical system-down events. Enterprise On-Ramp offers 30 minutes for critical issues. Business Support offers 1-hour response for urgent cases. Developer Support offers business-hours-only email access."}
+
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentIdx=0;
+let userAns=new Array(QS.length).fill(null);
+let timerSec=5400;
+let timerInterval=null;
+let isReview=false;
+
+function fmt(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+function startTimer(){
+  const el=document.getElementById('timer-display');
+  timerInterval=setInterval(()=>{
+    timerSec--;el.textContent=fmt(timerSec);
+    if(timerSec<=120)el.className='timer danger';
+    else if(timerSec<=300)el.className='timer warn';
+    if(timerSec<=0){clearInterval(timerInterval);finishExam();}
+  },1000);
+}
+function startExam(){
+  document.getElementById('start-screen').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  buildNavGrid();renderQ();startTimer();
+}
+function buildNavGrid(){
+  const g=document.getElementById('qnav-grid');g.innerHTML='';
+  QS.forEach((_,i)=>{
+    const b=document.createElement('div');b.className='qng';b.textContent=i+1;b.id='qng-'+i;
+    b.onclick=()=>goTo(i);g.appendChild(b);
+  });refreshNav();
+}
+function refreshNav(){
+  QS.forEach((_,i)=>{
+    const b=document.getElementById('qng-'+i);if(!b)return;
+    b.className='qng';
+    if(i===currentIdx)b.classList.add('cur');
+    else if(userAns[i]!==null)b.classList.add(userAns[i]===QS[i].ans||(Array.isArray(QS[i].ans)&&arrEqual(userAns[i],QS[i].ans))?'ok':'err');
+  });
+}
+function arrEqual(a,b){
+  if(!Array.isArray(a)||!Array.isArray(b))return false;
+  if(a.length!==b.length)return false;
+  return [...a].sort().join()===[...b].sort().join();
+}
+function isCorrect(q,chosen){
+  if(Array.isArray(q.ans)){
+    if(!Array.isArray(chosen))chosen=[chosen];
+    return arrEqual(chosen,q.ans);
+  }
+  return chosen===q.ans;
+}
+function getStats(){
+  let ok=0,err=0,done=0;
+  QS.forEach((q,i)=>{if(userAns[i]!==null){done++;if(isCorrect(q,userAns[i]))ok++;else err++;}});
+  return{ok,err,done};
+}
+function updateRibbon(){
+  const{ok,err,done}=getStats();
+  const pct=done>0?Math.round(ok/done*100):0;
+  document.getElementById('rb-num').textContent=currentIdx+1;
+  document.getElementById('rb-ok').textContent=ok;
+  document.getElementById('rb-err').textContent=err;
+  document.getElementById('rb-pct').textContent=done>0?pct+'%':'—';
+  document.getElementById('rb-ok-sub').textContent=done>0?Math.round(ok/QS.length*100)+'% total':'—';
+  document.getElementById('rb-err-sub').textContent=done>0?(100-pct)+'% incorrect':'—';
+  document.getElementById('rb-pct-sub').textContent=done>0?done+' answered':'live';
+  document.getElementById('prog-fill').style.width=Math.round(done/QS.length*100)+'%';
+  document.getElementById('prog-lbl').textContent=done+' / '+QS.length+' answered';
+  document.getElementById('domain-lbl').textContent='D'+QS[currentIdx].dom+' · '+DOMAIN_NAMES[QS[currentIdx].dom];
+  refreshNav();
+}
+function renderQ(){
+  if(currentIdx>=QS.length){finishExam();return;}
+  const q=QS[currentIdx];const prev=userAns[currentIdx];const isAns=prev!==null;
+  const isMulti=Array.isArray(q.ans);
+  let meta='<span class="q-num">Q'+(currentIdx+1)+' / '+QS.length+'</span>';
+  meta+='<span class="d-tag '+DOMAIN_CLS[q.dom]+'">D'+q.dom+' · '+DOMAIN_NAMES[q.dom]+'</span>';
+  meta+='<span class="diff-tag '+DIFF_CLS[q.diff]+'">'+DIFF_LBL[q.diff]+'</span>';
+  if(isMulti)meta+='<span class="multi-tag">SELECT MULTIPLE</span>';
+  const optsHTML=q.opts.map((opt,i)=>{
+    let cls='opt',dis='';
+    if(isAns){
+      dis='disabled';
+      const corrArr=Array.isArray(q.ans)?q.ans:[q.ans];
+      const choArr=Array.isArray(prev)?prev:[prev];
+      if(corrArr.includes(i))cls+=' correct';
+      else if(choArr.includes(i)&&!corrArr.includes(i))cls+=' wrong';
+    }
+    return'<button class="'+cls+'" '+dis+' onclick="pickAnswer('+i+')"><span class="opt-l">'+opt.substring(0,2)+'</span>'+opt.substring(3)+'</button>';
+  }).join('');
+  const fb=isAns?`<div class="feedback ${isCorrect(q,prev)?'ok':'err'} show"><div class="fb-head">${isCorrect(q,prev)?'Correct':'Incorrect'}</div>${q.exp}</div>`:'';
+  document.getElementById('q-area').innerHTML=`<div class="q-card"><div class="q-meta">${meta}</div><div class="q-txt">${q.q}</div><div class="opts">${optsHTML}</div>${fb}</div>`;
+  updateRibbon();
+}
+function pickAnswer(i){
+  if(userAns[currentIdx]!==null)return;
+  const q=QS[currentIdx];
+  if(Array.isArray(q.ans)){
+    // for multi-select, first click stores as array; subsequent clicks on same Q are disabled after submit
+    userAns[currentIdx]=[i];
+  } else {
+    userAns[currentIdx]=i;
+  }
+  renderQ();
+}
+function goTo(idx){
+  if(idx<0||idx>=QS.length)return;
+  currentIdx=idx;renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+function finishExam(){
+  clearInterval(timerInterval);
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  showResults();
+}
+function showResults(){
+  document.getElementById('results-page').style.display='block';
+  const{ok,err,done}=getStats();
+  const pct=Math.round(ok/QS.length*100);
+  const scaled=Math.round(100+(ok/QS.length)*900);
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('rs-ok').textContent=ok;document.getElementById('rs-err').textContent=err;document.getElementById('rs-skip').textContent=QS.length-done;
+  document.getElementById('res-lbl').textContent='You answered '+ok+' of '+QS.length+' correctly — estimated scaled score: ~'+scaled+'/1000';
+  const grade=document.getElementById('res-grade');
+  if(pct>=70){grade.textContent='PASS — Above 700/1000 threshold';grade.className='res-grade grade-pass';}
+  else if(pct>=60){grade.textContent='CLOSE — Just below passing, review blind spots';grade.className='res-grade grade-mid';}
+  else{grade.textContent='NEEDS WORK — Study weak domains and retake';grade.className='res-grade grade-low';}
+  const domStats={1:{ok:0,t:0},2:{ok:0,t:0},3:{ok:0,t:0},4:{ok:0,t:0}};
+  QS.forEach((q,i)=>{domStats[q.dom].t++;if(userAns[i]!==null&&isCorrect(q,userAns[i]))domStats[q.dom].ok++;});
+  document.getElementById('bd-domains').innerHTML=[1,2,3,4].map(d=>{
+    const s=domStats[d];const dp=s.t>0?Math.round(s.ok/s.t*100):0;
+    const col=dp>=70?'var(--green)':dp>=55?'var(--amber)':'var(--red)';
+    return`<div class="bd-row"><span>D${d} · ${DOMAIN_NAMES[d]}</span><span>${s.ok}/${s.t} (${dp}%)</span></div><div class="bd-bar"><div class="bd-fill" style="width:${dp}%;background:${col}"></div></div>`;
+  }).join('');
+  document.getElementById('bd-scaled').innerHTML=`
+    <div style="font-family:var(--mono);font-size:38px;font-weight:700;color:var(--text);line-height:1">${scaled}</div>
+    <div style="font-size:12px;color:var(--muted);margin-top:4px">out of 1,000 · passing = 700</div>
+    <div style="height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-top:12px">
+      <div style="height:100%;border-radius:3px;background:${scaled>=700?'var(--green)':scaled>=600?'var(--amber)':'var(--red)'};width:${Math.min(100,Math.round((scaled/1000)*100))}%"></div>
+    </div>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--hint);margin-top:4px">700 mark = ${Math.round(700/1000*100)}% of scale</div>`;
+  const missed=QS.filter((q,i)=>userAns[i]!==null&&!isCorrect(q,userAns[i]));
+  const bsList=document.getElementById('bs-list');
+  if(missed.length===0){bsList.innerHTML='<div class="empty-bs">No blind spots — perfect score!</div>';}
+  else{bsList.innerHTML=missed.map(q=>{
+    const gi=QS.indexOf(q);
+    const corrArr=Array.isArray(q.ans)?q.ans:[q.ans];
+    const corrText=corrArr.map(i=>q.opts[i].substring(3)).join(' / ');
+    return`<div class="bs-item"><div class="bs-q"><strong>Q${gi+1}:</strong> ${q.q}</div><div class="bs-tags"><span class="d-tag ${DOMAIN_CLS[q.dom]}">D${q.dom} · ${DOMAIN_NAMES[q.dom]}</span></div><div class="bs-correct">Correct: ${corrText}</div><div class="bs-exp">${q.exp}</div></div>`;
+  }).join('');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function reviewAll(){
+  isReview=true;
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  currentIdx=0;renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+function restartExam(){
+  clearInterval(timerInterval);timerSec=5400;isReview=false;
+  userAns=new Array(QS.length).fill(null);currentIdx=0;
+  const td=document.getElementById('timer-display');td.textContent='90:00';td.className='timer';
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  document.getElementById('start-screen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

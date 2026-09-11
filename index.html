@@ -1,371 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AWS CLF-C02 Study Guide</title>
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #f8fafc; color: #1e293b; }
-    .header { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); color: white; padding: 2rem; text-align: center; }
-    .header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
-    .header p { color: #94a3b8; margin-bottom: 1rem; }
-    .badges { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
-    .badge { padding: 0.3rem 0.8rem; border-radius: 999px; font-size: 0.78rem; font-weight: 600; }
-    .container { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
-    .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .tab { padding: 0.6rem 1.2rem; border-radius: 8px; border: 2px solid #e2e8f0; background: white; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
-    .tab.active { background: #3B82F6; border-color: #3B82F6; color: white; }
-    .tab:hover:not(.active) { border-color: #3B82F6; color: #3B82F6; }
-    .domain-card { background: white; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 1rem; overflow: hidden; }
-    .domain-header { padding: 1rem 1.2rem; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; border-left: 5px solid; }
-    .domain-header:hover { background: #f8fafc; }
-    .domain-title { font-weight: 700; font-size: 1rem; }
-    .domain-pct { font-size: 0.8rem; color: #64748b; margin-top: 0.2rem; }
-    .domain-arrow { font-size: 1.2rem; transition: transform 0.2s; }
-    .domain-arrow.open { transform: rotate(90deg); }
-    .topic-list { padding: 0 1.2rem 1rem; border-top: 1px solid #f1f5f9; }
-    .topic-item { margin-top: 1rem; }
-    .topic-name { font-weight: 600; font-size: 0.9rem; color: #334155; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem; }
-    .topic-name::before { content: '▶'; font-size: 0.6rem; color: #94a3b8; }
-    .subtopic { font-size: 0.84rem; color: #475569; padding: 0.25rem 0 0.25rem 1rem; border-left: 2px solid #e2e8f0; margin: 0.2rem 0; line-height: 1.5; }
-    .tip-card { background: white; border-radius: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 1rem 1.2rem; margin-bottom: 0.75rem; display: flex; gap: 1rem; align-items: flex-start; }
-    .tip-num { background: #3B82F6; color: white; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; flex-shrink: 0; }
-    .tip-text { font-size: 0.9rem; line-height: 1.6; color: #334155; }
-    .tip-text strong { color: #1e293b; }
-    .facts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-    @media (max-width: 520px) { .facts-grid { grid-template-columns: 1fr; } }
-    .fact-card { background: white; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 0.8rem 1rem; font-size: 0.85rem; line-height: 1.5; }
-    .fact-card strong { display: block; color: #1e293b; margin-bottom: 0.2rem; }
-    .fact-card span { color: #475569; }
-    .nav-links { background: white; border-top: 1px solid #e2e8f0; padding: 1rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
-    .nav-link { padding: 0.5rem 1rem; background: #f1f5f9; border-radius: 8px; text-decoration: none; color: #334155; font-size: 0.85rem; font-weight: 600; }
-    .nav-link:hover { background: #3B82F6; color: white; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS CLF-C02 · Free Study Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#090d16;--surface:#101726;--surface2:#1a2333;--border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.13);--text:#f1f5f9;--muted:#8ea0bf;--hint:#475569;--accent:#ff9900;--blue:#38bdf8;--green:#34d399;--red:#f87171;--amber:#fbbf24;--purple:#a78bfa;--mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;--radius:10px;--radius-lg:14px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;min-height:100vh;padding-bottom:4rem}
+header{border-bottom:1px solid var(--border);padding:16px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.logo{font-family:var(--mono);font-size:13px;color:var(--accent)}.logo span{color:var(--muted)}
+.cohort{font-family:var(--mono);font-size:.62rem;color:var(--muted);text-align:right;line-height:1.6}
+.hero{max-width:860px;margin:0 auto;padding:3rem 24px 2rem;text-align:center}
+.hero h1{font-family:var(--mono);font-size:clamp(1.5rem,4vw,2.4rem);font-weight:700;line-height:1.2;margin-bottom:.75rem}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{color:var(--muted);font-size:.95rem;max-width:580px;margin:0 auto 1.5rem}
+.pass-badge{display:inline-flex;align-items:center;gap:.6rem;background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:99px;padding:.4rem 1.1rem;font-family:var(--mono);font-size:.72rem;color:var(--green);margin-bottom:2rem}
+.pass-badge::before{content:'✓';font-weight:700}
+.exam-facts{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:3rem}
+.ef{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.6rem 1.1rem;text-align:center}
+.ef-v{font-family:var(--mono);font-size:1.2rem;font-weight:700;color:var(--text)}.ef-l{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+.main{max-width:860px;margin:0 auto;padding:0 24px}
+.section-label{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:1rem;margin-top:2.5rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:.5rem}
+.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.2rem;text-decoration:none;color:var(--text);transition:border-color .2s,background .2s;display:flex;flex-direction:column;gap:.5rem}
+.tool-card:hover{border-color:var(--accent);background:var(--surface2)}
+.tc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.5rem}
+.tc-title{font-size:.95rem;font-weight:600;color:var(--text);line-height:1.3}
+.tc-badge{font-family:var(--mono);font-size:.62rem;padding:.2rem .55rem;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.b-ref{background:rgba(167,139,250,.12);border:1px solid rgba(167,139,250,.28);color:var(--purple)}
+.b-test{background:rgba(255,153,0,.12);border:1px solid rgba(255,153,0,.28);color:var(--accent)}
+.b-drill{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.28);color:var(--red)}
+.b-plan{background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.28);color:var(--green)}
+.tc-desc{font-size:.82rem;color:var(--muted);line-height:1.5}
+.tc-meta{font-family:var(--mono);font-size:.68rem;color:var(--hint)}
+.mnemonics{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:2rem}
+@media(max-width:540px){.mnemonics{grid-template-columns:1fr}}
+.mn-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.2rem}
+.mn-head{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.5rem}
+.mn-acro{font-family:var(--mono);font-size:1.6rem;font-weight:700;letter-spacing:.1em;color:var(--text);margin-bottom:.3rem}
+.mn-trick{font-size:.82rem;color:var(--green);font-style:italic;margin-bottom:.75rem}
+.mn-list{font-size:.8rem;color:var(--muted);line-height:1.9}
+.mn-list b{color:var(--text)}
+.tips{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.2rem 1.4rem;margin-bottom:2rem}
+.tips h3{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.9rem}
+.tip-row{font-size:.88rem;color:var(--muted);padding:.4rem 0;border-top:1px solid var(--border);display:flex;gap:.7rem;line-height:1.5}
+.tip-row:first-of-type{border-top:none}
+.tip-row b{color:var(--text)}.tip-dot{color:var(--accent);flex-shrink:0}
+.github-section{background:rgba(255,153,0,.05);border:1px solid rgba(255,153,0,.2);border-radius:var(--radius-lg);padding:1.4rem 1.6rem;margin-bottom:2rem}
+.github-section h3{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:1rem}
+.gh-step{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.75rem;font-size:.88rem;color:var(--muted)}
+.gh-step:last-child{margin-bottom:0}
+.gh-num{font-family:var(--mono);font-size:.7rem;background:var(--accent);color:#1A0D00;width:1.4rem;height:1.4rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;margin-top:.1rem}
+.gh-body{flex:1;line-height:1.5}.gh-body b{color:var(--text)}
+.gh-body code{font-family:var(--mono);font-size:.78rem;background:var(--surface2);padding:.1rem .4rem;border-radius:4px;color:var(--blue)}
+footer{border-top:1px solid var(--border);padding:1.2rem 24px;text-align:center;font-family:var(--mono);font-size:.65rem;color:var(--hint);margin-top:3rem}
+</style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState } = React;
+<header>
+  <div class="logo">CLF-C02<span> · Free Study Tools</span></div>
+  <div class="cohort">Made by cohort 2026-RTT-06<br>Per Scholas Charlotte<br>Brian Thomas · AWS CCP ✓</div>
+</header>
 
-const DOMAINS = [
-  {
-    id: 1, color: '#3B82F6', pct: '24%',
-    title: 'Domain 1 — Cloud Concepts',
-    topics: [
-      {
-        name: 'What is Cloud Computing',
-        subs: [
-          '5 Characteristics: On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service',
-          '3 Deployment Models: Public Cloud (AWS/Azure/GCP), Private Cloud (on-premises), Hybrid Cloud (mix of both)',
-          'IaaS — you manage OS up (EC2); PaaS — you manage app/data (Elastic Beanstalk, RDS); SaaS — provider manages everything (Gmail, Salesforce)',
-        ]
-      },
-      {
-        name: '6 Advantages of Cloud Computing',
-        subs: [
-          '1. Trade fixed (CapEx) for variable expense (OpEx)',
-          '2. Benefit from massive economies of scale',
-          '3. Stop guessing capacity — scale up/down on demand',
-          '4. Increase speed and agility — deploy in minutes',
-          '5. Stop spending money on running/maintaining data centers',
-          '6. Go global in minutes — deploy in multiple AWS Regions',
-        ]
-      },
-      {
-        name: 'Architecture Design Principles',
-        subs: [
-          'Design for failure — assume components will fail; build in redundancy',
-          'Loose coupling — decouple components so failures don\'t cascade (SQS, SNS)',
-          'Implement elasticity — auto scale up/down with demand',
-          'Think parallel — distribute workloads across many small resources',
-        ]
-      },
-    ]
-  },
-  {
-    id: 2, color: '#EF4444', pct: '30%',
-    title: 'Domain 2 — Security & Compliance',
-    topics: [
-      {
-        name: 'Shared Responsibility Model',
-        subs: [
-          'AWS = Security OF the cloud: physical hardware, facilities, network infrastructure, hypervisor',
-          'Customer = Security IN the cloud: data, IAM/access management, OS patches, firewall/security group config, encryption',
-          'Shifts by service: EC2 → customer patches OS | RDS → AWS patches OS/DB engine | Lambda → AWS manages everything below the function',
-        ]
-      },
-      {
-        name: 'IAM (Identity & Access Management)',
-        subs: [
-          'Users: individual people with long-term credentials',
-          'Groups: collection of users; attach policies to groups',
-          'Roles: temporary credentials assumed by services/users/external accounts',
-          'Policies: JSON documents defining Allow/Deny permissions',
-          'Best practices: MFA everywhere, least privilege, never use root for daily work, rotate credentials',
-          'Credential Report: audits all IAM users and their credential status',
-          'Access Advisor: shows service permissions and last access date',
-        ]
-      },
-      {
-        name: 'Key Security Services',
-        subs: [
-          'Shield Standard — FREE, automatic DDoS protection (Layer 3/4) for all AWS customers',
-          'Shield Advanced — paid, enhanced DDoS + 24/7 DDoS response team + cost protection',
-          'WAF (Web Application Firewall) — Layer 7, blocks SQL injection, XSS, custom rules',
-          'GuardDuty — ML-powered continuous threat detection (unusual API calls, malicious IPs)',
-          'Inspector — automated CVE scanning for EC2 instances and containers',
-          'Macie — uses ML to find PII and sensitive data in S3 buckets',
-          'KMS (Key Management Service) — create/manage/audit encryption keys',
-          'CloudHSM — customer-managed hardware security module; AWS has zero key access',
-          'Artifact — on-demand access to AWS compliance reports (SOC, PCI DSS, ISO)',
-          'Config — tracks resource configuration changes over time; compliance rules',
-          'CloudTrail — logs every AWS API call (who, what, when, from where); default 90 days',
-          'Secrets Manager — stores/rotates secrets (DB passwords, API keys) automatically',
-        ]
-      },
-    ]
-  },
-  {
-    id: 3, color: '#10B981', pct: '34%',
-    title: 'Domain 3 — Technology',
-    topics: [
-      {
-        name: 'Global Infrastructure',
-        subs: [
-          'Regions: 30+ geographic areas; isolated for compliance and redundancy',
-          'Availability Zones: 3+ physically separate data centers per Region; connected by low-latency fiber',
-          'Edge Locations: 400+ worldwide; used by CloudFront, Route 53, Global Accelerator',
-          'Region selection criteria: Compliance/data residency, Proximity to users, Service availability, Pricing',
-        ]
-      },
-      {
-        name: 'EC2 & Compute',
-        subs: [
-          'Instance types: General (t/m), Compute (c), Memory (r/x), Storage (d/i), Accelerated (p/g)',
-          'On-Demand: pay by second, no commitment; best for unpredictable workloads',
-          'Reserved Instances: 1 or 3 year, up to 72% savings; best for steady-state workloads',
-          'Spot Instances: up to 90% off, can be interrupted; best for fault-tolerant batch jobs',
-          'Savings Plans: flexible commitment to $/hr; applies to EC2, Lambda, Fargate',
-          'Dedicated Hosts: physical server for compliance/licensing requirements',
-          'Lambda: serverless function execution, max 15 minutes, pay per invocation/duration',
-          'ECS/EKS: container orchestration; Fargate = serverless containers (no EC2 management)',
-          'Elastic Beanstalk: PaaS — deploy code, AWS handles infrastructure provisioning',
-          'CloudFormation: IaC — define infrastructure as YAML/JSON templates',
-        ]
-      },
-      {
-        name: 'Storage',
-        subs: [
-          'S3: object storage, 11 nines (99.999999999%) durability, unlimited storage',
-          'S3 Standard → Standard-IA → One-Zone-IA → Glacier Instant → Glacier Flexible → Deep Archive → Intelligent-Tiering',
-          'EBS (Elastic Block Store): block storage, attached to single EC2 in same AZ',
-          'EFS (Elastic File System): managed NFS file system, shared across multiple EC2, multi-AZ',
-          'Snow Family: Snowcone (8TB, edge), Snowball Edge (80TB, offline transfer), Snowmobile (100PB, data center migration)',
-          'Storage Gateway: hybrid storage — connects on-premises apps to S3/EBS/Glacier',
-        ]
-      },
-      {
-        name: 'Databases',
-        subs: [
-          'RDS: managed relational DB (MySQL, PostgreSQL, Oracle, SQL Server, MariaDB)',
-          'RDS Multi-AZ: synchronous standby for automatic failover (HA, NOT read scaling)',
-          'RDS Read Replicas: asynchronous copies for read scaling (NOT failover)',
-          'Aurora: AWS proprietary, 5x faster than MySQL, auto-scales to 64TB, 6 copies across 3 AZs',
-          'DynamoDB: serverless NoSQL key-value/document DB, single-digit millisecond at any scale',
-          'ElastiCache: in-memory caching (Redis for persistence/clustering, Memcached for simple caching)',
-          'Redshift: OLAP data warehouse for analytics and BI workloads',
-          'Athena: serverless SQL queries directly on S3 data (CSV, JSON, Parquet); pay per query',
-        ]
-      },
-      {
-        name: 'Networking',
-        subs: [
-          'VPC: logically isolated private network in AWS',
-          'Subnets: public (internet-accessible via IGW) vs private (no direct internet)',
-          'Internet Gateway (IGW): allows public subnet resources to reach internet',
-          'NAT Gateway: allows private subnet instances to reach internet (outbound only)',
-          'Security Groups: stateful, instance-level, allow-only rules (return traffic auto-allowed)',
-          'NACLs: stateless, subnet-level, allow + deny rules (must explicitly allow return traffic)',
-          'Direct Connect: dedicated private fiber connection to AWS (consistent bandwidth, not internet)',
-          'Site-to-Site VPN: encrypted tunnel over public internet between on-premises and VPC',
-          'CloudFront: CDN with 400+ edge locations for low-latency global content delivery',
-          'Route 53: DNS service + routing policies (Simple, Weighted, Failover, Geolocation, Latency)',
-          'Global Accelerator: routes traffic over AWS private network for improved global performance',
-          'Transit Gateway: hub-and-spoke to connect thousands of VPCs and on-premises networks',
-        ]
-      },
-    ]
-  },
-  {
-    id: 4, color: '#F59E0B', pct: '12%',
-    title: 'Domain 4 — Billing & Pricing',
-    topics: [
-      {
-        name: 'Pricing Models',
-        subs: [
-          'Pay-as-you-go: only pay for what you use, when you use it',
-          'Save when you reserve: commit to 1 or 3 years for significant discounts',
-          'Pay less by using more: volume/tiered pricing (S3, data transfer)',
-          'Data transfer IN to AWS: always FREE | Data transfer OUT: charged',
-        ]
-      },
-      {
-        name: 'Cost Management Tools',
-        subs: [
-          'AWS Pricing Calculator: estimate costs before deploying (planning tool)',
-          'Cost Explorer: visualize, analyze, and forecast spending; identify trends',
-          'Cost & Usage Report (CUR): most granular; hourly data by resource/tag; for BI tools',
-          'AWS Budgets: set cost/usage/reservation budgets with email/SNS alerts',
-          'Trusted Advisor: 5 categories including Cost Optimization (right-sizing, idle resources)',
-          'Compute Optimizer: ML-powered right-sizing recommendations for EC2, Lambda, EBS',
-          'TCO Calculator: compare on-premises total cost vs AWS migration savings',
-          'Consolidated Billing: single bill for all AWS Organizations accounts; share volume discounts',
-        ]
-      },
-      {
-        name: 'Support Plans',
-        subs: [
-          'Basic (FREE): AWS docs, 7 core Trusted Advisor checks, no tech support',
-          'Developer ($29/mo): business-hours email support, 12-24 hr general / 12 hr system impaired',
-          'Business ($100/mo): 24/7 phone + chat, 1 hr production down, all TA checks, Health API',
-          'Enterprise On-Ramp: pool of TAMs, 30 min critical system down, Concierge team',
-          'Enterprise: designated TAM, 15 min business-critical down, Concierge team, Well-Architected reviews',
-        ]
-      },
-    ]
-  },
-];
+<div class="hero">
+  <div class="pass-badge">Built by someone who passed — July 2026</div>
+  <h1>AWS Cloud Practitioner<br><em>CLF-C02 Study Tools</em></h1>
+  <p>Free, self-contained HTML files. No login. No install. Open in any browser. Built during a live Per Scholas AWS re/Start cohort and used by the whole class.</p>
+  <div class="exam-facts">
+    <div class="ef"><div class="ef-v">65</div><div class="ef-l">Questions</div></div>
+    <div class="ef"><div class="ef-v">90 min</div><div class="ef-l">Time limit</div></div>
+    <div class="ef"><div class="ef-v">700</div><div class="ef-l">Pass score</div></div>
+    <div class="ef"><div class="ef-v">4</div><div class="ef-l">Domains</div></div>
+    <div class="ef"><div class="ef-v">Free</div><div class="ef-l">All tools</div></div>
+  </div>
+</div>
 
-const TIPS = [
-  { title: 'Shared Responsibility shifts by service', text: '<strong>EC2</strong> → you patch the OS. <strong>RDS</strong> → AWS patches OS/DB engine; you manage data & access. <strong>Lambda</strong> → AWS manages everything below the function code. More managed = more AWS responsibility.' },
-  { title: 'EC2 pricing decision tree', text: '<strong>On-Demand</strong>: short-term, unpredictable. <strong>Reserved</strong>: steady-state 24/7 workloads (1-3 yr). <strong>Spot</strong>: interruption-tolerant batch/flexible jobs (90% off). <strong>Savings Plans</strong>: flexible commitment across EC2/Lambda/Fargate.' },
-  { title: 'Security Groups vs NACLs', text: '<strong>Security Groups</strong>: stateful (auto-allow return traffic), instance-level, allow-only rules. <strong>NACLs</strong>: stateless (must manually allow return traffic), subnet-level, allow + deny rules. When in doubt: SGs protect instances, NACLs protect subnets.' },
-  { title: 'CloudTrail vs CloudWatch vs Config', text: '<strong>CloudTrail</strong>: WHO did WHAT API call and WHEN (audit log). <strong>CloudWatch</strong>: performance metrics, alarms, logs (monitoring). <strong>Config</strong>: tracks resource CONFIGURATION changes over time and compliance.' },
-  { title: 'S3 storage class selection', text: '<strong>Standard</strong>: frequent access. <strong>IA</strong>: infrequent but fast retrieval. <strong>One-Zone-IA</strong>: non-critical infrequent. <strong>Glacier Instant</strong>: archive with millisecond retrieval. <strong>Glacier Flexible</strong>: minutes-to-hours. <strong>Deep Archive</strong>: cheapest, 12hr retrieval. <strong>Intelligent-Tiering</strong>: unknown/changing patterns.' },
-  { title: 'High availability architecture', text: 'HA = <strong>Multi-AZ deployment</strong> + <strong>Auto Scaling</strong> + <strong>Elastic Load Balancing</strong>. RDS Multi-AZ is for failover (HA), NOT performance. Read Replicas are for read scaling, NOT failover. Route 53 failover routing adds DNS-level HA.' },
-  { title: 'Database selection guide', text: '<strong>RDS</strong>: relational SQL, managed. <strong>Aurora</strong>: high-performance relational, cloud-native. <strong>DynamoDB</strong>: NoSQL key-value, millisecond scale. <strong>ElastiCache</strong>: in-memory cache layer. <strong>Redshift</strong>: analytics/OLAP warehouse. <strong>Athena</strong>: ad-hoc SQL on S3 files.' },
-  { title: 'Global reach services (not region-specific)', text: '<strong>IAM</strong>, <strong>Route 53</strong>, <strong>CloudFront</strong>, <strong>WAF</strong> (global), <strong>Shield</strong>, <strong>Global Accelerator</strong> are all global services. S3 bucket names are globally unique but data stays in chosen region.' },
-  { title: 'Trusted Advisor 5 categories', text: '<strong>Cost Optimization</strong> (idle/underutilized resources), <strong>Performance</strong> (service limits, throughput), <strong>Security</strong> (open ports, MFA on root, public S3), <strong>Fault Tolerance</strong> (Multi-AZ, snapshots), <strong>Service Limits</strong> (usage vs limits). Basic/Dev plans get 7 core checks; Business/Enterprise get all checks.' },
-  { title: 'Well-Architected 6 Pillars', text: '<strong>Operational Excellence</strong> (run/monitor systems), <strong>Security</strong> (protect data/systems), <strong>Reliability</strong> (recover from failures), <strong>Performance Efficiency</strong> (use resources efficiently), <strong>Cost Optimization</strong> (avoid waste), <strong>Sustainability</strong> (minimize environmental impact).' },
-];
+<div class="main">
+  <div class="section-label">Reference Material</div>
+  <div class="tools-grid">
+    <a class="tool-card" href="master-cheat-sheet.html">
+      <div class="tc-top"><div class="tc-title">Master Cheat Sheet</div><span class="tc-badge b-ref">REFERENCE</span></div>
+      <div class="tc-desc">All 4 domains across 10+ tabs — exam triggers, full service names, IAM, CAF, 7 Rs, Well-Architected, hybrid networking, billing tools, support plans.</div>
+      <div class="tc-meta">Start here · most comprehensive</div>
+    </a>
+    <a class="tool-card" href="countdown-plan.html">
+      <div class="tc-top"><div class="tc-title">Exam Day Plan</div><span class="tc-badge b-plan">PLAN</span></div>
+      <div class="tc-desc">7-day study schedule, real classmate intel from people who passed, 50+ service trigger phrases, exam day checklist, and common traps.</div>
+      <div class="tc-meta">Classmate intel · exam day card</div>
+    </a>
+  </div>
 
-const FACTS = [
-  { k: 'Passing Score', v: '700 out of 1000' },
-  { k: 'Total Questions', v: '65 (50 scored + 15 unscored)' },
-  { k: 'Exam Duration', v: '90 minutes' },
-  { k: 'S3 Durability', v: '11 nines — 99.999999999%' },
-  { k: 'Lambda Max Runtime', v: '15 minutes per invocation' },
-  { k: 'EBS Attachment', v: 'One EC2 instance at a time, same AZ only' },
-  { k: 'EFS', v: 'Shared file system, multiple EC2, multi-AZ' },
-  { k: 'RDS Multi-AZ', v: 'Failover (HA), NOT for read scaling' },
-  { k: 'RDS Read Replicas', v: 'Read scaling, NOT for automatic failover' },
-  { k: 'CloudTrail Retention', v: 'Default 90 days; archive to S3 for longer' },
-  { k: 'Shield Standard', v: 'FREE for all AWS customers, auto-enabled' },
-  { k: 'IAM Scope', v: 'Global service — not region-specific' },
-  { k: 'Root Account', v: 'Lock it down — enable MFA, don\'t use daily' },
-  { k: 'Spot Instances', v: 'Up to 90% savings; can be interrupted by AWS' },
-  { k: 'Reserved Instances', v: 'Up to 72% savings; 1 or 3 year commitment' },
-  { k: 'Aurora vs RDS MySQL', v: 'Aurora is 5x faster, auto-scales to 64TB' },
-  { k: 'Data Transfer IN', v: 'Always FREE; Data OUT to internet is charged' },
-  { k: 'Snowball Edge', v: '~80TB offline data transfer appliance' },
-  { k: 'Direct Connect', v: 'Dedicated fiber, NOT over public internet' },
-  { k: 'NAT Gateway', v: 'Private subnet → internet (outbound only)' },
-  { k: 'Availability Zones', v: 'Minimum 3 per AWS Region' },
-];
+  <div class="section-label">Full Mock Exams</div>
+  <div class="tools-grid">
+    <a class="tool-card" href="clf-c02-mock-exam.html">
+      <div class="tc-top"><div class="tc-title">Full Mock Exam</div><span class="tc-badge b-test">MOCK EXAM</span></div>
+      <div class="tc-desc">70 questions across all 4 domains weighted to official CLF-C02 percentages. 90-minute timer, live score, domain breakdown, blind spot analysis.</div>
+      <div class="tc-meta">70 questions · 90 min · all domains</div>
+    </a>
+    <a class="tool-card" href="mock-test-1.html">
+      <div class="tc-top"><div class="tc-title">Mock Test 1</div><span class="tc-badge b-test">MOCK EXAM</span></div>
+      <div class="tc-desc">Second full 70-question mock exam. All 4 domains. Different question set — use after completing the first one.</div>
+      <div class="tc-meta">70 questions · 90 min · all domains</div>
+    </a>
+    <a class="tool-card" href="master-cheat-sheet-test.html">
+      <div class="tc-top"><div class="tc-title">Cheat Sheet Test</div><span class="tc-badge b-test">TEST</span></div>
+      <div class="tc-desc">50 questions built from the cheat sheet. Full AWS service names — exactly how the real exam reads. No abbreviations where the exam won't use them.</div>
+      <div class="tc-meta">50 questions · 60 min · full names</div>
+    </a>
+  </div>
 
-function DomainCard({ domain }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="domain-card">
-      <div className="domain-header" style={{ borderLeftColor: domain.color }} onClick={() => setOpen(o => !o)}>
-        <div>
-          <div className="domain-title">{domain.title}</div>
-          <div className="domain-pct">Exam weight: {domain.pct}</div>
-        </div>
-        <span className={`domain-arrow${open ? ' open' : ''}`}>▶</span>
-      </div>
-      {open && (
-        <div className="topic-list">
-          {domain.topics.map((t, i) => (
-            <div key={i} className="topic-item">
-              <div className="topic-name">{t.name}</div>
-              {t.subs.map((s, j) => <div key={j} className="subtopic">{s}</div>)}
-            </div>
-          ))}
-        </div>
-      )}
+  <div class="section-label">Domain Diagnostics</div>
+  <div class="tools-grid">
+    <a class="tool-card" href="domain1-cloud-concepts.html">
+      <div class="tc-top"><div class="tc-title">Domain 1 · Cloud Concepts</div><span class="tc-badge b-drill">DIAGNOSTIC</span></div>
+      <div class="tc-desc">Well-Architected Framework, cloud benefits, migration strategies, CAF, and cloud economics. 24% of the real exam.</div>
+      <div class="tc-meta">65 questions · Domain 1 · 24%</div>
+    </a>
+    <a class="tool-card" href="domain3-phase-diagnostic.html">
+      <div class="tc-top"><div class="tc-title">Domain 3 · Technology</div><span class="tc-badge b-drill">DIAGNOSTIC</span></div>
+      <div class="tc-desc">38 questions mapped to all 8 official task statements. Compute, databases, networking, storage, AI/ML, analytics. 34% of the real exam.</div>
+      <div class="tc-meta">38 questions · All 8 task statements</div>
+    </a>
+    <a class="tool-card" href="domain3-technology.html">
+      <div class="tc-top"><div class="tc-title">Domain 3 · Full Exam</div><span class="tc-badge b-drill">DIAGNOSTIC</span></div>
+      <div class="tc-desc">70-question Domain 3 deep dive with topic filter, section banners, and blind spot analysis.</div>
+      <div class="tc-meta">70 questions · Domain 3 only</div>
+    </a>
+    <a class="tool-card" href="domain4-billing-diagnostic.html">
+      <div class="tc-top"><div class="tc-title">Domain 4 · Billing & Support</div><span class="tc-badge b-drill">DIAGNOSTIC</span></div>
+      <div class="tc-desc">36 scenario-based questions across all 3 task statements — pricing models, cost management tools, and support plans. 12% of the real exam.</div>
+      <div class="tc-meta">36 questions · All 3 task statements</div>
+    </a>
+    <a class="tool-card" href="security-deep-dive.html">
+      <div class="tc-top"><div class="tc-title">Domain 2 · Security Deep Dive</div><span class="tc-badge b-drill">DIAGNOSTIC</span></div>
+      <div class="tc-desc">Shared responsibility model, IAM, encryption, compliance tools, and security services. 30% of the real exam.</div>
+      <div class="tc-meta">Domain 2 · Security & Compliance · 30%</div>
+    </a>
+    <a class="tool-card" href="clf-c02-phase-diagnostic.html">
+      <div class="tc-top"><div class="tc-title">All-Domain Phase Diagnostic</div><span class="tc-badge b-drill">DIAGNOSTIC</span></div>
+      <div class="tc-desc">35-question cross-domain diagnostic in 5 phases. Quick assessment of where you stand across all domains.</div>
+      <div class="tc-meta">35 questions · All domains · 5 phases</div>
+    </a>
+  </div>
+
+  <div class="section-label">Targeted Drills</div>
+  <div class="tools-grid">
+    <a class="tool-card" href="AWS_CCP_keyword-match-drill-v2.html">
+      <div class="tc-top"><div class="tc-title">Keyword Match Drill v2</div><span class="tc-badge b-drill">DRILL</span></div>
+      <div class="tc-desc">65 rapid-fire trigger phrases mapped to services. Read the phrase, click the answer, move on. The fastest way to lock in service definitions.</div>
+      <div class="tc-meta">65 questions · ~55 min · rapid fire</div>
+    </a>
+    <a class="tool-card" href="blind-spot-drill.html">
+      <div class="tc-top"><div class="tc-title">Blind Spot Drill</div><span class="tc-badge b-drill">DRILL</span></div>
+      <div class="tc-desc">44 questions targeting the 4 most commonly missed areas — Shared Responsibility, SELECT TWO, service confusables, and storage.</div>
+      <div class="tc-meta">44 questions · 50 min · 4 weak areas</div>
+    </a>
+  </div>
+
+  <div class="section-label">Memory Tricks</div>
+  <div class="mnemonics">
+    <div class="mn-card">
+      <div class="mn-head">Well-Architected Framework · 6 Pillars</div>
+      <div class="mn-acro">OSRPCS</div>
+      <div class="mn-trick">"Old Soldiers Rest Peacefully, Carefully Sleeping"</div>
+      <div class="mn-list"><b>O</b>perational Excellence · <b>S</b>ecurity<br><b>R</b>eliability · <b>P</b>erformance Efficiency<br><b>C</b>ost Optimization · <b>S</b>ustainability</div>
     </div>
-  );
-}
-
-function App() {
-  const [tab, setTab] = useState(0);
-  const tabs = ['📚 Study Domains', '💡 Exam Tips', '⚡ Quick Facts'];
-  return (
-    <div>
-      <div className="header">
-        <h1>☁️ AWS CLF-C02 Study Guide</h1>
-        <p>AWS Certified Cloud Practitioner — Complete Study Reference</p>
-        <div className="badges">
-          <span className="badge" style={{ background: '#3B82F6' }}>Cloud Concepts 24%</span>
-          <span className="badge" style={{ background: '#EF4444' }}>Security & Compliance 30%</span>
-          <span className="badge" style={{ background: '#10B981' }}>Technology 34%</span>
-          <span className="badge" style={{ background: '#F59E0B', color: '#1e293b' }}>Billing & Pricing 12%</span>
-        </div>
-      </div>
-      <div className="container">
-        <div className="tabs">
-          {tabs.map((t, i) => (
-            <button key={i} className={`tab${tab === i ? ' active' : ''}`} onClick={() => setTab(i)}>{t}</button>
-          ))}
-        </div>
-
-        {tab === 0 && (
-          <div>
-            {DOMAINS.map(d => <DomainCard key={d.id} domain={d} />)}
-          </div>
-        )}
-
-        {tab === 1 && (
-          <div>
-            {TIPS.map((tip, i) => (
-              <div key={i} className="tip-card">
-                <div className="tip-num">{i + 1}</div>
-                <div>
-                  <strong style={{ display: 'block', marginBottom: '0.3rem', color: '#1e293b' }}>{tip.title}</strong>
-                  <div className="tip-text" dangerouslySetInnerHTML={{ __html: tip.text }} />
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {tab === 2 && (
-          <div className="facts-grid">
-            {FACTS.map((f, i) => (
-              <div key={i} className="fact-card">
-                <strong>{f.k}</strong>
-                <span>{f.v}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="nav-links">
-        <span style={{ color: '#64748b', fontSize: '0.85rem', alignSelf: 'center' }}>Also:</span>
-        <a href="practice-exam.html" className="nav-link">🧪 Practice Exam (50 Q)</a>
-        <a href="full-exam.html" className="nav-link">📝 Full Mock Exam (65 Q)</a>
-      </div>
+    <div class="mn-card">
+      <div class="mn-head">AWS CAF · 6 Perspectives</div>
+      <div class="mn-acro">BGPPSO</div>
+      <div class="mn-trick">"Big Gorillas Play Piano, Sing Opera"</div>
+      <div class="mn-list"><b>B</b>usiness · <b>G</b>overnance · <b>P</b>eople<br><b>P</b>latform · <b>S</b>ecurity · <b>O</b>perations</div>
     </div>
-  );
-}
+  </div>
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
-</script>
+  <div class="tips">
+    <h3>Tips from People Who Passed</h3>
+    <div class="tip-row"><span class="tip-dot">→</span><div><b>Read every answer choice before clicking.</b> The real exam options are longer than practice exams.</div></div>
+    <div class="tip-row"><span class="tip-dot">→</span><div><b>For SELECT TWO questions,</b> eliminate the two obviously wrong answers first, then choose from what's left.</div></div>
+    <div class="tip-row"><span class="tip-dot">→</span><div><b>Use pen and paper</b> at the testing center for Amazon VPC and subnet diagrams.</div></div>
+    <div class="tip-row"><span class="tip-dot">→</span><div><b>Flag and review.</b> Finish all 65 first, then go back to anything flagged. Use all 90 minutes.</div></div>
+    <div class="tip-row"><span class="tip-dot">→</span><div><b>Full service names on the real exam.</b> It says "Amazon Simple Notification Service" not "SNS." Know both.</div></div>
+    <div class="tip-row"><span class="tip-dot">→</span><div><b>First instinct is usually right.</b> Don't talk yourself out of your answer once you've read all the choices.</div></div>
+    <div class="tip-row"><span class="tip-dot">→</span><div><b>Half the questions are straightforward.</b> The other half require reading carefully 2-3 times. Budget your time.</div></div>
+  </div>
+
+  <div class="github-section">
+    <h3>How to Set This Up on GitHub Pages</h3>
+    <div class="gh-step"><div class="gh-num">1</div><div class="gh-body"><b>Fork or create a new repo</b> on GitHub. Name it something like <code>aws-clf-c02-study</code>.</div></div>
+    <div class="gh-step"><div class="gh-num">2</div><div class="gh-body"><b>Upload all the HTML files</b> into the root of the repo. Make sure <code>index.html</code> is in the root.</div></div>
+    <div class="gh-step"><div class="gh-num">3</div><div class="gh-body"><b>Go to Settings → Pages.</b> Set source to <code>main</code> branch, <code>/ (root)</code> folder. Click Save.</div></div>
+    <div class="gh-step"><div class="gh-num">4</div><div class="gh-body"><b>Wait 1-2 minutes.</b> Your site will be live at <code>https://yourusername.github.io/aws-clf-c02-study/</code></div></div>
+    <div class="gh-step"><div class="gh-num">5</div><div class="gh-body"><b>Share the link</b> with your cohort. Every file is accessible — no server needed.</div></div>
+  </div>
+</div>
+
+<footer>AWS Certified Cloud Practitioner · CLF-C02 · Free Study Tools · Made by cohort 2026-RTT-06 · Per Scholas Charlotte · Brian Thomas · Passed July 2026</footer>
 </body>
 </html>

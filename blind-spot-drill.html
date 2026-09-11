@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLF-C02 · Blind Spot Drill</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090d16;--surface:#101726;--surface2:#1a2333;--surface3:#0a0f1a;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.13);
+  --text:#f1f5f9;--muted:#8ea0bf;--hint:#475569;
+  --accent:#ff6b35;--blue:#38bdf8;--green:#34d399;--red:#f87171;
+  --amber:#fbbf24;--purple:#a78bfa;
+  --radius:10px;--radius-lg:14px;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;min-height:100vh}
+
+.header{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(9,13,22,0.97);backdrop-filter:blur(12px);z-index:100;gap:10px;flex-wrap:wrap}
+.logo{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.05em}
+.logo span{color:var(--muted)}
+.hbadges{display:flex;gap:6px;flex-wrap:wrap}
+.hb{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;border:1px solid}
+.hb-o{border-color:var(--accent);color:var(--accent)}
+.hb-r{border-color:var(--red);color:var(--red)}
+.hb-g{border-color:var(--green);color:var(--green)}
+.hb-p{border-color:var(--purple);color:var(--purple)}
+
+.top-bar{background:var(--surface3);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.timer{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--text);min-width:64px}
+.timer.warn{color:var(--amber)}
+.timer.danger{color:var(--red);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.prog-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.prog-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);width:0%;transition:width 0.35s}
+.prog-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.area-lbl{font-family:var(--mono);font-size:10px;color:var(--red);white-space:nowrap}
+
+/* START */
+.start-wrap{max-width:700px;margin:50px auto;padding:0 20px;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:10px;color:var(--red);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px}
+.start-wrap h1{font-family:var(--mono);font-size:clamp(22px,4vw,32px);font-weight:700;line-height:1.2;margin-bottom:8px}
+.start-wrap h1 em{font-style:normal;color:var(--accent)}
+.start-wrap p{color:var(--muted);font-size:14px;margin-bottom:24px}
+
+.area-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px;text-align:left}
+@media(max-width:500px){.area-grid{grid-template-columns:1fr}}
+.area-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.area-card.active-area{border-color:rgba(248,113,113,0.4);background:rgba(248,113,113,0.04)}
+.ac-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ac-num{font-family:var(--mono);font-size:9px;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);color:var(--red);padding:2px 7px;border-radius:4px}
+.ac-title{font-size:13px;font-weight:600;color:var(--text)}
+.ac-desc{font-size:12px;color:var(--muted);line-height:1.5}
+.ac-count{font-family:var(--mono);font-size:10px;color:var(--hint);margin-top:6px}
+
+.info-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:24px}
+.ir{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 18px;text-align:center}
+.ir-v{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--text)}
+.ir-l{font-size:11px;color:var(--muted);margin-top:2px}
+
+.start-btn{display:inline-block;padding:13px 38px;background:var(--red);color:white;border:none;border-radius:var(--radius);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:opacity 0.15s}
+.start-btn:hover{opacity:0.88}
+
+/* MAIN */
+.main{max-width:760px;margin:0 auto;padding:18px 20px 60px}
+.ribbon{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;text-align:center}
+.r-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px}
+.r-val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text)}
+.r-sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px}
+
+.qnav-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:14px}
+.qnav-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:7px}
+.qnav-grid{display:flex;flex-wrap:wrap;gap:4px}
+.qng{width:26px;height:26px;border-radius:5px;border:1px solid var(--border2);background:transparent;font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--muted);transition:all 0.15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qng:hover{background:var(--surface2);color:var(--text)}
+.qng.cur{border-color:var(--accent);color:var(--accent);background:rgba(255,107,53,0.1)}
+.qng.ok{background:rgba(52,211,153,0.14);border-color:rgba(52,211,153,0.38);color:var(--green)}
+.qng.err{background:rgba(248,113,113,0.11);border-color:rgba(248,113,113,0.32);color:var(--red)}
+
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:14px}
+.q-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:11px}
+.q-num{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)}
+.area-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px}
+.at-1{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.28);color:var(--red)}
+.at-2{background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.28);color:var(--purple)}
+.at-3{background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.28);color:var(--blue)}
+.at-4{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.28);color:var(--amber)}
+.multi-badge{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(255,107,53,0.12);border:1px solid rgba(255,107,53,0.3);color:var(--accent)}
+
+.q-txt{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:16px}
+.multi-hint{font-size:12px;color:var(--accent);font-family:var(--mono);margin-bottom:12px;padding:7px 12px;background:rgba(255,107,53,0.06);border:1px solid rgba(255,107,53,0.2);border-radius:var(--radius)}
+
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;padding:11px 15px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);text-align:left;font-family:var(--sans);font-size:13.5px;cursor:pointer;transition:all 0.15s;display:flex;gap:10px;align-items:flex-start}
+.opt:hover:not(:disabled):not(.selected){background:var(--surface2);border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt-l{font-family:var(--mono);color:var(--hint);font-weight:700;min-width:18px;flex-shrink:0;margin-top:2px}
+.opt.selected{background:rgba(255,107,53,0.08);border-color:var(--accent)!important}
+.opt.selected .opt-l{color:var(--accent)}
+.opt.correct{background:rgba(52,211,153,0.08);border-color:var(--green)!important}
+.opt.correct .opt-l{color:var(--green)}
+.opt.wrong{background:rgba(248,113,113,0.06);border-color:var(--red)!important}
+.opt.wrong .opt-l{color:var(--red)}
+
+.submit-btn{width:100%;padding:11px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;margin-top:8px;transition:opacity 0.15s;display:none}
+.submit-btn:hover{opacity:0.88}
+.submit-btn.show{display:block}
+
+.feedback{margin-top:12px;padding:12px 15px;border-radius:var(--radius);font-size:13px;display:none;line-height:1.65}
+.feedback.show{display:block}
+.feedback.ok{background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.16);color:var(--muted)}
+.feedback.ok .fb-head{color:var(--green);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+.feedback.err{background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.16);color:var(--muted)}
+.feedback.err .fb-head{color:var(--red);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+
+.phase-banner{background:var(--surface);border:1px solid rgba(167,139,250,0.3);border-radius:var(--radius-lg);padding:26px 22px;text-align:center;display:none;margin-bottom:14px}
+.phase-banner.show{display:block;animation:fadeUp 0.25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pb-score{font-family:var(--mono);font-size:38px;font-weight:700;color:var(--text);line-height:1}
+.pb-label{font-size:14px;color:var(--muted);margin-top:5px;margin-bottom:14px}
+.pb-bar-wrap{height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;margin-bottom:18px}
+.pb-bar{height:100%;border-radius:3px;transition:width 0.6s ease}
+.pb-btn{padding:10px 28px;background:transparent;border:1px solid var(--purple);color:var(--purple);border-radius:var(--radius);font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.pb-btn:hover{background:rgba(167,139,250,0.1)}
+
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nav-btn{padding:9px 18px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--sans);font-size:13px;cursor:pointer;transition:all 0.15s}
+.nav-btn:hover{background:var(--surface2)}
+.nav-btn.pri{border-color:var(--accent);color:var(--accent)}
+
+/* RESULTS */
+.results-page{display:none;max-width:760px;margin:18px auto;padding:0 20px 60px}
+.res-hero{text-align:center;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px}
+.res-pct{font-family:var(--mono);font-size:54px;font-weight:700;line-height:1}
+.res-lbl{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:14px}
+.res-grade{display:inline-block;font-family:var(--mono);font-size:12px;padding:4px 14px;border-radius:6px;margin-bottom:16px}
+.grade-pass{background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:var(--green)}
+.grade-mid{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:var(--amber)}
+.grade-low{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--red)}
+.res-stats{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.rs-item{text-align:center}
+.rs-val{font-family:var(--mono);font-size:24px;font-weight:700}
+.rs-lbl{font-size:12px;color:var(--muted)}
+
+.breakdown-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:14px}
+.bd-head{font-family:var(--mono);font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+.bd-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:4px}
+.bd-row span:last-child{font-family:var(--mono);font-size:11px;color:var(--text)}
+.bd-bar{height:5px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:3px;margin-bottom:10px}
+.bd-fill{height:100%;border-radius:2px}
+
+.blind-spot{background:var(--surface);border:1px solid rgba(248,113,113,0.2);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
+.bs-head{font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+.bs-item{border-bottom:1px solid var(--border);padding-bottom:14px;margin-bottom:14px}
+.bs-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.bs-q{font-size:14px;color:var(--text);margin-bottom:5px;line-height:1.5}
+.bs-tags{display:flex;gap:5px;margin-bottom:5px;flex-wrap:wrap}
+.bs-correct{font-family:var(--mono);font-size:11px;color:var(--green);margin-bottom:3px}
+.bs-exp{font-size:12px;color:var(--muted);line-height:1.6}
+.empty-bs{text-align:center;padding:22px;font-family:var(--mono);font-size:13px;color:var(--green)}
+
+.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.res-btn{padding:10px 24px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;cursor:pointer;background:transparent;color:var(--text);font-family:var(--sans);transition:all 0.15s}
+.res-btn:hover{background:var(--surface2)}
+.res-btn.pri{border-color:var(--red);color:var(--red)}
+
+.footer{border-top:1px solid var(--border);padding:14px 24px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--hint)}
+@media(max-width:560px){
+  .ribbon{grid-template-columns:repeat(2,1fr)}
+  .header,.main,.results-page{padding-left:14px;padding-right:14px}
+  .hbadges{display:none}.q-card{padding:16px 14px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">CLF-C02<span> · Blind Spot Drill</span></div>
+  <div class="hbadges">
+    <span class="hb hb-r">Based on Today's Misses</span>
+    <span class="hb hb-o">44 Questions</span>
+    <span class="hb hb-p">4 Weak Areas</span>
+    <span class="hb hb-g">Exam Monday</span>
+  </div>
+</header>
+
+<div class="top-bar" id="top-bar" style="display:none">
+  <div class="timer" id="timer-display">50:00</div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-lbl" id="prog-lbl">0 / 44 answered</div>
+  </div>
+  <div class="area-lbl" id="area-lbl">Area 1 · Shared Responsibility</div>
+</div>
+
+<!-- START SCREEN -->
+<div class="start-wrap" id="start-screen">
+  <div class="eyebrow">CLF-C02 · Exam Monday · Targeted Drill</div>
+  <h1>Your <em>Blind Spots</em> — Fixed Tonight</h1>
+  <p>Built from every question you missed on today's exam. Four focused areas, 44 questions. Instant feedback. No new material — just locking in what you already know.</p>
+
+  <div class="area-grid">
+    <div class="area-card active-area">
+      <div class="ac-head"><span class="ac-num">Area 1</span><span class="ac-title">Shared Responsibility</span></div>
+      <div class="ac-desc">EC2 vs RDS vs Lambda vs DynamoDB. What AWS owns. What you own. Customer vs AWS in every scenario.</div>
+      <div class="ac-count">12 questions</div>
+    </div>
+    <div class="area-card active-area">
+      <div class="ac-head"><span class="ac-num">Area 2</span><span class="ac-title">SELECT 2 Questions</span></div>
+      <div class="ac-desc">Every multi-select topic you missed. Elimination technique drilled until it's automatic.</div>
+      <div class="ac-count">12 questions</div>
+    </div>
+    <div class="area-card active-area">
+      <div class="ac-head"><span class="ac-num">Area 3</span><span class="ac-title">Service Definitions</span></div>
+      <div class="ac-desc">CloudTrail, Athena, Aurora, IAM (free), DynamoDB, Organizations. The services you KNOW but second-guessed.</div>
+      <div class="ac-count">12 questions</div>
+    </div>
+    <div class="area-card active-area">
+      <div class="ac-head"><span class="ac-num">Area 4</span><span class="ac-title">Storage</span></div>
+      <div class="ac-desc">Storage Gateway, S3 Versioning, S3 classes, EBS vs EFS. The exact scenarios from today's exam.</div>
+      <div class="ac-count">8 questions</div>
+    </div>
+  </div>
+
+  <div class="info-row">
+    <div class="ir"><div class="ir-v">44</div><div class="ir-l">Questions</div></div>
+    <div class="ir"><div class="ir-v">50 min</div><div class="ir-l">Time limit</div></div>
+    <div class="ir"><div class="ir-v">4</div><div class="ir-l">Weak areas</div></div>
+    <div class="ir"><div class="ir-v">Mon</div><div class="ir-l">Exam day</div></div>
+  </div>
+
+  <button class="start-btn" onclick="startExam()">Start Drill &#8594;</button>
+</div>
+
+<!-- WORKSPACE -->
+<div class="main" id="workspace" style="display:none">
+  <div class="ribbon">
+    <div class="r-card"><div class="r-lbl">Question</div><div class="r-val" id="rb-num">1</div><div class="r-sub" id="rb-of">of 44</div></div>
+    <div class="r-card"><div class="r-lbl">Correct</div><div class="r-val" id="rb-ok" style="color:var(--green)">0</div><div class="r-sub" id="rb-ok-sub">—</div></div>
+    <div class="r-card"><div class="r-lbl">Incorrect</div><div class="r-val" id="rb-err" style="color:var(--red)">0</div><div class="r-sub" id="rb-err-sub">—</div></div>
+    <div class="r-card"><div class="r-lbl">Accuracy</div><div class="r-val" id="rb-pct">—</div><div class="r-sub" id="rb-pct-sub">live</div></div>
+  </div>
+
+  <div class="qnav-wrap">
+    <div class="qnav-lbl">Navigator &nbsp;·&nbsp; green = correct &nbsp;·&nbsp; red = incorrect</div>
+    <div class="qnav-grid" id="qnav-grid"></div>
+  </div>
+
+  <div id="q-area"></div>
+
+  <div class="phase-banner" id="phase-banner">
+    <div class="pb-score" id="pb-score">0/12</div>
+    <div class="pb-label" id="pb-label">Area complete</div>
+    <div class="pb-bar-wrap"><div class="pb-bar" id="pb-bar" style="width:0%"></div></div>
+    <button class="pb-btn" id="pb-btn" onclick="nextSection()">Next Area &#8594;</button>
+  </div>
+
+  <div class="nav-row" id="nav-row">
+    <button class="nav-btn" onclick="goTo(currentIdx-1)">&#8592; Prev</button>
+    <button class="nav-btn pri" onclick="goTo(currentIdx+1)">Next &#8594;</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-page" id="results-page">
+  <div class="res-hero">
+    <div class="res-pct" id="res-pct">—</div>
+    <div class="res-lbl" id="res-lbl">Drill complete.</div>
+    <div><span class="res-grade" id="res-grade"></span></div>
+    <div class="res-stats">
+      <div class="rs-item"><div class="rs-val" id="rs-ok" style="color:var(--green)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-err" style="color:var(--red)">0</div><div class="rs-lbl">Incorrect</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-skip" style="color:var(--amber)">0</div><div class="rs-lbl">Skipped</div></div>
+    </div>
+  </div>
+
+  <div class="breakdown-card">
+    <div class="bd-head">Score by Weak Area</div>
+    <div id="bd-areas"></div>
+  </div>
+
+  <div class="blind-spot" id="bs-section">
+    <div class="bs-head">Still Missed — Review These Before Monday</div>
+    <div id="bs-list"></div>
+  </div>
+
+  <div class="res-actions">
+    <button class="res-btn pri" onclick="restartExam()">Retake Drill</button>
+    <button class="res-btn" onclick="reviewAll()">Review All Answers</button>
+  </div>
+</div>
+
+<footer class="footer">
+  CLF-C02 · Blind Spot Drill · Built from July 9 exam misses · Exam Monday July 13
+</footer>
+
+<script>
+const AREA_NAMES={1:'Shared Responsibility',2:'SELECT 2 Questions',3:'Service Definitions',4:'Storage'};
+const AREA_CLS={1:'at-1',2:'at-2',3:'at-3',4:'at-4'};
+
+const QS=[
+
+// ══════════════════════════════════════════════════════
+// AREA 1: SHARED RESPONSIBILITY MODEL (12 questions)
+// Exactly the scenarios from today's exam
+// ══════════════════════════════════════════════════════
+
+{area:1,multi:false,
+ q:"According to security best practices, how should an Amazon EC2 instance be given access to an Amazon S3 bucket?",
+ opts:["A) Store the IAM user's secret key and access key in a text file on the EC2 instance","B) Have the EC2 instance assume an IAM role to obtain the privileges to upload the file","C) Hard code an IAM user's secret key and access key directly in the application","D) Modify the S3 bucket policy so that any service can upload to it at any time"],
+ ans:1,
+ exp:"EC2 instances access S3 via an attached IAM role — the instance automatically receives temporary credentials through the instance metadata service. Never store or hardcode access keys. Bucket policies that allow any service are a major security risk."},
+
+{area:1,multi:false,
+ q:"Which option is a customer responsibility when using Amazon DynamoDB under the AWS Shared Responsibility Model?",
+ opts:["A) Patching the DynamoDB database engine","B) Physical security of DynamoDB infrastructure","C) Access to DynamoDB tables","D) Maintaining the underlying servers running DynamoDB"],
+ ans:2,
+ exp:"For managed services like DynamoDB, AWS handles the engine, physical hardware, and server maintenance. The customer is responsible for access control — who can read and write to the tables via IAM policies. Encryption at rest is provided by AWS automatically but can be configured by the customer too."},
+
+{area:1,multi:false,
+ q:"A company is running a NoSQL database on Amazon EC2 instances. Which task is AWS's responsibility in this scenario?",
+ opts:["A) Patch the NoSQL database software","B) Update the guest operating system of the EC2 instances","C) Patch the physical infrastructure that hosts the EC2 instances","D) Configure the security group firewall"],
+ ans:2,
+ exp:"When you run a database ON EC2 (not a managed service), you manage everything from the OS up — patching the OS, patching the database, configuring security groups. AWS is responsible for the physical infrastructure: servers, networking, facilities, and the hypervisor below the OS."},
+
+{area:1,multi:false,
+ q:"What is a customer responsibility when using AWS Lambda according to the AWS Shared Responsibility Model?",
+ opts:["A) Confirming that the hardware is working in the data center","B) Patching the underlying operating system","C) Managing the code within the Lambda function","D) Shutting down Lambda functions when they are no longer in use"],
+ ans:2,
+ exp:"Lambda is serverless — AWS manages the OS, runtime, infrastructure, and scaling. The customer's responsibility is the code inside the Lambda function and the IAM permissions granted to it. Lambda functions don't 'shut down' — they terminate automatically after execution."},
+
+{area:1,multi:false,
+ q:"A company is using Amazon DynamoDB. Which task is the company's responsibility, according to the AWS Shared Responsibility Model?",
+ opts:["A) Secure the operating system","B) Manage database access permissions","C) Provision the underlying hosts","D) Patch the operating system"],
+ ans:1,
+ exp:"For DynamoDB (a fully managed service), AWS handles the OS, hosts, and patching. The customer manages ACCESS — configuring IAM policies and resource-based policies that control who can read, write, or administer the DynamoDB tables."},
+
+{area:1,multi:false,
+ q:"An e-commerce company migrated its IT infrastructure from on-premises to AWS. Which cost is the company's DIRECT responsibility after migration?",
+ opts:["A) Cost of physical security for the AWS data center","B) Cost of power for the AWS servers","C) Cost of the hardware infrastructure on AWS","D) Cost of application software licenses"],
+ ans:3,
+ exp:"After migrating to AWS, the customer no longer pays for hardware, power, or physical security — AWS owns all of that. Application software licenses (for software running ON the cloud infrastructure) remain the customer's direct responsibility."},
+
+{area:1,multi:false,
+ q:"A company wants to run a NoSQL database on Amazon EC2 instances. Which task is the responsibility of AWS?",
+ opts:["A) Patch the physical infrastructure that hosts the EC2 instances","B) Update the guest operating system of the EC2 instances","C) Maintain high availability at the database layer","D) Configure the security group firewall"],
+ ans:0,
+ exp:"AWS is always responsible for the physical infrastructure — the data center hardware, network gear, and facilities. When running your OWN database on EC2, you manage the OS, the database software, and your own high availability architecture. AWS does not configure your security groups for you."},
+
+{area:1,multi:false,
+ q:"Under the AWS Shared Responsibility Model, which of the following is AWS always responsible for — regardless of which service you use?",
+ opts:["A) Patching the guest operating system on EC2 instances","B) Managing IAM user permissions and policies","C) Physical security of the data center facilities","D) Configuring encryption for data stored in S3"],
+ ans:2,
+ exp:"Physical security of the data center is always AWS's responsibility — this never shifts to the customer regardless of the service. Everything ABOVE the physical layer can shift depending on the service type (IaaS vs PaaS vs SaaS)."},
+
+{area:1,multi:false,
+ q:"Which of the following correctly describes the Shared Responsibility Model for Amazon RDS?",
+ opts:["A) The customer patches the database engine and AWS manages the OS","B) AWS patches the database engine and the customer manages access and data","C) The customer manages all aspects including hardware and OS","D) AWS manages everything including the customer's IAM permissions"],
+ ans:1,
+ exp:"For RDS, AWS manages the database engine patching, OS maintenance, and hardware. The customer manages: what data is stored, who has access (IAM), encryption configuration choices, and network security (security groups, VPC settings). This is the classic 'managed service' responsibility shift."},
+
+{area:1,multi:false,
+ q:"A developer deploys an application on AWS Lambda. According to the Shared Responsibility Model, which security task does AWS perform for the customer?",
+ opts:["A) Reviewing the application code for vulnerabilities","B) Managing IAM permissions for the Lambda function","C) Patching and maintaining the runtime environment and underlying OS","D) Encrypting data processed by the Lambda function"],
+ ans:2,
+ exp:"For Lambda, AWS manages the compute infrastructure, the underlying OS, and the runtime environment (Node.js, Python, Java, etc.) including patching them. The customer manages the function code, environment variables, IAM execution roles, and any data the function processes."},
+
+{area:1,multi:false,
+ q:"Which of the following is a shared responsibility between AWS and the customer for MOST AWS services?",
+ opts:["A) Physical access controls to the data center","B) Patching the hypervisor layer","C) Encryption of data — AWS provides the tools, customer decides to use them","D) Network cabling and hardware maintenance"],
+ ans:2,
+ exp:"Encryption is often described as shared: AWS provides and manages the encryption infrastructure (KMS, SSE), but the CUSTOMER decides whether and how to enable encryption for their data. Physical access, hypervisors, and hardware are always AWS's responsibility alone."},
+
+{area:1,multi:false,
+ q:"The AWS Shared Responsibility Model states 'security OF the cloud' is AWS's responsibility. Which of these is an example of 'security IN the cloud' — the customer's responsibility?",
+ opts:["A) Maintaining the global fiber network infrastructure","B) Configuring Multi-Factor Authentication (MFA) on IAM user accounts","C) Patching the underlying EC2 hypervisor","D) Physical security of AWS Regions and Availability Zones"],
+ ans:1,
+ exp:"'Security IN the cloud' means security of everything you put into AWS: your data, your applications, your IAM configuration, and your network settings. Configuring MFA on IAM accounts is entirely the customer's decision and responsibility. AWS has no ability to enable MFA on your behalf."},
+
+// ══════════════════════════════════════════════════════
+// AREA 2: SELECT 2 QUESTIONS (12 questions)
+// All the multi-select topics you missed today
+// ══════════════════════════════════════════════════════
+
+{area:2,multi:true,
+ q:"Which AWS services or tools can identify rightsizing opportunities for Amazon EC2 instances? (Choose TWO)",
+ opts:["A) AWS Cost Explorer","B) AWS Billing Conductor","C) Amazon CodeGuru","D) Amazon SageMaker","E) AWS Compute Optimizer"],
+ ans:[0,4],
+ exp:"AWS Cost Explorer has a built-in rightsizing recommendations feature. AWS Compute Optimizer uses ML to analyze CloudWatch metrics and recommend optimal EC2 instance types. Billing Conductor is for custom billing. CodeGuru reviews code quality. SageMaker is for ML model building."},
+
+{area:2,multi:true,
+ q:"Which of the following are benefits of using AWS Trusted Advisor? (Choose TWO)",
+ opts:["A) Providing high-performance container orchestration","B) Detecting underutilized resources to save costs","C) Improving security by proactively monitoring the AWS environment","D) Implementing enforced tagging across AWS resources","E) Creating and rotating encryption keys"],
+ ans:[1,2],
+ exp:"Trusted Advisor's five pillars include Cost Optimization (detecting underutilized/idle resources) and Security (flagging open ports, MFA off on root, etc.). It does NOT do container orchestration (ECS/EKS), enforce tagging (that's AWS Config/Tag Policies), or manage encryption keys (that's KMS)."},
+
+{area:2,multi:true,
+ q:"Which tasks are CUSTOMER responsibilities according to the AWS Shared Responsibility Model? (Choose TWO)",
+ opts:["A) Classify company assets in the AWS Cloud","B) Determine which Availability Zones to use for Amazon S3 buckets","C) Patch or upgrade Amazon DynamoDB","D) Select EC2 instances to run AWS Lambda on","E) Configure the AWS-provided security group firewall"],
+ ans:[0,4],
+ exp:"Classifying your own data/assets is always the customer's responsibility. Configuring security group firewalls is the customer's responsibility — AWS provides the security group feature but you define the rules. AWS manages DynamoDB patching. Lambda manages its own compute. S3 replication across AZs is handled by AWS."},
+
+{area:2,multi:true,
+ q:"Which of the following are pillars of the AWS Well-Architected Framework? (Choose TWO)",
+ opts:["A) Scalability","B) Availability","C) Responsive design","D) Operational Excellence","E) Reliability"],
+ ans:[3,4],
+ exp:"The 6 official pillars of the AWS Well-Architected Framework are: Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization, and Sustainability. Scalability, Availability, and Responsive Design are NOT official pillars — they are concepts, but not framework pillars."},
+
+{area:2,multi:true,
+ q:"A company wants to receive a notification when a specific AWS cost threshold is reached. Which AWS services or tools can the company use? (Choose TWO)",
+ opts:["A) Amazon CloudWatch","B) AWS Cost and Usage Report","C) AWS Cost Explorer","D) Amazon Simple Queue Service (Amazon SQS)","E) AWS Budgets"],
+ ans:[0,4],
+ exp:"AWS Budgets sends email or SNS alerts when actual or forecasted costs hit a threshold. Amazon CloudWatch billing alarms can trigger notifications based on estimated charges. CUR provides raw data but doesn't send alerts. SQS is a message queue. Cost Explorer visualizes data but doesn't send cost alerts proactively."},
+
+{area:2,multi:true,
+ q:"Which of the following are benefits of consolidated billing in AWS Organizations? (Choose TWO)",
+ opts:["A) Receive a single invoice for all AWS accounts","B) No additional charge for using consolidated billing","C) Each account gets its own separate invoice","D) Consolidated billing increases the cost of AWS services","E) Volume discounts apply only to the management account"],
+ ans:[0,1],
+ exp:"Consolidated billing produces ONE invoice for all member accounts (paid by the management account) and has NO additional charge. Volume pricing discounts are pooled across ALL member accounts — not just the management account. Each account does NOT get a separate invoice under consolidated billing."},
+
+{area:2,multi:true,
+ q:"What does the concept of agility mean in AWS Cloud computing? (Choose TWO)",
+ opts:["A) The low cost of entry into cloud computing","B) The speed at which AWS resources are implemented","C) The ability to experiment quickly with low cost of failure","D) The speed at which AWS creates new AWS Regions","E) The elimination of wasted capacity"],
+ ans:[1,2],
+ exp:"Agility means: AWS resources can be provisioned in minutes (speed of implementation), and you can experiment/innovate quickly because failed experiments cost almost nothing and can be quickly reversed. Eliminating waste is elasticity. Low entry cost is an advantage, not specifically agility."},
+
+{area:2,multi:true,
+ q:"Elasticity in the AWS Cloud refers to which of the following? (Choose TWO)",
+ opts:["A) The pay-as-you-go billing model","B) How easily resources can be procured when they are needed","C) The ability to rightsize resources as demand shifts","D) The maximum amount of RAM an Amazon EC2 instance can use","E) How quickly an Amazon EC2 instance can be restarted"],
+ ans:[1,2],
+ exp:"Elasticity = the ability to acquire resources when you need them AND release them when you don't — rightsizing to match demand in real time. Pay-as-you-go is the billing model (not elasticity). Max RAM is a specification. Restart speed is performance, not elasticity."},
+
+{area:2,multi:true,
+ q:"Which of the following services can be used to block network traffic to an Amazon EC2 instance? (Choose TWO)",
+ opts:["A) Amazon CloudWatch","B) AWS CloudTrail","C) Security groups","D) Network ACLs","E) Amazon VPC Flow Logs"],
+ ans:[2,3],
+ exp:"Security Groups are stateful firewalls at the instance level. Network ACLs are stateless firewalls at the subnet level. Both can BLOCK traffic. VPC Flow Logs capture traffic metadata but cannot block anything. CloudWatch is for monitoring. CloudTrail records API calls — neither can block traffic."},
+
+{area:2,multi:true,
+ q:"A company wants to provide managed Windows virtual desktops and applications to its remote employees. Which TWO AWS services meet these requirements?",
+ opts:["A) AWS Site-to-Site VPN","B) Amazon Elastic Container Service (Amazon ECS)","C) Amazon Connect","D) Amazon WorkSpaces","E) Amazon AppStream 2.0"],
+ ans:[3,4],
+ exp:"Amazon WorkSpaces provides fully managed Windows or Linux virtual desktops (DaaS). Amazon AppStream 2.0 streams specific desktop applications to users without providing a full desktop. Both deliver Windows applications/environments to remote employees. VPN is networking. ECS runs containers. Connect is a contact center service."},
+
+{area:2,multi:true,
+ q:"Which pricing options meet the requirement of making an upfront commitment for continued use of EC2 instances in exchange for the LOWEST cost? (Choose TWO)",
+ opts:["A) Spot Instances","B) Reserved Instances","C) Savings Plans","D) On-Demand Instances","E) Dedicated Hosts"],
+ ans:[1,2],
+ exp:"Reserved Instances and Savings Plans both require a 1 or 3 year commitment in exchange for up to 72% discount vs On-Demand — these are the two commitment-based pricing models. Spot Instances have no commitment but can be interrupted. On-Demand has no commitment. Dedicated Hosts are for compliance/licensing requirements, not lowest cost."},
+
+{area:2,multi:true,
+ q:"A company is using a central data platform to discover, transform, and visualize data for customers. Which TWO AWS services should the company use?",
+ opts:["A) Amazon Redshift","B) Amazon QLDB","C) AWS Glue","D) Amazon Elastic File System (Amazon EFS)","E) Amazon QuickSight"],
+ ans:[2,4],
+ exp:"AWS Glue is the serverless ETL service for discovering and transforming data. Amazon QuickSight is the BI service for visualizing data with dashboards and charts. Together they form a discover-transform-visualize pipeline. Redshift is a data warehouse (storage/query). QLDB is a ledger database. EFS is file storage."},
+
+// ══════════════════════════════════════════════════════
+// AREA 3: SERVICE DEFINITIONS (12 questions)
+// The ones you know but second-guessed under pressure
+// ══════════════════════════════════════════════════════
+
+{area:3,multi:false,
+ q:"Which AWS service can identify WHEN an Amazon EC2 instance was terminated and WHO terminated it?",
+ opts:["A) AWS Compute Optimizer","B) AWS CloudTrail","C) AWS Identity and Access Management (IAM)","D) Amazon EventBridge"],
+ ans:1,
+ exp:"AWS CloudTrail records ALL API calls in your account — including who made the call, when, from what IP, and what action was taken. TerminateInstances is an EC2 API call. CloudTrail logs it with the user identity, timestamp, and parameters. EventBridge routes events but doesn't log API call history."},
+
+{area:3,multi:false,
+ q:"A company has 5 TB of data stored in Amazon S3. The company plans to occasionally run queries on the data for analysis. Which AWS service runs these queries in the MOST cost-effective manner?",
+ opts:["A) Amazon Kinesis","B) Amazon RDS","C) Amazon Athena","D) Amazon Redshift"],
+ ans:2,
+ exp:"Amazon Athena queries data directly in S3 using SQL — serverless, no infrastructure to provision, you pay only per query (per TB of data scanned). For OCCASIONAL queries on S3 data, Athena is far cheaper than running a Redshift cluster or RDS instance 24/7. Kinesis is for real-time streaming."},
+
+{area:3,multi:false,
+ q:"Which AWS service is a fully managed MySQL-compatible relational database?",
+ opts:["A) Amazon S3","B) Amazon Redshift","C) Amazon DynamoDB","D) Amazon Aurora"],
+ ans:3,
+ exp:"Amazon Aurora is a fully managed relational database compatible with MySQL AND PostgreSQL. DynamoDB is NoSQL. Redshift is a data warehouse for analytics (not a transactional database). S3 is object storage. Aurora = relational, MySQL/PostgreSQL compatible — this is a core exam fact."},
+
+{area:3,multi:false,
+ q:"Which AWS service is always provided at NO additional charge?",
+ opts:["A) AWS Config","B) Amazon SageMaker","C) AWS Organizations","D) Amazon CloudWatch"],
+ ans:2,
+ exp:"AWS Organizations (creating and managing multiple accounts, consolidated billing, SCPs) has NO additional charge. CloudWatch has a free tier but charges for custom metrics and extended retention. Config charges per configuration item recorded. SageMaker charges for compute and storage used."},
+
+{area:3,multi:false,
+ q:"Which AWS service is always FREE — meaning it has no cost under any usage level?",
+ opts:["A) Amazon S3","B) AWS WAF","C) AWS Identity and Access Management (IAM)","D) Elastic Load Balancers"],
+ ans:2,
+ exp:"AWS IAM (Identity and Access Management) is completely free — no charge for creating users, groups, roles, or policies. S3 charges for storage used. WAF charges per web ACL and rule. ELBs charge by the hour and by data processed."},
+
+{area:3,multi:false,
+ q:"To reduce costs, a company is planning to migrate a NoSQL database to AWS. Which AWS service is fully managed AND can automatically scale throughput capacity to meet database workload demands?",
+ opts:["A) Amazon Redshift","B) Amazon Aurora","C) Amazon RDS","D) Amazon DynamoDB"],
+ ans:3,
+ exp:"Amazon DynamoDB is a fully managed NoSQL database that automatically scales throughput capacity (read/write capacity units) up and down with demand — no manual scaling or server management. Redshift is a data warehouse. Aurora and RDS are relational (SQL) databases, not NoSQL."},
+
+{area:3,multi:false,
+ q:"Which AWS service can be used at no additional cost to manage and govern multiple AWS accounts?",
+ opts:["A) AWS Config","B) AWS Organizations","C) Amazon CloudWatch","D) Amazon SageMaker"],
+ ans:1,
+ exp:"AWS Organizations is free — there is no charge for the service itself. You can create organizational units, apply SCPs, and use consolidated billing at no additional cost. You only pay for the AWS resources and services used within the member accounts."},
+
+{area:3,multi:false,
+ q:"Which AWS service provides the ability to manage infrastructure as code (IaC)?",
+ opts:["A) AWS CodePipeline","B) AWS CodeDeploy","C) AWS Direct Connect","D) AWS CloudFormation"],
+ ans:3,
+ exp:"AWS CloudFormation is the native IaC service — you write JSON or YAML templates describing your desired infrastructure and CloudFormation provisions and manages it. CodePipeline automates CI/CD pipelines. CodeDeploy automates application deployments. Direct Connect is a network connection service."},
+
+{area:3,multi:false,
+ q:"A company wants to manage deployed IT services and govern its infrastructure as code (IaC) templates. Which AWS service meets this requirement?",
+ opts:["A) AWS Systems Manager","B) AWS Organizations","C) AWS Service Catalog","D) AWS Resource Explorer"],
+ ans:2,
+ exp:"AWS Service Catalog lets organizations create and manage portfolios of approved IT services — including CloudFormation templates — that employees can deploy. It governs WHICH templates are approved and WHO can deploy them. Systems Manager manages operational tasks. Organizations manages account structure."},
+
+{area:3,multi:false,
+ q:"A global company wants to migrate its third-party applications to AWS and wants help from a global team of AWS experts to complete the migration reliably according to AWS best practices. Which AWS resource meets this requirement?",
+ opts:["A) AWS Support","B) AWS Launch Wizard","C) AWS Managed Services (AMS)","D) AWS Professional Services"],
+ ans:3,
+ exp:"AWS Professional Services is a global team of AWS experts that partners with customers for complex migrations and cloud transformations, following AWS best practices. AMS operates your AWS infrastructure for you but doesn't execute migrations. Launch Wizard simplifies specific workload deployments. Support provides technical assistance, not project execution."},
+
+{area:3,multi:false,
+ q:"A company is running and managing its own Docker environment on Amazon EC2 instances. The company wants a managed alternative to help manage cluster size, scheduling, and environment maintenance. Which AWS service meets these requirements?",
+ opts:["A) Amazon Athena","B) AWS Fargate","C) Amazon RDS","D) AWS Lambda"],
+ ans:1,
+ exp:"AWS Fargate is a serverless compute engine for containers that works with ECS and EKS — eliminating the need to manage the underlying EC2 cluster size, scheduling, and maintenance. Lambda is serverless but for functions, not Docker containers. RDS is a database. Athena queries S3 data."},
+
+{area:3,multi:false,
+ q:"Which AWS Cloud Adoption Framework (AWS CAF) capability belongs to the People perspective?",
+ opts:["A) Data architecture","B) Event management","C) Cloud fluency","D) Strategic partnership"],
+ ans:2,
+ exp:"Cloud fluency belongs to the People perspective — it focuses on building a cloud-competent workforce with the knowledge, skills, and behaviors needed to support cloud adoption. Data architecture is Platform perspective. Event management is Operations perspective. Strategic partnership is Business perspective."},
+
+// ══════════════════════════════════════════════════════
+// AREA 4: STORAGE (8 questions)
+// Storage Gateway, S3 Versioning, EBS, S3 classes
+// ══════════════════════════════════════════════════════
+
+{area:4,multi:false,
+ q:"A company has a centralized group of users with large file storage requirements that have exceeded the space available on premises. The company wants to extend its file storage capabilities while RETAINING the performance benefit of sharing content locally. Which is the MOST operationally efficient solution?",
+ opts:["A) Move each user's environment to Amazon WorkSpaces with Amazon WorkDocs","B) Configure and deploy an AWS Storage Gateway file gateway — connect each workstation to it","C) Deploy an EC2 instance and attach an EBS Provisioned IOPS volume, share directly with users","D) Create an Amazon S3 bucket for each user and mount using S3 file system utility"],
+ ans:1,
+ exp:"AWS Storage Gateway file gateway is the exact solution for this scenario: it presents cloud storage as a local network file share (NFS/SMB), caches frequently accessed content on-premises for local performance, and stores the actual data in S3 in the cloud. Users connect to it just like a local file server — no change in workflow."},
+
+{area:4,multi:false,
+ q:"A company is storing sensitive customer data in an Amazon S3 bucket. The company wants to protect the data from ACCIDENTAL DELETION or overwriting. Which S3 feature should the company use?",
+ opts:["A) S3 server-side encryption","B) S3 Lifecycle rules","C) S3 bucket policies","D) S3 Versioning"],
+ ans:3,
+ exp:"S3 Versioning preserves every version of every object — if someone accidentally deletes or overwrites a file, the previous version is still there and can be restored. Encryption protects data confidentiality, not against deletion. Lifecycle rules automate storage class transitions. Bucket policies control access, not version recovery."},
+
+{area:4,multi:false,
+ q:"Which Amazon S3 storage class is designed for data that is accessed only a few times per year and requires rapid retrieval when accessed?",
+ opts:["A) S3 Standard","B) S3 Standard-Infrequent Access (S3 Standard-IA)","C) S3 Glacier Deep Archive","D) S3 Intelligent-Tiering"],
+ ans:1,
+ exp:"S3 Standard-IA is for data accessed infrequently but that needs to be retrieved quickly when needed. It has lower storage cost than Standard but charges a per-GB retrieval fee. S3 Glacier Deep Archive is for data rarely if ever accessed (retrieval takes hours). S3 Standard is for frequent access."},
+
+{area:4,multi:false,
+ q:"Which Amazon S3 storage class automatically moves objects between storage tiers based on changing access patterns, with no retrieval fees?",
+ opts:["A) S3 Standard-IA","B) S3 Glacier","C) S3 Intelligent-Tiering","D) S3 One Zone-IA"],
+ ans:2,
+ exp:"S3 Intelligent-Tiering monitors object access patterns and automatically moves objects between a frequent access tier and an infrequent access tier — with no retrieval fees and no performance impact. It's ideal when access patterns are unpredictable. Standard-IA has retrieval fees. Glacier is for archival only."},
+
+{area:4,multi:false,
+ q:"Which AWS storage service provides block-level storage volumes for use with Amazon EC2 instances that persist independently from the instance?",
+ opts:["A) Amazon EFS","B) Amazon S3","C) Amazon EBS","D) AWS Storage Gateway"],
+ ans:2,
+ exp:"Amazon EBS (Elastic Block Store) provides persistent block storage for EC2 — like a virtual hard drive that survives instance stops and terminations (unless explicitly deleted). EFS is shared file storage (NFS). S3 is object storage. Storage Gateway bridges on-premises to cloud storage."},
+
+{area:4,multi:false,
+ q:"Which AWS storage service provides SHARED file storage that can be mounted simultaneously across multiple Amazon EC2 instances using NFS protocol?",
+ opts:["A) Amazon EBS","B) Amazon S3","C) Amazon EFS","D) Amazon FSx for Windows File Server"],
+ ans:2,
+ exp:"Amazon EFS (Elastic File System) provides scalable NFS file storage mountable by multiple EC2 instances at the same time. EBS can only be attached to ONE EC2 instance at a time (except Multi-Attach, which is limited). S3 is object storage. FSx for Windows uses SMB protocol, not NFS."},
+
+{area:4,multi:false,
+ q:"A company has an application running on Amazon EC2 that needs to store a database with high IOPS requirements. Which storage solution should they use?",
+ opts:["A) Amazon EFS General Purpose","B) Amazon S3","C) Amazon EBS Provisioned IOPS (io1/io2)","D) AWS Storage Gateway"],
+ ans:2,
+ exp:"EBS Provisioned IOPS volumes (io1/io2) are designed for I/O-intensive workloads like databases that require consistent, low-latency IOPS performance. EFS is for shared file access, not high-performance single-instance databases. S3 is object storage with no IOPS guarantee. Storage Gateway is for hybrid cloud."},
+
+{area:4,multi:false,
+ q:"A company needs to store archival data that is accessed less than once per year and can tolerate retrieval times measured in hours. Which LOWEST COST Amazon S3 storage class should they use?",
+ opts:["A) S3 Standard","B) S3 Standard-IA","C) S3 Glacier Instant Retrieval","D) S3 Glacier Deep Archive"],
+ ans:3,
+ exp:"S3 Glacier Deep Archive is the lowest cost S3 storage class — designed for data retained for 7-10+ years that is rarely if ever accessed. Retrieval takes up to 12 hours. Standard-IA and Glacier Instant Retrieval cost more but provide faster access. Standard is the most expensive and is for frequent access."}
+
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentIdx=0;
+let userAns=new Array(QS.length).fill(null);
+let selectedMulti=[];
+let timerSec=3000;
+let timerInterval=null;
+let isReview=false;
+
+const SECTION_SIZES={1:12,2:12,3:12,4:8};
+const SECTION_STARTS={1:0,2:12,3:24,4:36};
+
+function fmt(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+
+function startTimer(){
+  const el=document.getElementById('timer-display');
+  timerInterval=setInterval(()=>{
+    timerSec--;el.textContent=fmt(timerSec);
+    if(timerSec<=120)el.className='timer danger';
+    else if(timerSec<=300)el.className='timer warn';
+    if(timerSec<=0){clearInterval(timerInterval);showResults();}
+  },1000);
+}
+
+function startExam(){
+  document.getElementById('start-screen').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  buildNavGrid();renderQ();startTimer();
+}
+
+function buildNavGrid(){
+  const g=document.getElementById('qnav-grid');g.innerHTML='';
+  QS.forEach((_,i)=>{
+    const b=document.createElement('div');b.className='qng';b.textContent=i+1;b.id='qng-'+i;
+    b.onclick=()=>goTo(i);g.appendChild(b);
+  });refreshNav();
+}
+
+function refreshNav(){
+  QS.forEach((_,i)=>{
+    const b=document.getElementById('qng-'+i);if(!b)return;
+    b.className='qng';
+    if(i===currentIdx)b.classList.add('cur');
+    else if(userAns[i]!==null){
+      const q=QS[i];
+      const correct=Array.isArray(q.ans)?arrEqual(userAns[i],q.ans):userAns[i]===q.ans;
+      b.classList.add(correct?'ok':'err');
+    }
+  });
+}
+
+function arrEqual(a,b){
+  if(!a||!b)return false;
+  return [...a].sort().join()===[...b].sort().join();
+}
+
+function isCorrect(q,ans){
+  if(ans===null)return false;
+  return Array.isArray(q.ans)?arrEqual(ans,q.ans):ans===q.ans;
+}
+
+function getStats(){
+  let ok=0,err=0,done=0;
+  QS.forEach((q,i)=>{if(userAns[i]!==null){done++;if(isCorrect(q,userAns[i]))ok++;else err++;}});
+  return{ok,err,done};
+}
+
+function updateRibbon(){
+  const{ok,err,done}=getStats();
+  const pct=done>0?Math.round(ok/done*100):0;
+  document.getElementById('rb-num').textContent=currentIdx+1;
+  document.getElementById('rb-ok').textContent=ok;
+  document.getElementById('rb-err').textContent=err;
+  document.getElementById('rb-pct').textContent=done>0?pct+'%':'—';
+  document.getElementById('rb-ok-sub').textContent=done>0?Math.round(ok/QS.length*100)+'% total':'—';
+  document.getElementById('rb-err-sub').textContent=done>0?(100-pct)+'% wrong':'—';
+  document.getElementById('rb-pct-sub').textContent=done>0?done+' answered':'live';
+  document.getElementById('prog-fill').style.width=Math.round(done/QS.length*100)+'%';
+  document.getElementById('prog-lbl').textContent=done+' / '+QS.length+' answered';
+  document.getElementById('area-lbl').textContent='Area '+QS[currentIdx].area+' · '+AREA_NAMES[QS[currentIdx].area];
+  refreshNav();
+}
+
+function renderQ(){
+  document.getElementById('phase-banner').className='phase-banner';
+  document.getElementById('nav-row').style.display='flex';
+  if(currentIdx>=QS.length){showResults();return;}
+  const q=QS[currentIdx];
+  const prev=userAns[currentIdx];
+  const isAns=prev!==null;
+  const isMulti=Array.isArray(q.ans);
+
+  let meta=`<span class="q-num">Q${currentIdx+1} / ${QS.length}</span>`;
+  meta+=`<span class="area-tag ${AREA_CLS[q.area]}">Area ${q.area} · ${AREA_NAMES[q.area]}</span>`;
+  if(isMulti)meta+=`<span class="multi-badge">SELECT 2</span>`;
+
+  let optsHTML='';
+  if(isMulti&&!isAns){
+    optsHTML=q.opts.map((opt,i)=>
+      `<button class="opt" id="mopt-${i}" onclick="toggleMulti(${i})"><span class="opt-l">${opt.substring(0,2)}</span>${opt.substring(3)}</button>`
+    ).join('');
+  } else {
+    const corrArr=isMulti?(Array.isArray(q.ans)?q.ans:[q.ans]):null;
+    const choArr=isMulti&&prev?(Array.isArray(prev)?prev:[prev]):null;
+    optsHTML=q.opts.map((opt,i)=>{
+      let cls='opt',dis='';
+      if(isAns){
+        dis='disabled';
+        if(isMulti){
+          if(corrArr.includes(i))cls+=' correct';
+          else if(choArr&&choArr.includes(i))cls+=' wrong';
+        } else {
+          if(i===q.ans)cls+=' correct';
+          else if(i===prev&&i!==q.ans)cls+=' wrong';
+        }
+      }
+      return`<button class="${cls}" ${dis} onclick="pickAnswer(${i})"><span class="opt-l">${opt.substring(0,2)}</span>${opt.substring(3)}</button>`;
+    }).join('');
+  }
+
+  const submitBtn=isMulti&&!isAns?'<button class="submit-btn show" id="submit-btn" onclick="submitMulti()">Submit Answer</button>':'';
+  const multiHint=isMulti&&!isAns?'<div class="multi-hint">Select 2 answers, then click Submit</div>':'';
+  const fb=isAns?`<div class="feedback ${isCorrect(q,prev)?'ok':'err'} show"><div class="fb-head">${isCorrect(q,prev)?'Correct':'Incorrect'}</div>${q.exp}</div>`:'';
+
+  document.getElementById('q-area').innerHTML=`
+    <div class="q-card">
+      <div class="q-meta">${meta}</div>
+      <div class="q-txt">${q.q}</div>
+      ${multiHint}
+      <div class="opts">${optsHTML}</div>
+      ${submitBtn}
+      ${fb}
+    </div>`;
+
+  selectedMulti=[];
+  updateRibbon();
+}
+
+function toggleMulti(i){
+  const btn=document.getElementById('mopt-'+i);
+  if(!btn)return;
+  const idx=selectedMulti.indexOf(i);
+  if(idx>=0){
+    selectedMulti.splice(idx,1);
+    btn.classList.remove('selected');
+    btn.querySelector('.opt-l').style.color='';
+  } else {
+    if(selectedMulti.length>=2)return;
+    selectedMulti.push(i);
+    btn.classList.add('selected');
+  }
+}
+
+function submitMulti(){
+  if(selectedMulti.length<2)return;
+  userAns[currentIdx]=[...selectedMulti];
+  checkSectionComplete();
+  renderQ();
+}
+
+function pickAnswer(i){
+  if(userAns[currentIdx]!==null)return;
+  const q=QS[currentIdx];
+  if(Array.isArray(q.ans))return;
+  userAns[currentIdx]=i;
+  checkSectionComplete();
+  renderQ();
+}
+
+function checkSectionComplete(){
+  if(isReview)return;
+  const area=QS[currentIdx].area;
+  const start=SECTION_STARTS[area];
+  const size=SECTION_SIZES[area];
+  const isLast=currentIdx===start+size-1;
+  const allDone=QS.slice(start,start+size).every((_,xi)=>userAns[start+xi]!==null);
+  if(isLast&&allDone)setTimeout(()=>showSectionBanner(area),300);
+}
+
+function showSectionBanner(area){
+  const start=SECTION_STARTS[area];
+  const size=SECTION_SIZES[area];
+  let sOk=0;
+  for(let i=start;i<start+size;i++){if(isCorrect(QS[i],userAns[i]))sOk++;}
+  const pct=Math.round(sOk/size*100);
+  document.getElementById('pb-score').textContent=sOk+'/'+size;
+  document.getElementById('pb-label').textContent=AREA_NAMES[area]+' — '+pct+'%';
+  const bar=document.getElementById('pb-bar');
+  bar.style.width=pct+'%';
+  bar.style.background=pct>=80?'var(--green)':pct>=60?'var(--amber)':'var(--red)';
+  const btn=document.getElementById('pb-btn');
+  if(area===4){btn.textContent='See Results &#8594;';btn.onclick=()=>showResults();}
+  else{btn.textContent='Next Area &#8594;';btn.onclick=()=>nextSection();}
+  document.getElementById('phase-banner').classList.add('show');
+  document.getElementById('nav-row').style.display='none';
+}
+
+function nextSection(){
+  const cur=QS[currentIdx].area;
+  const nextStart=SECTION_STARTS[cur+1];
+  if(nextStart!==undefined){
+    currentIdx=nextStart;
+    document.getElementById('phase-banner').className='phase-banner';
+    document.getElementById('nav-row').style.display='flex';
+    renderQ();window.scrollTo({top:0,behavior:'smooth'});
+  } else showResults();
+}
+
+function goTo(idx){
+  if(idx<0||idx>=QS.length)return;
+  currentIdx=idx;
+  document.getElementById('phase-banner').className='phase-banner';
+  document.getElementById('nav-row').style.display='flex';
+  selectedMulti=[];renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  clearInterval(timerInterval);
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  document.getElementById('results-page').style.display='block';
+
+  const{ok,err,done}=getStats();
+  const pct=Math.round(ok/QS.length*100);
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('rs-ok').textContent=ok;
+  document.getElementById('rs-err').textContent=err;
+  document.getElementById('rs-skip').textContent=QS.length-done;
+
+  const grade=document.getElementById('res-grade');
+  const lbl=document.getElementById('res-lbl');
+  if(pct>=85){grade.textContent='Blind spots closed — you are ready for Monday';grade.className='res-grade grade-pass';lbl.textContent='Strong performance across all 4 weak areas. Go rest.';}
+  else if(pct>=70){grade.textContent='Almost there — review the red areas below';grade.className='res-grade grade-mid';lbl.textContent='Good progress. Retake and target the areas still showing red.';}
+  else{grade.textContent='Keep going — retake until you hit 85%+';grade.className='res-grade grade-low';lbl.textContent='Use the blind spot list below. Retake. Repeat.';}
+
+  const areaStats={1:{ok:0,t:0},2:{ok:0,t:0},3:{ok:0,t:0},4:{ok:0,t:0}};
+  QS.forEach((q,i)=>{areaStats[q.area].t++;if(isCorrect(q,userAns[i]))areaStats[q.area].ok++;});
+  document.getElementById('bd-areas').innerHTML=[1,2,3,4].map(a=>{
+    const s=areaStats[a];const dp=s.t>0?Math.round(s.ok/s.t*100):0;
+    const col=dp>=80?'var(--green)':dp>=60?'var(--amber)':'var(--red)';
+    return`<div class="bd-row"><span>Area ${a} · ${AREA_NAMES[a]}</span><span>${s.ok}/${s.t} (${dp}%)</span></div><div class="bd-bar"><div class="bd-fill" style="width:${dp}%;background:${col}"></div></div>`;
+  }).join('');
+
+  const missed=QS.filter((q,i)=>userAns[i]!==null&&!isCorrect(q,userAns[i]));
+  const bsList=document.getElementById('bs-list');
+  if(missed.length===0){bsList.innerHTML='<div class="empty-bs">Zero misses — you are locked in for Monday.</div>';}
+  else{
+    bsList.innerHTML=missed.map(q=>{
+      const gi=QS.indexOf(q);
+      const corrArr=Array.isArray(q.ans)?q.ans:[q.ans];
+      const corrText=corrArr.map(i=>q.opts[i].substring(3)).join(' + ');
+      return`<div class="bs-item">
+        <div class="bs-q"><strong>Q${gi+1}:</strong> ${q.q}</div>
+        <div class="bs-tags"><span class="area-tag ${AREA_CLS[q.area]}">Area ${q.area} · ${AREA_NAMES[q.area]}</span></div>
+        <div class="bs-correct">Correct: ${corrText}</div>
+        <div class="bs-exp">${q.exp}</div>
+      </div>`;
+    }).join('');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function reviewAll(){
+  isReview=true;
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  document.getElementById('phase-banner').className='phase-banner';
+  document.getElementById('nav-row').style.display='flex';
+  currentIdx=0;selectedMulti=[];renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restartExam(){
+  clearInterval(timerInterval);timerSec=3000;isReview=false;
+  userAns=new Array(QS.length).fill(null);currentIdx=0;selectedMulti=[];
+  const td=document.getElementById('timer-display');td.textContent='50:00';td.className='timer';
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  document.getElementById('start-screen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

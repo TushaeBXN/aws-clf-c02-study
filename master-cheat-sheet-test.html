@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLF-C02 · Master Cheat Sheet Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#090d16;--surface:#101726;--surface2:#1a2333;--surface3:#0a0f1a;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.13);
+  --text:#f1f5f9;--muted:#8ea0bf;--hint:#475569;
+  --accent:#ff9900;--blue:#38bdf8;--green:#34d399;--red:#f87171;
+  --amber:#fbbf24;--purple:#a78bfa;
+  --radius:10px;--radius-lg:14px;
+  --mono:'Space Mono',monospace;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;min-height:100vh}
+.header{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:rgba(9,13,22,0.97);backdrop-filter:blur(12px);z-index:100;gap:10px;flex-wrap:wrap}
+.logo{font-family:var(--mono);font-size:12px;color:var(--accent);letter-spacing:0.05em}
+.logo span{color:var(--muted)}
+.hbadges{display:flex;gap:6px;flex-wrap:wrap}
+.hb{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:4px;border:1px solid}
+.hb-o{border-color:var(--accent);color:var(--accent)}
+.hb-b{border-color:var(--blue);color:var(--blue)}
+.hb-g{border-color:var(--green);color:var(--green)}
+.hb-p{border-color:var(--purple);color:var(--purple)}
+.top-bar{background:var(--surface3);border-bottom:1px solid var(--border);padding:10px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.timer{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--text);min-width:64px}
+.timer.warn{color:var(--amber)}
+.timer.danger{color:var(--red);animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+.prog-wrap{flex:1;display:flex;align-items:center;gap:12px}
+.prog-bg{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);width:0%;transition:width 0.35s}
+.prog-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);white-space:nowrap}
+.cat-lbl{font-family:var(--mono);font-size:10px;color:var(--accent);white-space:nowrap}
+/* START */
+.start-wrap{max-width:680px;margin:50px auto;padding:0 20px;text-align:center}
+.eyebrow{font-family:var(--mono);font-size:10px;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:10px}
+.start-wrap h1{font-family:var(--mono);font-size:clamp(22px,4vw,32px);font-weight:700;line-height:1.2;margin-bottom:8px}
+.start-wrap h1 em{font-style:normal;color:var(--accent)}
+.start-wrap p{color:var(--muted);font-size:14px;margin-bottom:24px}
+.info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:22px;text-align:left}
+.ic{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px}
+.ic-l{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:4px}
+.ic-v{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text)}
+.ic-s{font-size:12px;color:var(--muted);margin-top:2px}
+.cat-preview{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:24px;text-align:left}
+.cat-preview h3{font-family:var(--mono);font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+.cp-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.cp-row:last-child{margin-bottom:0}
+.cp-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cp-name{font-size:13px;color:var(--muted);flex:1}
+.cp-count{font-family:var(--mono);font-size:10px;color:var(--hint)}
+.start-btn{display:inline-block;padding:13px 38px;background:var(--accent);color:#000;border:none;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--sans);transition:opacity 0.15s}
+.start-btn:hover{opacity:0.88}
+/* MAIN */
+.main{max-width:760px;margin:0 auto;padding:18px 20px 60px}
+.ribbon{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;text-align:center}
+.r-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px}
+.r-val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--text)}
+.r-sub{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px}
+.qnav-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:14px}
+.qnav-lbl{font-family:var(--mono);font-size:9px;color:var(--hint);text-transform:uppercase;letter-spacing:0.09em;margin-bottom:7px}
+.qnav-grid{display:flex;flex-wrap:wrap;gap:4px}
+.qng{width:26px;height:26px;border-radius:5px;border:1px solid var(--border2);background:transparent;font-family:var(--mono);font-size:10px;cursor:pointer;color:var(--muted);transition:all 0.15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.qng:hover{background:var(--surface2);color:var(--text)}
+.qng.cur{border-color:var(--accent);color:var(--accent);background:rgba(255,153,0,0.1)}
+.qng.ok{background:rgba(52,211,153,0.14);border-color:rgba(52,211,153,0.38);color:var(--green)}
+.qng.err{background:rgba(248,113,113,0.11);border-color:rgba(248,113,113,0.32);color:var(--red)}
+.q-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:14px}
+.q-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:11px}
+.q-num{font-family:var(--mono);font-size:10px;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:4px;border:1px solid var(--border2)}
+.cat-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(255,153,0,0.1);border:1px solid rgba(255,153,0,0.25);color:var(--accent)}
+.q-txt{font-size:15px;color:var(--text);line-height:1.65;margin-bottom:16px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{width:100%;padding:11px 15px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);text-align:left;font-family:var(--sans);font-size:13.5px;cursor:pointer;transition:all 0.15s;display:flex;gap:10px;align-items:flex-start}
+.opt:hover:not(:disabled){background:var(--surface2);border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt-l{font-family:var(--mono);color:var(--hint);font-weight:700;min-width:18px;flex-shrink:0;margin-top:2px}
+.opt.correct{background:rgba(52,211,153,0.08);border-color:var(--green)!important}
+.opt.correct .opt-l{color:var(--green)}
+.opt.wrong{background:rgba(248,113,113,0.06);border-color:var(--red)!important}
+.opt.wrong .opt-l{color:var(--red)}
+.feedback{margin-top:12px;padding:12px 15px;border-radius:var(--radius);font-size:13px;display:none;line-height:1.65}
+.feedback.show{display:block}
+.feedback.ok{background:rgba(52,211,153,0.05);border:1px solid rgba(52,211,153,0.16);color:var(--muted)}
+.feedback.ok .fb-head{color:var(--green);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+.feedback.err{background:rgba(248,113,113,0.05);border:1px solid rgba(248,113,113,0.16);color:var(--muted)}
+.feedback.err .fb-head{color:var(--red);font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:0.06em;font-weight:700;margin-bottom:3px}
+.nav-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.nav-btn{padding:9px 18px;background:transparent;border:1px solid var(--border2);border-radius:var(--radius);color:var(--text);font-family:var(--sans);font-size:13px;cursor:pointer;transition:all 0.15s}
+.nav-btn:hover{background:var(--surface2)}
+.nav-btn.pri{border-color:var(--accent);color:var(--accent)}
+/* RESULTS */
+.results-page{display:none;max-width:760px;margin:18px auto;padding:0 20px 60px}
+.res-hero{text-align:center;padding:28px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:16px}
+.res-pct{font-family:var(--mono);font-size:54px;font-weight:700;line-height:1}
+.res-lbl{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:14px}
+.res-grade{display:inline-block;font-family:var(--mono);font-size:12px;padding:4px 14px;border-radius:6px;margin-bottom:16px}
+.grade-pass{background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:var(--green)}
+.grade-mid{background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);color:var(--amber)}
+.grade-low{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:var(--red)}
+.res-stats{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.rs-item{text-align:center}
+.rs-val{font-family:var(--mono);font-size:24px;font-weight:700}
+.rs-lbl{font-size:12px;color:var(--muted)}
+.breakdown-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:14px}
+.bd-head{font-family:var(--mono);font-size:10px;color:var(--hint);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+.bd-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-bottom:4px}
+.bd-row span:last-child{font-family:var(--mono);font-size:11px;color:var(--text)}
+.bd-bar{height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;margin-top:3px;margin-bottom:9px}
+.bd-fill{height:100%;border-radius:2px}
+.blind-spot{background:var(--surface);border:1px solid rgba(248,113,113,0.2);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
+.bs-head{font-family:var(--mono);font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:12px}
+.bs-item{border-bottom:1px solid var(--border);padding-bottom:13px;margin-bottom:13px}
+.bs-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.bs-q{font-size:14px;color:var(--text);margin-bottom:5px;line-height:1.5}
+.bs-tags{display:flex;gap:5px;margin-bottom:4px;flex-wrap:wrap}
+.bs-correct{font-family:var(--mono);font-size:11px;color:var(--green);margin-bottom:3px}
+.bs-exp{font-size:12px;color:var(--muted);line-height:1.6}
+.empty-bs{text-align:center;padding:22px;font-family:var(--mono);font-size:13px;color:var(--green)}
+.res-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.res-btn{padding:10px 24px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;cursor:pointer;background:transparent;color:var(--text);font-family:var(--sans);transition:all 0.15s}
+.res-btn:hover{background:var(--surface2)}
+.res-btn.pri{border-color:var(--accent);color:var(--accent)}
+.footer{border-top:1px solid var(--border);padding:14px 24px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--hint)}
+@media(max-width:560px){
+  .ribbon{grid-template-columns:repeat(2,1fr)}
+  .header,.main,.results-page{padding-left:14px;padding-right:14px}
+  .hbadges{display:none}.q-card{padding:16px 14px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">CLF-C02<span> · Master Cheat Sheet Test</span></div>
+  <div class="hbadges">
+    <span class="hb hb-o">50 Questions</span>
+    <span class="hb hb-b">60 Min</span>
+    <span class="hb hb-g">Full Service Names</span>
+    <span class="hb hb-p">No Abbreviations</span>
+  </div>
+</header>
+
+<div class="top-bar" id="top-bar" style="display:none">
+  <div class="timer" id="timer-display">60:00</div>
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-lbl" id="prog-lbl">0 / 50 answered</div>
+  </div>
+  <div class="cat-lbl" id="cat-lbl">Storage</div>
+</div>
+
+<!-- START -->
+<div class="start-wrap" id="start-screen">
+  <div class="eyebrow">CLF-C02 · Exam Monday · Final Drill</div>
+  <h1>Master Cheat Sheet <em>Test</em></h1>
+  <p>50 questions built directly from your master cheat sheet. Every answer uses the full AWS service name — exactly how the real exam reads it. Instant feedback every question.</p>
+
+  <div class="info-grid">
+    <div class="ic"><div class="ic-l">Questions</div><div class="ic-v">50</div><div class="ic-s">Full service names</div></div>
+    <div class="ic"><div class="ic-l">Time limit</div><div class="ic-v">60 min</div><div class="ic-s">~72 sec per Q</div></div>
+    <div class="ic"><div class="ic-l">Pass line</div><div class="ic-v">70%</div><div class="ic-s">35+ correct</div></div>
+    <div class="ic"><div class="ic-l">Exam day</div><div class="ic-v">Monday</div><div class="ic-s">3:15 PM · Forsyth</div></div>
+  </div>
+
+  <div class="cat-preview">
+    <h3>Categories Covered</h3>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--blue)"></div><div class="cp-name">Storage — Amazon S3, Amazon EBS, Amazon EFS, Amazon FSx, Amazon S3 Glacier, AWS Storage Gateway</div><div class="cp-count">7 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--purple)"></div><div class="cp-name">Networking — AWS Direct Connect, AWS Site-to-Site VPN, AWS Transit Gateway, Amazon Route 53, Amazon CloudFront</div><div class="cp-count">6 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--amber)"></div><div class="cp-name">Monitoring — Amazon CloudWatch, AWS CloudTrail, AWS Config, AWS Trusted Advisor</div><div class="cp-count">5 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--green)"></div><div class="cp-name">Databases — Amazon Aurora, Amazon RDS, Amazon DynamoDB, Amazon Redshift, Amazon ElastiCache</div><div class="cp-count">6 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--red)"></div><div class="cp-name">Security — AWS WAF, Amazon GuardDuty, Amazon Macie, Amazon Inspector, AWS Key Management Service</div><div class="cp-count">6 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--accent)"></div><div class="cp-name">Compute — Amazon EC2, AWS Lambda, Amazon ECS, Amazon EKS, AWS Fargate, AWS Elastic Beanstalk</div><div class="cp-count">5 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--cyan,#06b6d4)"></div><div class="cp-name">Deployment — AWS CloudFormation, AWS CodeDeploy, AWS CodePipeline, AWS OpsWorks</div><div class="cp-count">4 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--muted)"></div><div class="cp-name">Messaging — Amazon SNS, Amazon SQS, Amazon SES, Amazon EventBridge</div><div class="cp-count">4 Qs</div></div>
+    <div class="cp-row"><div class="cp-dot" style="background:var(--blue)"></div><div class="cp-name">Well-Architected, Cloud Concepts, Billing &amp; Support, Global Infrastructure, IAM, AWS CAF</div><div class="cp-count">7 Qs</div></div>
+  </div>
+
+  <!-- MEMORY AIDS -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;text-align:left">
+
+    <div style="background:var(--surface);border:1px solid rgba(52,211,153,0.25);border-radius:var(--radius-lg);padding:16px 18px">
+      <div style="font-family:var(--mono);font-size:9px;color:var(--green);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">Well-Architected · 6 Pillars</div>
+      <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text);letter-spacing:0.08em;margin-bottom:6px">OSRPCS</div>
+      <div style="font-size:12px;color:var(--green);font-style:italic;margin-bottom:10px">"Old Soldiers Rest Peacefully, Carefully Sleeping"</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.8">
+        <span style="color:var(--text);font-weight:600">O</span>perational Excellence<br>
+        <span style="color:var(--text);font-weight:600">S</span>ecurity<br>
+        <span style="color:var(--text);font-weight:600">R</span>eliability<br>
+        <span style="color:var(--text);font-weight:600">P</span>erformance Efficiency<br>
+        <span style="color:var(--text);font-weight:600">C</span>ost Optimization<br>
+        <span style="color:var(--text);font-weight:600">S</span>ustainability
+      </div>
+    </div>
+
+    <div style="background:var(--surface);border:1px solid rgba(167,139,250,0.25);border-radius:var(--radius-lg);padding:16px 18px">
+      <div style="font-family:var(--mono);font-size:9px;color:var(--purple);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px">AWS CAF · 6 Perspectives</div>
+      <div style="font-family:var(--mono);font-size:22px;font-weight:700;color:var(--text);letter-spacing:0.08em;margin-bottom:6px">BGPPSO</div>
+      <div style="font-size:12px;color:var(--purple);font-style:italic;margin-bottom:10px">"Big Gorillas Play Piano, Sing Opera"</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.8">
+        <span style="color:var(--text);font-weight:600">B</span>usiness<br>
+        <span style="color:var(--text);font-weight:600">G</span>overnance<br>
+        <span style="color:var(--text);font-weight:600">P</span>eople<br>
+        <span style="color:var(--text);font-weight:600">P</span>latform<br>
+        <span style="color:var(--text);font-weight:600">S</span>ecurity<br>
+        <span style="color:var(--text);font-weight:600">O</span>perations
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:24px;text-align:left;font-size:13px;color:var(--muted);line-height:1.7">
+    <span style="font-family:var(--mono);font-size:9px;color:var(--accent);text-transform:uppercase;letter-spacing:0.08em;display:block;margin-bottom:6px">Keep them separate on exam day</span>
+    Well-Architected = <strong style="color:var(--text)">pillars</strong> · technical design principles for building systems<br>
+    AWS CAF = <strong style="color:var(--text)">perspectives</strong> · organizational lenses for cloud adoption<br>
+    <span style="color:var(--green)">→</span> "protect data and systems" = <strong style="color:var(--text)">Security pillar</strong> &nbsp;·&nbsp;
+    <span style="color:var(--green)">→</span> "cloud fluency / workforce" = <strong style="color:var(--text)">People perspective</strong>
+  </div>
+
+  <button class="start-btn" onclick="startExam()">Begin Test &#8594;</button>
+</div>
+
+<!-- WORKSPACE -->
+<div class="main" id="workspace" style="display:none">
+  <div class="ribbon">
+    <div class="r-card"><div class="r-lbl">Question</div><div class="r-val" id="rb-num">1</div><div class="r-sub" id="rb-of">of 50</div></div>
+    <div class="r-card"><div class="r-lbl">Correct</div><div class="r-val" id="rb-ok" style="color:var(--green)">0</div><div class="r-sub" id="rb-ok-sub">—</div></div>
+    <div class="r-card"><div class="r-lbl">Incorrect</div><div class="r-val" id="rb-err" style="color:var(--red)">0</div><div class="r-sub" id="rb-err-sub">—</div></div>
+    <div class="r-card"><div class="r-lbl">Accuracy</div><div class="r-val" id="rb-pct">—</div><div class="r-sub" id="rb-pct-sub">live</div></div>
+  </div>
+  <div class="qnav-wrap">
+    <div class="qnav-lbl">Navigator &nbsp;·&nbsp; green = correct &nbsp;·&nbsp; red = incorrect</div>
+    <div class="qnav-grid" id="qnav-grid"></div>
+  </div>
+  <div id="q-area"></div>
+  <div class="nav-row">
+    <button class="nav-btn" onclick="goTo(currentIdx-1)">&#8592; Prev</button>
+    <button class="nav-btn pri" onclick="goTo(currentIdx+1)">Next &#8594;</button>
+    <button class="nav-btn" style="border-color:var(--purple);color:var(--purple)" onclick="finishExam()">Finish</button>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-page" id="results-page">
+  <div class="res-hero">
+    <div class="res-pct" id="res-pct">—</div>
+    <div class="res-lbl" id="res-lbl">Test complete.</div>
+    <div><span class="res-grade" id="res-grade"></span></div>
+    <div class="res-stats">
+      <div class="rs-item"><div class="rs-val" id="rs-ok" style="color:var(--green)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-err" style="color:var(--red)">0</div><div class="rs-lbl">Incorrect</div></div>
+      <div class="rs-item"><div class="rs-val" id="rs-skip" style="color:var(--amber)">0</div><div class="rs-lbl">Skipped</div></div>
+    </div>
+  </div>
+  <div class="breakdown-card">
+    <div class="bd-head">Score by Category</div>
+    <div id="bd-cats"></div>
+  </div>
+  <div class="blind-spot">
+    <div class="bs-head">Blind Spot Analysis — Every Miss</div>
+    <div id="bs-list"></div>
+  </div>
+  <div class="res-actions">
+    <button class="res-btn pri" onclick="restartExam()">Retake</button>
+    <button class="res-btn" onclick="reviewAll()">Review All Answers</button>
+  </div>
+</div>
+
+<footer class="footer">
+  CLF-C02 · Master Cheat Sheet Test · 50 Questions · Full AWS Service Names · Exam Monday July 13
+</footer>
+
+<script>
+const QS=[
+
+// ── STORAGE (7) ───────────────────────────────────────────────────────────────
+{cat:'Storage',
+ q:"A company needs storage that can be accessed concurrently by hundreds of Amazon EC2 instances as a shared file system using the NFS protocol. Which service is the best fit?",
+ opts:["A) Amazon Elastic Block Store","B) Amazon Simple Storage Service","C) Amazon Elastic File System","D) Amazon S3 Glacier"],
+ ans:2,
+ exp:"Amazon Elastic File System (Amazon EFS) provides a shared NFS file system mountable by hundreds of EC2 instances simultaneously. Amazon Elastic Block Store attaches to ONE instance only. Amazon Simple Storage Service is object storage accessed via HTTP/REST, not NFS."},
+
+{cat:'Storage',
+ q:"A media site hosts a static website directly from cloud storage with no web server. Which AWS service supports this?",
+ opts:["A) Amazon Elastic Block Store","B) Amazon Simple Storage Service","C) Amazon Elastic File System","D) Amazon EC2"],
+ ans:1,
+ exp:"Amazon Simple Storage Service (Amazon S3) natively supports static website hosting — you enable the feature on the bucket and point your domain to it. No web server or EC2 instance is required."},
+
+{cat:'Storage',
+ q:"A single Amazon EC2 instance needs a virtual hard drive for its root volume and primary database storage. Which service should be used?",
+ opts:["A) Amazon Simple Storage Service","B) Amazon Elastic Block Store","C) Amazon Elastic File System","D) Amazon S3 Glacier"],
+ ans:1,
+ exp:"Amazon Elastic Block Store (Amazon EBS) provides persistent block storage volumes that attach directly to a single EC2 instance — acting as a virtual hard drive. It supports boot volumes and high-IOPS database workloads."},
+
+{cat:'Storage',
+ q:"A hospital archives compliance records that are rarely accessed and can tolerate 12-48 hour retrieval times. Which storage class provides the lowest cost?",
+ opts:["A) Amazon S3 Standard","B) Amazon S3 Glacier Instant Retrieval","C) Amazon S3 Glacier Deep Archive","D) Amazon Elastic File System"],
+ ans:2,
+ exp:"Amazon S3 Glacier Deep Archive is the lowest-cost Amazon S3 storage class, designed for data retained for 7-10+ years that is rarely if ever accessed. Retrieval times are 12-48 hours. It is significantly cheaper than Amazon S3 Glacier Instant Retrieval or Amazon S3 Standard."},
+
+{cat:'Storage',
+ q:"An on-premises application needs to access cloud storage via SMB protocol, mounting AWS storage locally as if it were a local file server. Which service provides this?",
+ opts:["A) Amazon Simple Storage Service","B) AWS Storage Gateway","C) Amazon Elastic File System","D) AWS Snowball"],
+ ans:1,
+ exp:"AWS Storage Gateway provides hybrid cloud storage — it presents AWS cloud storage as a local SMB or NFS file share to on-premises applications. The actual data is stored in AWS while the gateway provides local access and caching for performance."},
+
+{cat:'Storage',
+ q:"A Windows-based workload needs a fully managed SMB file share and high-performance computing jobs need a Lustre-compatible file system. Which service handles both?",
+ opts:["A) Amazon Elastic File System","B) Amazon FSx","C) Amazon Simple Storage Service","D) Amazon Elastic Block Store"],
+ ans:1,
+ exp:"Amazon FSx provides purpose-built high-performance file systems — Amazon FSx for Windows File Server (SMB protocol for Windows workloads) and Amazon FSx for Lustre (high-performance computing and machine learning). Amazon Elastic File System is Linux-only NFS."},
+
+{cat:'Storage',
+ q:"A company needs to transfer 80 TB of data to AWS but their internet connection is too slow. Which service uses a physical device shipped to and from the customer?",
+ opts:["A) AWS DataSync","B) AWS Snowball","C) AWS Storage Gateway","D) AWS Database Migration Service"],
+ ans:1,
+ exp:"AWS Snowball is a physical data transfer device — AWS ships it to you, you load your data, ship it back, and AWS uploads it. For large datasets where the network transfer would take weeks or months, Snowball is the right choice. AWS DataSync syncs data over the network."},
+
+// ── NETWORKING (6) ────────────────────────────────────────────────────────────
+{cat:'Networking',
+ q:"A company needs a dedicated, physical network connection from its on-premises data center to AWS that bypasses the public internet entirely for consistent, predictable performance. Which service provides this?",
+ opts:["A) AWS Site-to-Site VPN","B) AWS Direct Connect","C) AWS Transit Gateway","D) Amazon Route 53"],
+ ans:1,
+ exp:"AWS Direct Connect establishes a dedicated private physical connection to AWS — it never touches the public internet, providing consistent bandwidth, lower latency, and reduced data transfer costs. AWS Site-to-Site VPN uses encrypted tunnels OVER the public internet."},
+
+{cat:'Networking',
+ q:"A company needs an encrypted tunnel from its office network to AWS over the public internet, set up quickly without a physical connection. Which service should they use?",
+ opts:["A) AWS Direct Connect","B) AWS Site-to-Site VPN","C) AWS Transit Gateway","D) Amazon Virtual Private Cloud Peering"],
+ ans:1,
+ exp:"AWS Site-to-Site VPN creates encrypted IPsec tunnels over the public internet between your on-premises network and your Amazon Virtual Private Cloud. It can be set up in minutes. AWS Direct Connect requires a physical dedicated line that takes weeks to provision."},
+
+{cat:'Networking',
+ q:"A company has 40 Amazon Virtual Private Clouds and multiple on-premises sites that all need to communicate. Which service acts as a central hub to simplify connectivity instead of creating a full mesh of connections?",
+ opts:["A) Amazon Virtual Private Cloud Peering","B) AWS Transit Gateway","C) AWS NAT Gateway","D) Amazon Internet Gateway"],
+ ans:1,
+ exp:"AWS Transit Gateway acts as a hub-and-spoke network transit center — you connect all your Amazon Virtual Private Clouds and on-premises networks to the Transit Gateway, which routes traffic between them. Two VPCs only → use Amazon Virtual Private Cloud Peering. Many VPCs → use AWS Transit Gateway."},
+
+{cat:'Networking',
+ q:"A company wants to cache content at hundreds of edge locations worldwide to reduce latency for global users downloading images and videos. Which service provides this?",
+ opts:["A) Amazon Route 53","B) Amazon CloudFront","C) Elastic Load Balancing","D) AWS Global Accelerator"],
+ ans:1,
+ exp:"Amazon CloudFront is a global Content Delivery Network that caches content at edge locations worldwide, serving it to users from the nearest location. Amazon Route 53 is a DNS service. AWS Global Accelerator improves performance via the AWS global network but does not cache content."},
+
+{cat:'Networking',
+ q:"A company registers a domain and wants to route users to different regional endpoints based on their geographic location. Which service handles domain registration and latency-based routing?",
+ opts:["A) Amazon CloudFront","B) Amazon Route 53","C) Elastic Load Balancing","D) AWS Direct Connect"],
+ ans:1,
+ exp:"Amazon Route 53 is a scalable DNS and domain registration service. It supports routing policies including latency-based, geolocation, failover, and weighted routing to direct users to the best endpoint. Amazon CloudFront caches content but does not handle DNS or domain registration."},
+
+{cat:'Networking',
+ q:"A company needs to block a specific IP address from reaching resources in their Amazon Virtual Private Cloud subnet. Which firewall operates at the subnet level and supports both allow and deny rules?",
+ opts:["A) Security Group","B) Network Access Control List","C) AWS WAF","D) AWS Shield"],
+ ans:1,
+ exp:"Network Access Control Lists operate at the subnet level and are stateless — they support both allow AND deny rules, making them the correct tool to block a specific IP address. Security Groups operate at the instance level, are stateful, and only support allow rules — they cannot deny specific IPs."},
+
+// ── MONITORING (5) ────────────────────────────────────────────────────────────
+{cat:'Monitoring',
+ q:"An operations team wants dashboards showing CPU utilization and memory metrics for their Amazon EC2 fleet, with alarms that trigger when thresholds are exceeded. Which service provides this?",
+ opts:["A) AWS CloudTrail","B) Amazon CloudWatch","C) AWS Config","D) AWS Artifact"],
+ ans:1,
+ exp:"Amazon CloudWatch collects metrics, logs, and events from AWS resources and applications. It provides dashboards and the ability to set alarms that trigger notifications or automated actions when metrics cross defined thresholds."},
+
+{cat:'Monitoring',
+ q:"A security officer needs to find out who deleted an Amazon EC2 instance at 3 PM yesterday and from which IP address. Which service captures this information?",
+ opts:["A) Amazon CloudWatch","B) AWS CloudTrail","C) AWS Config","D) AWS Trusted Advisor"],
+ ans:1,
+ exp:"AWS CloudTrail records every API call made in your AWS account — including who made it (user identity), when (timestamp), from where (source IP), and what action was taken. Terminating an EC2 instance is an API call that CloudTrail logs completely."},
+
+{cat:'Monitoring',
+ q:"A compliance officer needs to see the configuration history of security groups and verify they have not drifted from a defined compliance baseline. Which service tracks resource configuration history?",
+ opts:["A) Amazon CloudWatch","B) AWS CloudTrail","C) AWS Config","D) AWS Artifact"],
+ ans:2,
+ exp:"AWS Config continuously records the configuration state of your AWS resources and evaluates them against compliance rules. It answers 'Is it configured correctly?' and tracks configuration drift over time. AWS CloudTrail answers 'Who did what?' AWS CloudWatch answers 'How is it performing?'"},
+
+{cat:'Monitoring',
+ q:"A team wants real-time best-practice recommendations across cost optimization, security, fault tolerance, performance efficiency, and service limits. Which service provides these recommendations?",
+ opts:["A) AWS Config","B) AWS CloudTrail","C) AWS Trusted Advisor","D) Amazon CloudWatch"],
+ ans:2,
+ exp:"AWS Trusted Advisor inspects your AWS environment and provides real-time recommendations across five categories: Cost Optimization, Performance, Security, Fault Tolerance, and Service Limits. It identifies underutilized resources, open security gaps, and quota concerns."},
+
+{cat:'Monitoring',
+ q:"Auditors need to download AWS SOC 2 and PCI DSS compliance reports to verify that AWS meets regulatory requirements. Which service provides these official compliance documents on demand?",
+ opts:["A) AWS Trusted Advisor","B) AWS Artifact","C) AWS Security Hub","D) Amazon Inspector"],
+ ans:1,
+ exp:"AWS Artifact is the self-service portal for on-demand access to AWS security and compliance reports — including SOC 1, SOC 2, SOC 3, PCI DSS, ISO certifications, and other compliance documentation. It does not generate audit reports for your own resources."},
+
+// ── DATABASES (6) ─────────────────────────────────────────────────────────────
+{cat:'Databases',
+ q:"A company needs a MySQL-compatible managed relational database with five times the throughput of standard MySQL and up to 15 read replicas. Which service should they use?",
+ opts:["A) Amazon RDS for MySQL","B) Amazon Aurora","C) Amazon DynamoDB","D) Amazon Redshift"],
+ ans:1,
+ exp:"Amazon Aurora is a cloud-native relational database compatible with MySQL and PostgreSQL, offering up to 5x the throughput of standard MySQL and support for up to 15 read replicas. Amazon RDS for MySQL is fully managed but does not deliver Aurora's performance characteristics."},
+
+{cat:'Databases',
+ q:"An application needs a NoSQL database with single-digit millisecond latency at any scale with a flexible schema. Which managed AWS service meets this need?",
+ opts:["A) Amazon RDS","B) Amazon Aurora","C) Amazon DynamoDB","D) Amazon ElastiCache"],
+ ans:2,
+ exp:"Amazon DynamoDB is a fully managed NoSQL key-value and document database that delivers consistent single-digit millisecond performance at any scale. It is serverless — no cluster management required. Amazon ElastiCache is an in-memory caching layer, not a primary database."},
+
+{cat:'Databases',
+ q:"A business intelligence team needs to run complex SQL analytical queries against petabytes of historical sales data. Which AWS service is purpose-built for this data warehouse workload?",
+ opts:["A) Amazon Aurora","B) Amazon Redshift","C) Amazon RDS","D) Amazon DynamoDB"],
+ ans:1,
+ exp:"Amazon Redshift is a fully managed data warehouse optimized for Online Analytical Processing (OLAP) — complex queries across large datasets for business intelligence. Amazon RDS and Amazon Aurora are for Online Transaction Processing (OLTP). Amazon DynamoDB is NoSQL."},
+
+{cat:'Databases',
+ q:"An application needs sub-millisecond read performance in front of an existing SQL database to reduce load on the primary database. Which in-memory caching service should be used?",
+ opts:["A) Amazon DynamoDB Accelerator","B) Amazon ElastiCache","C) Amazon Redshift","D) Amazon RDS"],
+ ans:1,
+ exp:"Amazon ElastiCache provides fully managed in-memory caching using Redis or Memcached — it sits in front of SQL databases to serve frequently requested data at sub-millisecond speed. Amazon DynamoDB Accelerator (DAX) is specifically for caching Amazon DynamoDB queries only, not SQL databases."},
+
+{cat:'Databases',
+ q:"A company is migrating a NoSQL database to AWS and needs a fully managed service that automatically scales read and write throughput capacity to meet unpredictable demand. Which service meets this requirement?",
+ opts:["A) Amazon Redshift","B) Amazon DynamoDB","C) Amazon Aurora","D) Amazon RDS"],
+ ans:1,
+ exp:"Amazon DynamoDB automatically scales throughput capacity up and down with demand using on-demand capacity mode — no manual scaling or server management. Amazon Redshift is a data warehouse. Amazon Aurora and Amazon RDS are relational (SQL) databases, not NoSQL."},
+
+{cat:'Databases',
+ q:"A team wants full control of the guest operating system on their database server including the ability to install custom software and manage patching themselves. Which approach supports this?",
+ opts:["A) Amazon RDS","B) Amazon EC2","C) Amazon Aurora","D) Amazon DynamoDB"],
+ ans:1,
+ exp:"Running a database on Amazon EC2 gives the customer full control of the guest OS — they can install any software, configure the OS, and manage patching themselves. Amazon RDS, Amazon Aurora, and Amazon DynamoDB are managed services where AWS controls the OS layer."},
+
+// ── SECURITY (6) ─────────────────────────────────────────────────────────────
+{cat:'Security',
+ q:"A company needs to block SQL injection and cross-site scripting attacks against its public web application. Which service filters malicious web requests?",
+ opts:["A) AWS Shield","B) AWS WAF","C) Amazon GuardDuty","D) Amazon Inspector"],
+ ans:1,
+ exp:"AWS WAF (Web Application Firewall) protects web applications from common exploits by filtering HTTP/HTTPS traffic based on customizable rules — blocking SQL injection, cross-site scripting, and other OWASP top-10 threats. AWS Shield protects against DDoS attacks, not application-layer exploits."},
+
+{cat:'Security',
+ q:"A security team needs a service that automatically detects malicious and unauthorized activity across AWS accounts using threat intelligence feeds, without requiring agents. Which service provides this?",
+ opts:["A) Amazon Macie","B) Amazon GuardDuty","C) Amazon Inspector","D) AWS Security Hub"],
+ ans:1,
+ exp:"Amazon GuardDuty is a managed threat detection service that continuously monitors AWS accounts, Amazon Virtual Private Cloud flow logs, DNS logs, and AWS CloudTrail events for malicious activity using threat intelligence and machine learning — no agents required."},
+
+{cat:'Security',
+ q:"A company wants to automatically discover and classify sensitive personally identifiable information (PII) stored in Amazon S3 buckets. Which service should they use?",
+ opts:["A) Amazon GuardDuty","B) Amazon Macie","C) Amazon Inspector","D) AWS Key Management Service"],
+ ans:1,
+ exp:"Amazon Macie uses machine learning to automatically discover, classify, and protect sensitive data stored in Amazon S3 — including PII such as names, addresses, credit card numbers, and social security numbers. Amazon GuardDuty detects threats in your account, not sensitive data in S3."},
+
+{cat:'Security',
+ q:"A company needs to scan Amazon EC2 instances and container images for known software vulnerabilities and unintended network exposure. Which service performs these automated assessments?",
+ opts:["A) Amazon GuardDuty","B) Amazon Macie","C) Amazon Inspector","D) AWS Security Hub"],
+ ans:2,
+ exp:"Amazon Inspector is an automated vulnerability management service that continuously scans Amazon EC2 instances and Amazon Elastic Container Registry container images for software vulnerabilities (CVEs) and network reachability issues against security best practices."},
+
+{cat:'Security',
+ q:"A company wants to centrally aggregate security findings from Amazon GuardDuty, Amazon Inspector, and Amazon Macie into a single dashboard with standardized formatting. Which service provides this?",
+ opts:["A) Amazon GuardDuty","B) AWS Config","C) Amazon Inspector","D) AWS Security Hub"],
+ ans:3,
+ exp:"AWS Security Hub is a cloud security posture management service that aggregates, organizes, and prioritizes security alerts and findings from multiple AWS services and partner products — including Amazon GuardDuty, Amazon Inspector, and Amazon Macie — into a single standardized view."},
+
+{cat:'Security',
+ q:"A company needs to store database passwords and API keys securely with automatic rotation so applications can retrieve credentials programmatically. Which service provides this?",
+ opts:["A) AWS Key Management Service","B) AWS Secrets Manager","C) AWS Certificate Manager","D) AWS Systems Manager Parameter Store"],
+ ans:1,
+ exp:"AWS Secrets Manager is specifically designed to store, manage, and automatically rotate secrets including database credentials, API keys, and OAuth tokens. It natively integrates with Amazon RDS, Amazon Aurora, and Amazon Redshift for automatic credential rotation."},
+
+// ── COMPUTE (5) ───────────────────────────────────────────────────────────────
+{cat:'Compute',
+ q:"A developer wants to run code in response to events such as Amazon S3 file uploads or Amazon API Gateway calls, without provisioning or managing any servers. Which service is the best fit?",
+ opts:["A) Amazon EC2","B) AWS Lambda","C) Amazon Elastic Container Service","D) AWS Batch"],
+ ans:1,
+ exp:"AWS Lambda is a serverless compute service — you upload your function code and it runs in response to events with no servers to provision, manage, or patch. You pay only for the compute time consumed, measured in milliseconds."},
+
+{cat:'Compute',
+ q:"A company runs Docker containers on AWS using AWS-native orchestration without Kubernetes. Which service manages these Docker containers?",
+ opts:["A) Amazon Elastic Kubernetes Service","B) Amazon Elastic Container Service","C) AWS Elastic Beanstalk","D) AWS Batch"],
+ ans:1,
+ exp:"Amazon Elastic Container Service is AWS's native container orchestration service for running Docker containers — it manages cluster placement, scheduling, and scaling without Kubernetes. Amazon Elastic Kubernetes Service is for running managed Kubernetes. These two are the most commonly confused on the exam."},
+
+{cat:'Compute',
+ q:"A company wants to run Docker containers without managing any underlying Amazon EC2 server instances. Which serverless compute engine removes the need to provision or manage servers for containers?",
+ opts:["A) Amazon Elastic Container Service on Amazon EC2","B) AWS Fargate","C) AWS Lambda","D) AWS Batch"],
+ ans:1,
+ exp:"AWS Fargate is a serverless compute engine for containers that works with both Amazon Elastic Container Service and Amazon Elastic Kubernetes Service. You define the container's CPU and memory requirements and Fargate handles the underlying infrastructure — no EC2 instances to manage."},
+
+{cat:'Compute',
+ q:"A developer wants to upload application code and have AWS automatically provision and manage the underlying Amazon EC2 instances, load balancer, and Auto Scaling group. Which service provides this Platform as a Service experience?",
+ opts:["A) AWS CloudFormation","B) AWS Elastic Beanstalk","C) AWS CodeDeploy","D) Amazon EC2"],
+ ans:1,
+ exp:"AWS Elastic Beanstalk is a Platform as a Service — you upload your application code and Elastic Beanstalk automatically handles the deployment, capacity provisioning, load balancing, auto scaling, and health monitoring. You retain full control but AWS manages the infrastructure."},
+
+{cat:'Compute',
+ q:"A fault-tolerant batch computing workload can be interrupted and restarted without data loss. The company wants to reduce compute costs by up to 90%. Which Amazon EC2 pricing option should they use?",
+ opts:["A) On-Demand Instances","B) Reserved Instances","C) Spot Instances","D) Dedicated Hosts"],
+ ans:2,
+ exp:"Amazon EC2 Spot Instances use spare AWS compute capacity at discounts up to 90% off On-Demand pricing. AWS can reclaim Spot capacity with a 2-minute warning — making them ideal for stateless, fault-tolerant, interruptible workloads like batch processing, simulations, and rendering."},
+
+// ── DEPLOYMENT (4) ────────────────────────────────────────────────────────────
+{cat:'Deployment',
+ q:"A team wants to define their entire AWS infrastructure — including an Amazon Virtual Private Cloud, Amazon EC2 instances, Amazon RDS databases, and AWS IAM roles — as a single repeatable text template. Which service provisions this infrastructure as code?",
+ opts:["A) AWS OpsWorks","B) AWS CodeDeploy","C) AWS CloudFormation","D) AWS Batch"],
+ ans:2,
+ exp:"AWS CloudFormation is the native Infrastructure as Code service — you write JSON or YAML templates describing your desired AWS resources and CloudFormation provisions and manages them as a stack. AWS CodeDeploy deploys application code to servers, not infrastructure templates."},
+
+{cat:'Deployment',
+ q:"A company needs to deploy the same application update to both Amazon EC2 instances in the cloud AND on-premises servers in their data center. Which deployment service supports both targets?",
+ opts:["A) AWS CloudFormation","B) AWS Elastic Beanstalk","C) AWS CodeDeploy","D) AWS Batch"],
+ ans:2,
+ exp:"AWS CodeDeploy automates application deployments to Amazon EC2 instances, AWS Fargate, AWS Lambda, AND on-premises servers — it is the only AWS deployment service that targets both cloud and on-premises. AWS Elastic Beanstalk only deploys to AWS infrastructure."},
+
+{cat:'Deployment',
+ q:"A team already uses Chef cookbooks for configuration management and wants a managed AWS service that understands and runs Chef recipes natively. Which service supports this?",
+ opts:["A) AWS CloudFormation","B) AWS OpsWorks","C) AWS Elastic Beanstalk","D) AWS CodeDeploy"],
+ ans:1,
+ exp:"AWS OpsWorks is a configuration management service that provides managed instances of Chef and Puppet. It allows teams to use their existing Chef cookbooks and Puppet manifests to automate server configuration on AWS. AWS CloudFormation provisions infrastructure but does not run Chef."},
+
+{cat:'Deployment',
+ q:"A development team wants a fully managed end-to-end continuous integration and continuous delivery pipeline that orchestrates source, build, test, and deploy stages. Which service provides this?",
+ opts:["A) AWS CodeCommit","B) AWS CodeBuild","C) AWS CodeDeploy","D) AWS CodePipeline"],
+ ans:3,
+ exp:"AWS CodePipeline is the end-to-end continuous delivery orchestration service — it models and automates the release pipeline from source to deployment, coordinating AWS CodeCommit (source), AWS CodeBuild (build/test), and AWS CodeDeploy (deploy) into one automated workflow."},
+
+// ── MESSAGING (4) ─────────────────────────────────────────────────────────────
+{cat:'Messaging',
+ q:"A company wants to send SMS messages AND email notifications to multiple subscribers simultaneously when a critical system alert fires. Which service delivers messages to many subscribers at once?",
+ opts:["A) Amazon Simple Queue Service","B) Amazon Simple Notification Service","C) Amazon Simple Email Service","D) Amazon EventBridge"],
+ ans:1,
+ exp:"Amazon Simple Notification Service (Amazon SNS) is a pub/sub service that pushes notifications to multiple subscribers simultaneously — SMS, email, HTTP endpoints, AWS Lambda, and Amazon Simple Queue Service. Amazon Simple Email Service is for bulk or transactional email only, not SMS."},
+
+{cat:'Messaging',
+ q:"A company wants to decouple two application components so that if the processing service goes down, messages are not lost — they wait in a buffer until the service recovers. Which service provides this message buffering?",
+ opts:["A) Amazon Simple Notification Service","B) Amazon Simple Queue Service","C) Amazon EventBridge","D) Amazon Simple Email Service"],
+ ans:1,
+ exp:"Amazon Simple Queue Service (Amazon SQS) is a fully managed message queuing service that decouples components — messages are stored in the queue until a consumer picks them up and processes them. This prevents message loss if a downstream service is temporarily unavailable."},
+
+{cat:'Messaging',
+ q:"A company needs to send transactional emails such as order confirmations and password reset emails to customers. Which AWS service is purpose-built for this use case?",
+ opts:["A) Amazon Simple Notification Service","B) Amazon Simple Queue Service","C) Amazon Simple Email Service","D) Amazon EventBridge"],
+ ans:2,
+ exp:"Amazon Simple Email Service (Amazon SES) is a cloud-based email sending service built for sending transactional, marketing, and bulk emails. Amazon Simple Notification Service can send email but is designed for real-time pub/sub notifications, not transactional email at scale."},
+
+{cat:'Messaging',
+ q:"A company wants to route events from AWS services — such as when an Amazon EC2 instance changes state — to AWS Lambda functions and Amazon Simple Queue Service queues based on rules. Which service acts as this event bus?",
+ opts:["A) Amazon Simple Notification Service","B) Amazon Simple Queue Service","C) Amazon EventBridge","D) AWS Step Functions"],
+ ans:2,
+ exp:"Amazon EventBridge is a serverless event bus that routes events from AWS services, custom applications, and software-as-a-service applications to targets like AWS Lambda, Amazon Simple Queue Service, and Amazon Simple Notification Service based on routing rules."},
+
+// ── WELL-ARCHITECTED, BILLING, CONCEPTS, IAM, CAF (7) ────────────────────────
+{cat:'Well-Architected',
+ q:"A company deploys its application across multiple Availability Zones with an Auto Scaling group so that if one Availability Zone fails the application continues running. Which Well-Architected Framework pillar does this design support?",
+ opts:["A) Performance Efficiency","B) Operational Excellence","C) Reliability","D) Sustainability"],
+ ans:2,
+ exp:"The Reliability pillar focuses on the ability to recover from infrastructure or service disruptions and dynamically acquire resources to meet demand. Distributing across multiple Availability Zones with Auto Scaling is the classic Reliability design pattern — automatic recovery from failure."},
+
+{cat:'Well-Architected',
+ q:"A company adopts infrastructure as code using AWS CloudFormation templates so all operational changes are made through code rather than manual console clicks. Which Well-Architected Framework pillar does this design principle represent?",
+ opts:["A) Reliability","B) Operational Excellence","C) Performance Efficiency","D) Cost Optimization"],
+ ans:1,
+ exp:"The Operational Excellence pillar includes the design principle 'Perform operations as code' — using AWS CloudFormation and automation to manage infrastructure eliminates manual processes, reduces human error, and enables consistent, repeatable operations."},
+
+{cat:'Billing',
+ q:"A company wants to estimate the monthly cost of a new architecture including Amazon EC2, Amazon Simple Storage Service, and Amazon RDS BEFORE deploying any resources. Which tool is purpose-built for pre-deployment cost estimation?",
+ opts:["A) AWS Cost Explorer","B) AWS Pricing Calculator","C) AWS Budgets","D) AWS Cost and Usage Report"],
+ ans:1,
+ exp:"AWS Pricing Calculator is the pre-deployment cost estimation tool — you configure services, regions, and usage quantities to generate an estimate before provisioning anything. AWS Cost Explorer analyzes EXISTING historical spend. AWS Budgets sets alerts. AWS Cost and Usage Report provides detailed billing data."},
+
+{cat:'Billing',
+ q:"A company wants to visualize their month-over-month Amazon EC2 spending trends over the past 12 months, broken down by AWS Region, and forecast next month's spend. Which tool provides this?",
+ opts:["A) AWS Pricing Calculator","B) AWS Cost and Usage Report","C) AWS Cost Explorer","D) AWS Budgets"],
+ ans:2,
+ exp:"AWS Cost Explorer provides interactive visual charts of historical AWS spending with filters by service, Region, account, and tags. It also includes a forecasting feature. AWS Pricing Calculator is for pre-deployment estimates. AWS Cost and Usage Report exports raw detailed data but doesn't provide visual dashboards."},
+
+{cat:'Cloud Concepts',
+ q:"Which of the following correctly states one of the six advantages of cloud computing?",
+ opts:["A) Trade variable expense for capital expense","B) Trade capital expense for variable expense","C) Eliminate all operational expenses","D) Pay a fixed monthly cost regardless of usage"],
+ ans:1,
+ exp:"One of the six advantages of cloud computing is trading capital expense (CapEx — large upfront hardware investments) for variable expense (OpEx — pay only for what you use). The opposite — trading variable for capital — is incorrect and appears as a distractor on the exam."},
+
+{cat:'IAM',
+ q:"A company wants to ensure a single AWS account root user is protected from unauthorized access. Which AWS IAM best practice should they implement immediately?",
+ opts:["A) Share the root user credentials with the IT team for convenience","B) Enable Multi-Factor Authentication on the root user account","C) Create access keys for the root user for programmatic access","D) Use the root user for all daily administrative tasks"],
+ ans:1,
+ exp:"AWS IAM best practices specify that the root user should be protected with Multi-Factor Authentication and used only for tasks that specifically require root access. Daily administrative tasks should be performed by individual IAM users with least-privilege permissions. Root access keys should never be created."},
+
+{cat:'AWS CAF',
+ q:"Which AWS Cloud Adoption Framework perspective focuses on building cloud fluency and developing the workforce skills and cultural changes needed for cloud adoption?",
+ opts:["A) Platform Perspective","B) Governance Perspective","C) People Perspective","D) Operations Perspective"],
+ ans:2,
+ exp:"The People Perspective of the AWS Cloud Adoption Framework focuses on organizational change management — building cloud fluency, developing workforce skills, transforming culture, and ensuring people have the capabilities needed to support the cloud journey. Cloud fluency is the key capability of the People Perspective."},
+
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let currentIdx=0;
+let userAns=new Array(QS.length).fill(null);
+let timerSec=3600;
+let timerInterval=null;
+let isReview=false;
+
+function fmt(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+function startTimer(){
+  const el=document.getElementById('timer-display');
+  timerInterval=setInterval(()=>{
+    timerSec--;el.textContent=fmt(timerSec);
+    if(timerSec<=120)el.className='timer danger';
+    else if(timerSec<=300)el.className='timer warn';
+    if(timerSec<=0){clearInterval(timerInterval);finishExam();}
+  },1000);
+}
+function startExam(){
+  document.getElementById('start-screen').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  buildNavGrid();renderQ();startTimer();
+}
+function buildNavGrid(){
+  const g=document.getElementById('qnav-grid');g.innerHTML='';
+  QS.forEach((_,i)=>{
+    const b=document.createElement('div');b.className='qng';b.textContent=i+1;b.id='qng-'+i;
+    b.onclick=()=>goTo(i);g.appendChild(b);
+  });refreshNav();
+}
+function refreshNav(){
+  QS.forEach((_,i)=>{
+    const b=document.getElementById('qng-'+i);if(!b)return;
+    b.className='qng';
+    if(i===currentIdx)b.classList.add('cur');
+    else if(userAns[i]!==null)b.classList.add(userAns[i]===QS[i].ans?'ok':'err');
+  });
+}
+function getStats(){
+  let ok=0,err=0,done=0;
+  userAns.forEach((a,i)=>{if(a!==null){done++;if(a===QS[i].ans)ok++;else err++;}});
+  return{ok,err,done};
+}
+function updateRibbon(){
+  const{ok,err,done}=getStats();
+  const pct=done>0?Math.round(ok/done*100):0;
+  document.getElementById('rb-num').textContent=currentIdx+1;
+  document.getElementById('rb-ok').textContent=ok;
+  document.getElementById('rb-err').textContent=err;
+  document.getElementById('rb-pct').textContent=done>0?pct+'%':'—';
+  document.getElementById('rb-ok-sub').textContent=done>0?Math.round(ok/QS.length*100)+'% total':'—';
+  document.getElementById('rb-err-sub').textContent=done>0?(100-pct)+'% wrong':'—';
+  document.getElementById('rb-pct-sub').textContent=done>0?done+' answered':'live';
+  document.getElementById('prog-fill').style.width=Math.round(done/QS.length*100)+'%';
+  document.getElementById('prog-lbl').textContent=done+' / '+QS.length+' answered';
+  document.getElementById('cat-lbl').textContent=QS[currentIdx].cat;
+  refreshNav();
+}
+function renderQ(){
+  if(currentIdx>=QS.length){finishExam();return;}
+  const q=QS[currentIdx];const prev=userAns[currentIdx];const isAns=prev!==null;
+  let meta=`<span class="q-num">Q${currentIdx+1} / ${QS.length}</span>`;
+  meta+=`<span class="cat-tag">${q.cat}</span>`;
+  const optsHTML=q.opts.map((opt,i)=>{
+    let cls='opt',dis='';
+    if(isAns){dis='disabled';if(i===q.ans)cls+=' correct';else if(i===prev&&i!==q.ans)cls+=' wrong';}
+    return`<button class="${cls}" ${dis} onclick="pickAnswer(${i})"><span class="opt-l">${opt.substring(0,2)}</span>${opt.substring(3)}</button>`;
+  }).join('');
+  const fb=isAns?`<div class="feedback ${prev===q.ans?'ok':'err'} show"><div class="fb-head">${prev===q.ans?'Correct':'Incorrect'}</div>${q.exp}</div>`:'';
+  document.getElementById('q-area').innerHTML=`<div class="q-card"><div class="q-meta">${meta}</div><div class="q-txt">${q.q}</div><div class="opts">${optsHTML}</div>${fb}</div>`;
+  updateRibbon();
+}
+function pickAnswer(i){
+  if(userAns[currentIdx]!==null)return;
+  userAns[currentIdx]=i;renderQ();
+}
+function goTo(idx){
+  if(idx<0||idx>=QS.length)return;
+  currentIdx=idx;renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+function finishExam(){
+  clearInterval(timerInterval);
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  showResults();
+}
+function showResults(){
+  document.getElementById('results-page').style.display='block';
+  const{ok,err,done}=getStats();
+  const pct=Math.round(ok/QS.length*100);
+  document.getElementById('res-pct').textContent=pct+'%';
+  document.getElementById('rs-ok').textContent=ok;
+  document.getElementById('rs-err').textContent=err;
+  document.getElementById('rs-skip').textContent=QS.length-done;
+  const grade=document.getElementById('res-grade');const lbl=document.getElementById('res-lbl');
+  if(pct>=70){grade.textContent='PASS range — ready for Monday';grade.className='res-grade grade-pass';lbl.textContent=ok+'/'+QS.length+' correct. Above the 70% pass line.';}
+  else if(pct>=60){grade.textContent='CLOSE — review blind spots below';grade.className='res-grade grade-mid';lbl.textContent=ok+'/'+QS.length+' correct. Almost there.';}
+  else{grade.textContent='RETAKE — drill blind spots then go again';grade.className='res-grade grade-low';lbl.textContent=ok+'/'+QS.length+' correct. Use the list below.';}
+  const catStats={};
+  QS.forEach((q,i)=>{if(!catStats[q.cat])catStats[q.cat]={ok:0,t:0};catStats[q.cat].t++;if(userAns[i]===q.ans)catStats[q.cat].ok++;});
+  document.getElementById('bd-cats').innerHTML=Object.entries(catStats).map(([cat,s])=>{
+    const dp=s.t>0?Math.round(s.ok/s.t*100):0;
+    const col=dp>=70?'var(--green)':dp>=50?'var(--amber)':'var(--red)';
+    return`<div class="bd-row"><span>${cat}</span><span>${s.ok}/${s.t} (${dp}%)</span></div><div class="bd-bar"><div class="bd-fill" style="width:${dp}%;background:${col}"></div></div>`;
+  }).join('');
+  const missed=QS.filter((q,i)=>userAns[i]!==null&&userAns[i]!==q.ans);
+  const bsList=document.getElementById('bs-list');
+  if(missed.length===0){bsList.innerHTML='<div class="empty-bs">Zero misses — perfect score. You are ready.</div>';}
+  else{bsList.innerHTML=missed.map(q=>{
+    const gi=QS.indexOf(q);
+    return`<div class="bs-item"><div class="bs-q"><strong>Q${gi+1}:</strong> ${q.q}</div><div class="bs-tags"><span class="cat-tag">${q.cat}</span></div><div class="bs-correct">Correct: ${q.opts[q.ans].substring(3)}</div><div class="bs-exp">${q.exp}</div></div>`;
+  }).join('');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function reviewAll(){
+  isReview=true;
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  currentIdx=0;renderQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+function restartExam(){
+  clearInterval(timerInterval);timerSec=3600;isReview=false;
+  userAns=new Array(QS.length).fill(null);currentIdx=0;
+  const td=document.getElementById('timer-display');td.textContent='60:00';td.className='timer';
+  document.getElementById('results-page').style.display='none';
+  document.getElementById('workspace').style.display='none';
+  document.getElementById('top-bar').style.display='none';
+  document.getElementById('start-screen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

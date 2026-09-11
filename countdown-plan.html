@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLF-C02 · Exam Day Plan</title>
+<style>
+  :root{--bg:#0B1220;--panel:#111A2B;--panel2:#0E1626;--border:#22314A;--text:#E8EDF6;--muted:#8A9AB8;--orange:#FF9900;--green:#3DDC84;--red:#FF5D6C;--blue:#5AA9FF;--purple:#A78BFA;--cyan:#38BDF8}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.55;padding-bottom:5rem}
+  header{position:sticky;top:0;z-index:50;background:rgba(11,18,32,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.9rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem}
+  .logo{font-family:'Space Mono',monospace;font-size:.9rem}
+  .logo b{color:var(--orange)}
+  .cohort{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);text-align:right;line-height:1.6}
+  .main{max-width:920px;margin:0 auto;padding:2rem 1.5rem}
+  h1{font-size:1.8rem;font-weight:800;margin-bottom:.3rem}
+  h1 em{color:var(--orange);font-style:normal}
+  .lede{color:var(--muted);font-size:.95rem;margin-bottom:2rem}
+  .lede b{color:var(--text)}
+
+  /* INTEL BOX */
+  .intel-box{background:rgba(255,153,0,.05);border:1px solid rgba(255,153,0,.25);border-left:4px solid var(--orange);border-radius:0 10px 10px 0;padding:1.1rem 1.3rem;margin-bottom:2rem}
+  .intel-title{font-family:'Space Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.7rem}
+  .intel-row{font-size:.88rem;color:var(--muted);padding:.3rem 0;border-top:1px solid var(--border);display:flex;gap:.6rem;align-items:baseline}
+  .intel-row:first-of-type{border-top:none}
+  .intel-row b{color:var(--text)}
+  .intel-src{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--green);flex-shrink:0}
+
+  /* DAY CARDS */
+  .day-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:1.3rem 1.4rem;margin-bottom:1rem;position:relative}
+  .day-card.done{opacity:.55;border-left:3px solid var(--muted)}
+  .day-card.rest{border-left:3px solid var(--green)}
+  .day-card.today{border-color:var(--orange);border-left-width:4px}
+  .day-card.exam{background:linear-gradient(135deg,rgba(255,153,0,.08),var(--panel));border-color:var(--orange);border-left-width:4px}
+  .day-header{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem;margin-bottom:.9rem}
+  .day-title{font-size:1.05rem;font-weight:800}
+  .day-title em{color:var(--orange);font-style:normal}
+  .day-date{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+  .day-badge{font-family:'Space Mono',monospace;font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;padding:.2rem .55rem;border-radius:4px;font-weight:700}
+  .badge-done{background:rgba(138,154,184,.15);color:var(--muted)}
+  .badge-today{background:rgba(255,153,0,.15);color:var(--orange)}
+  .badge-rest{background:rgba(61,220,132,.15);color:var(--green)}
+  .badge-exam{background:var(--orange);color:#1A1200}
+  .badge-light{background:rgba(90,169,255,.15);color:var(--blue)}
+  .task{display:flex;gap:.7rem;align-items:baseline;padding:.5rem 0;border-top:1px solid var(--border);font-size:.9rem}
+  .task:first-of-type{border-top:none}
+  .task-time{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);min-width:5.5rem;flex-shrink:0}
+  .task-body{flex:1}
+  .task-body b{color:var(--orange)}
+  .task-target{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--green);margin-top:.15rem;display:block}
+  .task-note{font-size:.82rem;color:var(--muted);margin-top:.2rem;display:block;font-style:italic}
+  .score-hit{font-family:'Space Mono',monospace;font-size:.72rem;color:var(--green);background:rgba(61,220,132,.1);border:1px solid rgba(61,220,132,.25);padding:.15rem .55rem;border-radius:4px;display:inline-block;margin-top:.2rem}
+
+  /* SECTION DIVIDER */
+  .section-divider{margin:3rem 0 1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:.5rem}
+  .section-divider h2{font-size:1.3rem;font-weight:800}
+  .section-divider h2 em{color:var(--orange);font-style:normal}
+  .section-divider .sub{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+  /* SKIM GROUPS */
+  .skim-group{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem;margin-bottom:.9rem}
+  .skim-group h3{font-family:'Space Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:.8rem;display:flex;align-items:center;gap:.5rem}
+  .skim-group h3 .num{background:var(--orange);color:#1A1200;padding:.15rem .5rem;border-radius:99px;font-weight:800}
+  .skim-row{display:flex;gap:.6rem;align-items:baseline;font-size:.86rem;padding:.35rem 0;border-top:1px solid var(--border)}
+  .skim-row:first-of-type{border-top:none}
+  .trig{color:var(--text);flex:1}
+  .trig b{color:var(--blue)}
+  .arw{color:var(--muted);flex-shrink:0}
+  .ans{font-family:'Space Mono',monospace;font-size:.76rem;font-weight:700;color:var(--orange);background:rgba(255,153,0,.12);padding:.15rem .55rem;border-radius:6px;white-space:nowrap}
+
+  /* EXAM DAY CARD */
+  .exam-day-section{margin-top:3rem}
+  .exam-day-section h2{font-size:1.4rem;font-weight:800;margin-bottom:.3rem}
+  .exam-day-section h2 em{color:var(--orange);font-style:normal}
+  .exam-day-sub{color:var(--muted);font-size:.9rem;margin-bottom:1.5rem}
+
+  .edc-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+  @media(max-width:640px){.edc-grid{grid-template-columns:1fr}}
+  .edc-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem}
+  .edc-card.orange{border-color:rgba(255,153,0,.4)}
+  .edc-card.green{border-color:rgba(61,220,132,.3)}
+  .edc-card.red{border-color:rgba(255,93,108,.3)}
+  .edc-card.blue{border-color:rgba(90,169,255,.3)}
+  .edc-head{font-family:'Space Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.8rem}
+  .edc-head.orange{color:var(--orange)}
+  .edc-head.green{color:var(--green)}
+  .edc-head.red{color:var(--red)}
+  .edc-head.blue{color:var(--blue)}
+  .edc-row{font-size:.86rem;color:var(--muted);padding:.35rem 0;border-top:1px solid var(--border);display:flex;gap:.6rem;align-items:baseline;line-height:1.45}
+  .edc-row:first-of-type{border-top:none}
+  .edc-row b{color:var(--text)}
+  .edc-row .dot{color:var(--orange);flex-shrink:0}
+
+  .checklist-card{background:linear-gradient(135deg,rgba(255,153,0,.07),var(--panel));border:2px solid var(--orange);border-radius:12px;padding:1.5rem 1.6rem;margin-bottom:1.5rem}
+  .checklist-card h3{font-family:'Space Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--orange);margin-bottom:1rem}
+  .ci{display:flex;gap:.75rem;align-items:flex-start;padding:.55rem 0;border-top:1px solid var(--border);font-size:.9rem}
+  .ci:first-of-type{border-top:none}
+  .cb{width:1.1rem;height:1.1rem;border:1.5px solid var(--muted);border-radius:4px;flex-shrink:0;margin-top:.15rem}
+  .cb.hot{border-color:var(--orange)}
+  .ci-body{flex:1;color:var(--muted)}
+  .ci-body b{color:var(--text)}
+
+  .trigger-card{background:var(--panel);border:1px solid rgba(167,139,250,.3);border-radius:10px;padding:1.2rem 1.4rem;margin-bottom:1rem}
+  .trigger-card h3{font-family:'Space Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--purple);margin-bottom:.9rem}
+  .tr{display:flex;gap:.6rem;align-items:baseline;font-size:.86rem;padding:.35rem 0;border-top:1px solid var(--border)}
+  .tr:first-of-type{border-top:none}
+  .tr-phrase{color:var(--text);flex:1;font-style:italic}
+  .tr-ans{font-family:'Space Mono',monospace;font-size:.74rem;font-weight:700;color:var(--purple);background:rgba(167,139,250,.12);padding:.15rem .55rem;border-radius:6px;white-space:nowrap}
+
+  .final-note{background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--green);border-radius:0 10px 10px 0;padding:1.2rem 1.4rem;margin-top:1.5rem;font-size:.93rem;color:var(--muted);line-height:1.7}
+  .final-note b{color:var(--text)}
+  .final-note em{color:var(--green);font-style:normal;font-weight:700}
+
+  @media(max-width:600px){.main{padding:1.25rem 1rem}header{padding:.8rem 1rem}.task-time{min-width:auto;font-size:.65rem}.task{flex-direction:column;gap:.15rem}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CLF-C02 · <b>Exam Day Plan</b></div>
+  <div class="cohort">Made by cohort<br>2026-RTT-06<br>classmate Brian Thomas</div>
+</header>
+
+<div class="main">
+  <h1>CLF-C02 · <em>Exam Day Plan</em></h1>
+  <p class="lede">Built from 7 days of drilling, two classmates who passed, and every score logged this week. Full service names. No abbreviations where the exam won't use them. Target: <b>700/1000</b>.</p>
+
+  <!-- INTEL BOX -->
+  <div class="intel-box">
+    <div class="intel-title">Classmate Intel — Confirmed Topics from People Who Passed This Week</div>
+    <div class="intel-row"><span class="intel-src">Kevin (775)</span><b>Shared Responsibility Model</b> — heavily tested. Know the shift by service: EC2 vs Amazon RDS vs AWS Lambda.</div>
+    <div class="intel-row"><span class="intel-src">Kevin (775)</span><b>Well-Architected Framework</b> — pillars and trigger phrases. "Ops as code" = Operational Excellence. Know all 6.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>Amazon RDS</b> — shared responsibility. AWS patches engine and OS. You manage security groups, DB users, encryption choice, data.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>AWS IAM</b> — shared responsibility. Root user. IAM Roles vs Users vs Groups.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>Amazon S3</b> — storage classes, versioning for accidental deletion, lifecycle policies, static website hosting.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>AWS Cloud Adoption Framework</b> — perspectives and which stakeholder maps to which. Cloud fluency = People.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>AWS WAF</b> — blocks SQL injection and cross-site scripting (XSS). Layer 7. Works with Amazon CloudFront and Application Load Balancer.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>Amazon Route 53</b> — one question. DNS, latency-based and geo routing.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>AWS Direct Connect</b> — one question. Dedicated private line, not over the internet.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>AWS CodeDeploy, AWS CodePipeline, AWS CodeCommit</b> — came up together.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span><b>Amazon CloudHSM, Amazon EFS, AWS IoT Core</b> — appeared. Know the one-line definition.</div>
+    <div class="intel-row"><span class="intel-src">Classmate 2</span>3 database questions total. 3 SELECT TWO questions — one of the two options will be very close to wrong. Read carefully.</div>
+    <div class="intel-row"><span class="intel-src">Both</span>Half the questions easy to answer. Half require reading 2-3 times. Use pen and paper for VPC/subnet diagrams. Use ALL the time.</div>
+    <div class="intel-row"><span class="intel-src">Both</span>Multiple choice options are longer on the real exam than in class practice. Read every option before clicking.</div>
+  </div>
+
+  <!-- WEEK RECAP -->
+  <div class="section-divider">
+    <h2>This Week · <em>Scores Logged</em></h2>
+    <span class="sub">For context going into exam day</span>
+  </div>
+
+  <div class="day-card done">
+    <div class="day-header"><div><div class="day-title">Monday · Day 7</div><div class="day-date">Jul 7</div></div><span class="day-badge badge-done">DONE</span></div>
+    <div class="task"><span class="task-time">—</span><span class="task-body">Domain 3 practice<span class="score-hit">34/45 · 75.6%</span></span></div>
+  </div>
+
+  <div class="day-card done">
+    <div class="day-header"><div><div class="day-title">Tuesday · Day 6</div><div class="day-date">Jul 8</div></div><span class="day-badge badge-done">DONE</span></div>
+    <div class="task"><span class="task-time">—</span><span class="task-body">Keyword Match v2 · full 65 questions<span class="score-hit">58/65 · 89%</span></span></div>
+  </div>
+
+  <div class="day-card done">
+    <div class="day-header"><div><div class="day-title">Wednesday · Day 5</div><div class="day-date">Jul 9 · Instructor exam day</div></div><span class="day-badge badge-done">DONE</span></div>
+    <div class="task"><span class="task-time">—</span><span class="task-body">Instructor surprise exam · 65 questions<span class="score-hit">42.5/65 · 65.4%</span></span></div>
+    <div class="task"><span class="task-time">—</span><span class="task-body">Domain 4 SELECT 2 Gap Closer<span class="score-hit">7/10 · 78%</span></span></div>
+    <div class="task"><span class="task-time">—</span><span class="task-body">Keyword Match v2 retake<span class="score-hit">58/65 · 89%</span></span></div>
+  </div>
+
+  <div class="day-card done">
+    <div class="day-header"><div><div class="day-title">Thursday · Day 4</div><div class="day-date">Jul 10</div></div><span class="day-badge badge-done">DONE</span></div>
+    <div class="task"><span class="task-time">—</span><span class="task-body">E12 Gap Closer · 40 questions<span class="score-hit">32/40 · 80%</span></span></div>
+    <div class="task"><span class="task-time">—</span><span class="task-body">Master Cheat Sheet Test · 50 questions · full service names<span class="score-hit">48/50 · 96%</span></span></div>
+  </div>
+
+  <div class="day-card rest">
+    <div class="day-header"><div><div class="day-title">Saturday · Day 2</div><div class="day-date">Jul 12 · today</div></div><span class="day-badge badge-rest">SKIM ONLY</span></div>
+    <div class="task"><span class="task-time">30–40 min</span><span class="task-body"><b>Master Cheat Sheet — skim only</b> · no questions<span class="task-note">Focus on: EXAM TRIGGERS tab · FULL SERVICE NAMES tab · IAM & ACCESS tab · 7 Rs on Cloud Concepts tab</span></span></div>
+    <div class="task"><span class="task-time">rest</span><span class="task-body">Everything else off. Sleep early. Eat well.<span class="task-note">The night before the night before matters.</span></span></div>
+  </div>
+
+  <div class="day-card exam">
+    <div class="day-header"><div><div class="day-title">Monday · <em>Exam Day</em></div><div class="day-date">Jul 13 · 3:15 PM · Forsyth Tech</div></div><span class="day-badge badge-exam">EXAM DAY</span></div>
+    <div class="task"><span class="task-time">Morning</span><span class="task-body">Eat a real breakfast. No cramming.<span class="task-note">If you want to do anything, read the Shared Responsibility and IAM tabs one time — 15 minutes max, then close it.</span></span></div>
+    <div class="task"><span class="task-time">2:45 PM</span><span class="task-body"><b>Arrive at Forsyth Tech</b> — 30 minutes early<span class="task-note">Bring two forms of ID. Confirmation number: 0O80-3377-7271</span></span></div>
+    <div class="task"><span class="task-time">3:15 PM</span><span class="task-body"><b>65 questions · 90 minutes</b> — ~83 seconds per question<span class="task-note">Flag anything over 90 sec. Finish all questions first. Review flagged at the end. Use all the time.</span></span></div>
+  </div>
+
+  <!-- TRIGGER REFERENCE -->
+  <div class="section-divider">
+    <h2>Quick Trigger <em>Reference</em></h2>
+    <span class="sub">Read the phrase → pick the service · no second guessing</span>
+  </div>
+
+  <div class="trigger-card">
+    <h3>Shared Responsibility — Service by Service</h3>
+    <div class="tr"><span class="tr-phrase">"Who patches the Amazon RDS database engine?"</span><span class="arw">→</span><span class="tr-ans">AWS</span></div>
+    <div class="tr"><span class="tr-phrase">"Who manages security groups on Amazon RDS?"</span><span class="arw">→</span><span class="tr-ans">Customer</span></div>
+    <div class="tr"><span class="tr-phrase">"Who manages code in AWS Lambda?"</span><span class="arw">→</span><span class="tr-ans">Customer</span></div>
+    <div class="tr"><span class="tr-phrase">"Who patches the Lambda runtime and OS?"</span><span class="arw">→</span><span class="tr-ans">AWS</span></div>
+    <div class="tr"><span class="tr-phrase">"Who is responsible for the physical data center?"</span><span class="arw">→</span><span class="tr-ans">AWS — always</span></div>
+    <div class="tr"><span class="tr-phrase">"Who configures AWS IAM permissions?"</span><span class="arw">→</span><span class="tr-ans">Customer — always</span></div>
+    <div class="tr"><span class="tr-phrase">"Customer ALWAYS owns, every service"</span><span class="arw">→</span><span class="tr-ans">Customer data</span></div>
+    <div class="tr"><span class="tr-phrase">"Shared control — both AWS and customer"</span><span class="arw">→</span><span class="tr-ans">Patch mgmt · Config mgmt · Training</span></div>
+    <div class="tr"><span class="tr-phrase">"Who patches guest OS on Amazon EC2?"</span><span class="arw">→</span><span class="tr-ans">Customer</span></div>
+    <div class="tr"><span class="tr-phrase">"Who maintains the hypervisor under Amazon EC2?"</span><span class="arw">→</span><span class="tr-ans">AWS</span></div>
+  </div>
+
+  <div class="trigger-card">
+    <h3>Well-Architected Framework — 6 Pillars · OSRPCS</h3>
+    <div class="tr"><span class="tr-phrase">"Operations as code" · "Frequent, small, reversible changes" · "Anticipate failure"</span><span class="arw">→</span><span class="tr-ans">Operational Excellence</span></div>
+    <div class="tr"><span class="tr-phrase">"Protect data and systems" · "Least privilege" · "Encryption"</span><span class="arw">→</span><span class="tr-ans">Security</span></div>
+    <div class="tr"><span class="tr-phrase">"Recover from disruption" · "Dynamically acquire resources" · "Automatically recover"</span><span class="arw">→</span><span class="tr-ans">Reliability</span></div>
+    <div class="tr"><span class="tr-phrase">"Right instance type" · "Use resources efficiently" · "Adapt as tech evolves"</span><span class="arw">→</span><span class="tr-ans">Performance Efficiency</span></div>
+    <div class="tr"><span class="tr-phrase">"Avoid unnecessary costs" · "Right-sized resources" · "Match supply to demand"</span><span class="arw">→</span><span class="tr-ans">Cost Optimization</span></div>
+    <div class="tr"><span class="tr-phrase">"Minimize environmental impact"</span><span class="arw">→</span><span class="tr-ans">Sustainability</span></div>
+    <div class="tr"><span class="tr-phrase">NOT a pillar — exam distractors</span><span class="arw">→</span><span class="tr-ans">"Resilience" · "Confidentiality" · "Availability" · "Agility"</span></div>
+  </div>
+
+  <div class="trigger-card">
+    <h3>Service Definitions — Full Names · Do Not Mix These Up</h3>
+    <div class="tr"><span class="tr-phrase">"Programmatic access from application code"</span><span class="arw">→</span><span class="tr-ans">AWS SDK</span></div>
+    <div class="tr"><span class="tr-phrase">"Automate via shell script / command line"</span><span class="arw">→</span><span class="tr-ans">AWS CLI</span></div>
+    <div class="tr"><span class="tr-phrase">"Define infrastructure using a programming language"</span><span class="arw">→</span><span class="tr-ans">AWS Cloud Development Kit</span></div>
+    <div class="tr"><span class="tr-phrase">"JSON/YAML templates · provision infra"</span><span class="arw">→</span><span class="tr-ans">AWS CloudFormation</span></div>
+    <div class="tr"><span class="tr-phrase">"Who did what and when · API audit log"</span><span class="arw">→</span><span class="tr-ans">AWS CloudTrail</span></div>
+    <div class="tr"><span class="tr-phrase">"Metrics · CPU utilization · alarms · logs"</span><span class="arw">→</span><span class="tr-ans">Amazon CloudWatch</span></div>
+    <div class="tr"><span class="tr-phrase">"Configuration history · compliance rules · drift"</span><span class="arw">→</span><span class="tr-ans">AWS Config</span></div>
+    <div class="tr"><span class="tr-phrase">"Block SQL injection and XSS · Layer 7"</span><span class="arw">→</span><span class="tr-ans">AWS WAF</span></div>
+    <div class="tr"><span class="tr-phrase">"DDoS protection · always on · free"</span><span class="arw">→</span><span class="tr-ans">AWS Shield Standard</span></div>
+    <div class="tr"><span class="tr-phrase">"Discover PII in Amazon S3"</span><span class="arw">→</span><span class="tr-ans">Amazon Macie</span></div>
+    <div class="tr"><span class="tr-phrase">"Threat detection · malicious activity · no agents"</span><span class="arw">→</span><span class="tr-ans">Amazon GuardDuty</span></div>
+    <div class="tr"><span class="tr-phrase">"Scan Amazon EC2 for software vulnerabilities"</span><span class="arw">→</span><span class="tr-ans">Amazon Inspector</span></div>
+    <div class="tr"><span class="tr-phrase">"Central security dashboard · aggregate findings"</span><span class="arw">→</span><span class="tr-ans">AWS Security Hub</span></div>
+    <div class="tr"><span class="tr-phrase">"Query Amazon S3 with SQL · serverless · pay per query"</span><span class="arw">→</span><span class="tr-ans">Amazon Athena</span></div>
+    <div class="tr"><span class="tr-phrase">"BI dashboards and data visualization"</span><span class="arw">→</span><span class="tr-ans">Amazon QuickSight</span></div>
+    <div class="tr"><span class="tr-phrase">"Managed Hadoop/Spark clusters"</span><span class="arw">→</span><span class="tr-ans">Amazon EMR</span></div>
+    <div class="tr"><span class="tr-phrase">"Serverless ETL · discover and integrate data"</span><span class="arw">→</span><span class="tr-ans">AWS Glue</span></div>
+    <div class="tr"><span class="tr-phrase">"Real-time data streaming"</span><span class="arw">→</span><span class="tr-ans">Amazon Kinesis</span></div>
+    <div class="tr"><span class="tr-phrase">"Docker containers · AWS-native orchestration"</span><span class="arw">→</span><span class="tr-ans">Amazon Elastic Container Service</span></div>
+    <div class="tr"><span class="tr-phrase">"Kubernetes managed · no control plane to operate"</span><span class="arw">→</span><span class="tr-ans">Amazon Elastic Kubernetes Service</span></div>
+    <div class="tr"><span class="tr-phrase">"Serverless containers · no Amazon EC2 to manage"</span><span class="arw">→</span><span class="tr-ans">AWS Fargate</span></div>
+    <div class="tr"><span class="tr-phrase">"Dedicated private physical line to AWS"</span><span class="arw">→</span><span class="tr-ans">AWS Direct Connect</span></div>
+    <div class="tr"><span class="tr-phrase">"Encrypted tunnel OVER the internet to Amazon VPC"</span><span class="arw">→</span><span class="tr-ans">AWS Site-to-Site VPN</span></div>
+    <div class="tr"><span class="tr-phrase">"Hub and spoke · many Amazon VPCs + on-premises"</span><span class="arw">→</span><span class="tr-ans">AWS Transit Gateway</span></div>
+    <div class="tr"><span class="tr-phrase">"Two Amazon VPCs talking directly · no on-premises"</span><span class="arw">→</span><span class="tr-ans">Amazon VPC Peering</span></div>
+    <div class="tr"><span class="tr-phrase">"VPC scope" — how many Regions?</span><span class="arw">→</span><span class="tr-ans">One Region only · spans multiple AZs</span></div>
+    <div class="tr"><span class="tr-phrase">"IPv6 outbound only from private subnet"</span><span class="arw">→</span><span class="tr-ans">Egress-Only Internet Gateway</span></div>
+    <div class="tr"><span class="tr-phrase">"Content delivery · close to users · reduces latency"</span><span class="arw">→</span><span class="tr-ans">Amazon CloudFront</span></div>
+    <div class="tr"><span class="tr-phrase">"DNS · latency-based routing · geo routing"</span><span class="arw">→</span><span class="tr-ans">Amazon Route 53</span></div>
+    <div class="tr"><span class="tr-phrase">"NoSQL · single-digit millisecond · auto scales"</span><span class="arw">→</span><span class="tr-ans">Amazon DynamoDB</span></div>
+    <div class="tr"><span class="tr-phrase">"MySQL-compatible relational · 5x throughput"</span><span class="arw">→</span><span class="tr-ans">Amazon Aurora</span></div>
+    <div class="tr"><span class="tr-phrase">"Data warehouse · OLAP · business intelligence"</span><span class="arw">→</span><span class="tr-ans">Amazon Redshift</span></div>
+    <div class="tr"><span class="tr-phrase">"In-memory cache for SQL · Redis or Memcached"</span><span class="arw">→</span><span class="tr-ans">Amazon ElastiCache</span></div>
+    <div class="tr"><span class="tr-phrase">"DynamoDB cache only · microsecond latency"</span><span class="arw">→</span><span class="tr-ans">Amazon DynamoDB Accelerator (DAX)</span></div>
+    <div class="tr"><span class="tr-phrase">"Estimate costs BEFORE deploying"</span><span class="arw">→</span><span class="tr-ans">AWS Pricing Calculator</span></div>
+    <div class="tr"><span class="tr-phrase">"Visualize and forecast EXISTING spend"</span><span class="arw">→</span><span class="tr-ans">AWS Cost Explorer</span></div>
+    <div class="tr"><span class="tr-phrase">"Alert when spend EXCEEDS threshold"</span><span class="arw">→</span><span class="tr-ans">AWS Budgets</span></div>
+    <div class="tr"><span class="tr-phrase">"Most granular billing data · every resource and tag"</span><span class="arw">→</span><span class="tr-ans">AWS Cost and Usage Report</span></div>
+    <div class="tr"><span class="tr-phrase">"Track costs by project · department · team"</span><span class="arw">→</span><span class="tr-ans">Cost Allocation Tags</span></div>
+    <div class="tr"><span class="tr-phrase">"Physical ship 80TB+ · network too slow"</span><span class="arw">→</span><span class="tr-ans">AWS Snowball</span></div>
+    <div class="tr"><span class="tr-phrase">"Migrate DB · source stays live"</span><span class="arw">→</span><span class="tr-ans">AWS Database Migration Service</span></div>
+    <div class="tr"><span class="tr-phrase">"Convert schema between DB engines"</span><span class="arw">→</span><span class="tr-ans">AWS Schema Conversion Tool</span></div>
+    <div class="tr"><span class="tr-phrase">"Store and rotate DB passwords and API keys"</span><span class="arw">→</span><span class="tr-ans">AWS Secrets Manager</span></div>
+    <div class="tr"><span class="tr-phrase">"Download SOC 2 · PCI · ISO compliance reports"</span><span class="arw">→</span><span class="tr-ans">AWS Artifact</span></div>
+    <div class="tr"><span class="tr-phrase">"Single sign-on across multiple AWS accounts"</span><span class="arw">→</span><span class="tr-ans">AWS IAM Identity Center</span></div>
+    <div class="tr"><span class="tr-phrase">"Best-practice recommendations · 5 categories"</span><span class="arw">→</span><span class="tr-ans">AWS Trusted Advisor</span></div>
+    <div class="tr"><span class="tr-phrase">"Real-time service outage status"</span><span class="arw">→</span><span class="tr-ans">AWS Health Dashboard</span></div>
+    <div class="tr"><span class="tr-phrase">"Report abuse of AWS resources · spam · scanning"</span><span class="arw">→</span><span class="tr-ans">AWS Trust and Safety Team</span></div>
+    <div class="tr"><span class="tr-phrase">"Buy third-party software on AWS invoice"</span><span class="arw">→</span><span class="tr-ans">AWS Marketplace</span></div>
+    <div class="tr"><span class="tr-phrase">"AWS experts do the project WITH you · paid"</span><span class="arw">→</span><span class="tr-ans">AWS Professional Services</span></div>
+    <div class="tr"><span class="tr-phrase">"Third-party firms design/migrate/build FOR you"</span><span class="arw">→</span><span class="tr-ans">APN Consulting Partners</span></div>
+  </div>
+
+  <div class="trigger-card">
+    <h3>AWS IAM — Users, Groups, Roles, Policies</h3>
+    <div class="tr"><span class="tr-phrase">"One specific person · long-term credentials · named individual"</span><span class="arw">→</span><span class="tr-ans">IAM User</span></div>
+    <div class="tr"><span class="tr-phrase">"Share permissions for many users at once · all devs should have"</span><span class="arw">→</span><span class="tr-ans">IAM Group</span></div>
+    <div class="tr"><span class="tr-phrase">"Service needs access · temporary credentials · no long-term keys"</span><span class="arw">→</span><span class="tr-ans">IAM Role</span></div>
+    <div class="tr"><span class="tr-phrase">"JSON document · Allow/Deny · defined permissions"</span><span class="arw">→</span><span class="tr-ans">IAM Policy</span></div>
+    <div class="tr"><span class="tr-phrase">"Account owner · lock with MFA · do not use daily · first time setup"</span><span class="arw">→</span><span class="tr-ans">Root User</span></div>
+    <div class="tr"><span class="tr-phrase">"EC2 needs to access Amazon S3"</span><span class="arw">→</span><span class="tr-ans">IAM Role (never hardcode keys)</span></div>
+    <div class="tr"><span class="tr-phrase">"Groups can be nested inside other groups"</span><span class="arw">→</span><span class="tr-ans">FALSE — groups cannot be nested</span></div>
+    <div class="tr"><span class="tr-phrase">"IAM is regional — set up per Region"</span><span class="arw">→</span><span class="tr-ans">FALSE — IAM is global</span></div>
+  </div>
+
+  <div class="trigger-card">
+    <h3>AWS CAF — 6 Perspectives · BGPPSO</h3>
+    <div class="tr"><span class="tr-phrase">"Business outcomes · value realization · stakeholder alignment"</span><span class="arw">→</span><span class="tr-ans">Business Perspective</span></div>
+    <div class="tr"><span class="tr-phrase">"Risk management · compliance · cloud governance"</span><span class="arw">→</span><span class="tr-ans">Governance Perspective</span></div>
+    <div class="tr"><span class="tr-phrase">"Cloud fluency · workforce skills · cultural change"</span><span class="arw">→</span><span class="tr-ans">People Perspective</span></div>
+    <div class="tr"><span class="tr-phrase">"Cloud infrastructure · data architecture · platform engineering"</span><span class="arw">→</span><span class="tr-ans">Platform Perspective</span></div>
+    <div class="tr"><span class="tr-phrase">"Cloud security controls · identity · data protection"</span><span class="arw">→</span><span class="tr-ans">Security Perspective</span></div>
+    <div class="tr"><span class="tr-phrase">"Cloud operations · observability · incident management"</span><span class="arw">→</span><span class="tr-ans">Operations Perspective</span></div>
+    <div class="tr"><span class="tr-phrase">"CAF perspective for someone from HR or Learning &amp; Dev"</span><span class="arw">→</span><span class="tr-ans">People Perspective</span></div>
+  </div>
+
+  <div class="trigger-card">
+    <h3>7 Rs — Migration Strategies</h3>
+    <div class="tr"><span class="tr-phrase">"Shut it down — no longer needed"</span><span class="arw">→</span><span class="tr-ans">Retire</span></div>
+    <div class="tr"><span class="tr-phrase">"Keep on-premises — not ready to migrate"</span><span class="arw">→</span><span class="tr-ans">Retain</span></div>
+    <div class="tr"><span class="tr-phrase">"Lift and shift — move as-is, no changes"</span><span class="arw">→</span><span class="tr-ans">Rehost</span></div>
+    <div class="tr"><span class="tr-phrase">"Lift, tinker, shift — minor optimization (move to Amazon RDS)"</span><span class="arw">→</span><span class="tr-ans">Replatform</span></div>
+    <div class="tr"><span class="tr-phrase">"Drop and shop — replace with SaaS (Salesforce)"</span><span class="arw">→</span><span class="tr-ans">Repurchase</span></div>
+    <div class="tr"><span class="tr-phrase">"Re-architect — cloud-native, microservices, most expensive"</span><span class="arw">→</span><span class="tr-ans">Refactor</span></div>
+    <div class="tr"><span class="tr-phrase">"VMware workloads to AWS VMware Cloud"</span><span class="arw">→</span><span class="tr-ans">Relocate</span></div>
+  </div>
+
+  <!-- EXAM DAY CARD -->
+  <div class="exam-day-section">
+    <h2>Exam Day <em>Card</em></h2>
+    <div class="exam-day-sub">Screenshot this section Sunday night. Read it in the car before you walk in.</div>
+
+    <div class="checklist-card">
+      <h3>Before You Walk In — Checklist</h3>
+      <div class="ci"><div class="cb hot"></div><div class="ci-body"><b>Two forms of ID</b> — government photo ID (driver's license or passport) + one signature ID (credit card is fine)</div></div>
+      <div class="ci"><div class="cb hot"></div><div class="ci-body"><b>Confirmation number:</b> 0O80-3377-7271</div></div>
+      <div class="ci"><div class="cb hot"></div><div class="ci-body"><b>Arrive by 2:45 PM</b> — 30 minutes early. Do not be late.</div></div>
+      <div class="ci"><div class="cb"></div><div class="ci-body">Phone, wallet, keys go in the locker — nothing at the workstation</div></div>
+      <div class="ci"><div class="cb"></div><div class="ci-body">They provide <b>pen and paper</b> — use it for VPC/subnet diagrams</div></div>
+      <div class="ci"><div class="cb"></div><div class="ci-body">Eat before you arrive. Water is fine inside.</div></div>
+    </div>
+
+    <div class="edc-grid">
+
+      <div class="edc-card orange">
+        <div class="edc-head orange">Exam Format</div>
+        <div class="edc-row"><span class="dot">→</span><div><b>65 questions</b> · 90 minutes total</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>~83 seconds per question</div></div>
+        <div class="edc-row"><span class="dot">→</span><div><b>Pass line: 700/1000</b> (~46 of 65 correct)</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>Result shown <b>immediately</b> after you submit</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>Score card arrives in 2-3 days by email</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>15 unscored questions embedded — don't know which</div></div>
+      </div>
+
+      <div class="edc-card green">
+        <div class="edc-head green">Strategy Inside the Exam</div>
+        <div class="edc-row"><span class="dot">→</span><div><b>Read every answer choice</b> before clicking — don't stop at the first one that sounds right</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>Flag anything that takes more than 90 sec — finish all 65 first, then review</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>For SELECT TWO — eliminate the two obviously wrong ones first</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>Use pen and paper for VPC/networking diagrams</div></div>
+        <div class="edc-row"><span class="dot">→</span><div><b>Use ALL the time</b> — your classmate reviewed every flagged question</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>First instinct is usually right — don't talk yourself out of it</div></div>
+      </div>
+
+      <div class="edc-card blue">
+        <div class="edc-head blue">Confirmed Heavy Topics</div>
+        <div class="edc-row"><span class="dot">→</span><div><b>Shared Responsibility Model</b> — by service (Amazon EC2, Amazon RDS, AWS Lambda)</div></div>
+        <div class="edc-row"><span class="dot">→</span><div><b>Well-Architected Framework</b> — 6 pillars and trigger phrases (OSRPCS)</div></div>
+        <div class="edc-row"><span class="dot">→</span><div><b>AWS IAM</b> — Users, Groups, Roles, Policies, Root User</div></div>
+        <div class="edc-row"><span class="dot">→</span><div><b>Amazon S3</b> — storage classes, versioning, lifecycle</div></div>
+        <div class="edc-row"><span class="dot">→</span><div><b>AWS Cloud Adoption Framework</b> — 6 perspectives (BGPPSO)</div></div>
+        <div class="edc-row"><span class="dot">→</span><div><b>AWS WAF</b> — SQL injection and XSS · Layer 7</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>3 database questions · 3 SELECT TWO questions</div></div>
+      </div>
+
+      <div class="edc-card red">
+        <div class="edc-head red">Common Traps — Don't Fall For These</div>
+        <div class="edc-row"><span class="dot">→</span><div>"Trade <b>variable</b> expense for <b>capital</b> expense" = <b>WRONG</b> — it's the opposite</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>Amazon ECS = Docker · Amazon EKS = Kubernetes. Do not swap.</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>Amazon DynamoDB Accelerator (DAX) = DynamoDB cache ONLY. Amazon ElastiCache = SQL cache.</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>AWS Direct Connect = private physical line. AWS Site-to-Site VPN = encrypted tunnel over internet.</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>AWS Pricing Calculator = BEFORE deploy. AWS Cost Explorer = AFTER (historical).</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>"Resilience" and "Confidentiality" are NOT Well-Architected pillars.</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>Support API starts at <b>Business</b> — not Developer or Basic.</div></div>
+        <div class="edc-row"><span class="dot">→</span><div>TAM starts at <b>Enterprise On-Ramp</b> — Business does NOT have a TAM.</div></div>
+      </div>
+
+    </div>
+
+    <div class="final-note">
+      <em>What's true going into Monday.</em> You went from <b>65% on a surprise exam</b> to <b>96% on the Master Cheat Sheet Test</b> in the same week. You built every study tool your cohort is using. You have intel from two classmates who passed. The exam is easier than what you drilled in class. Half the questions you'll answer immediately. The other half you read carefully, eliminate wrong answers, and pick. <b>You know this material.</b> Walk in at 3:15, trust the work, read every answer before clicking, use all the time, and get it done. See you on the other side.
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

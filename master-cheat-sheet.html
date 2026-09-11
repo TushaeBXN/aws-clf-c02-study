@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLF-C02 Master Cheat Sheet</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+:root{
+  --bg:#080b10;--surface:#0e1218;--card:#141920;--border:#1e2636;--border2:#263045;
+  --text:#e2e8f0;--muted:#556070;--label:#8899aa;
+  --orange:#FF9900;--orange-dim:#2b1e05;
+  --blue:#4f8ef7;--blue-dim:#0f1e3a;
+  --green:#3ecf8e;--green-dim:#0a2218;
+  --red:#f7604f;--red-dim:#2a100e;
+  --purple:#a855f7;--purple-dim:#1e0f30;
+  --yellow:#f7c948;--yellow-dim:#2b2008;
+  --cyan:#06b6d4;--cyan-dim:#051e28;
+  --pink:#ec4899;--pink-dim:#280d1c;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;padding-bottom:60px;}
+
+/* ── HEADER ── */
+.site-header{
+  background:var(--surface);border-bottom:2px solid var(--orange);
+  padding:16px 24px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.site-title{font-family:'Space Mono',monospace;font-size:.95rem;color:var(--orange);letter-spacing:.05em;}
+.site-sub{font-size:.72rem;color:var(--muted);margin-top:2px;}
+
+/* ── SEARCH ── */
+.tab-btn{
+  font-family:'Space Mono',monospace;font-size:.68rem;padding:.7rem .9rem;
+  background:none;border:none;color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:.15s;
+  letter-spacing:.03em;
+}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{color:var(--orange);border-bottom-color:var(--orange);}
+
+/* ── LAYOUT ── */
+.page{display:none;padding:20px 20px;max-width:1300px;margin:0 auto;}
+.page.active{display:block;}
+
+/* ── SECTION TITLES ── */
+.sec{
+  font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);
+  display:flex;align-items:center;gap:.8rem;margin:22px 0 10px;
+}
+.sec::after{content:'';flex:1;height:1px;background:var(--border);}
+.sec span{padding:.15rem .6rem;border-radius:3px;font-weight:700;}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:9px;}
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:9px;}
+.grid-wide{display:grid;grid-template-columns:1fr;gap:9px;}
+
+/* ── CARD ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:9px;overflow:hidden;transition:border-color .15s;}
+.card:hover{border-color:var(--border2);}
+.card-head{
+  display:flex;align-items:center;gap:8px;padding:9px 13px 8px;
+  border-bottom:1px solid var(--border);
+}
+.card-title{font-weight:700;font-size:.88rem;flex:1;}
+.badge{font-family:'Space Mono',monospace;font-size:.58rem;font-weight:700;padding:.15rem .55rem;border-radius:3px;white-space:nowrap;}
+
+/* badge colors */
+.b-orange{background:var(--orange-dim);color:var(--orange);}
+.b-blue{background:var(--blue-dim);color:var(--blue);}
+.b-green{background:var(--green-dim);color:var(--green);}
+.b-red{background:var(--red-dim);color:var(--red);}
+.b-purple{background:var(--purple-dim);color:var(--purple);}
+.b-yellow{background:var(--yellow-dim);color:var(--yellow);}
+.b-cyan{background:var(--cyan-dim);color:var(--cyan);}
+.b-pink{background:var(--pink-dim);color:var(--pink);}
+
+/* card title colors match badge */
+.t-orange{color:var(--orange);}
+.t-blue{color:var(--blue);}
+.t-green{color:var(--green);}
+.t-red{color:var(--red);}
+.t-purple{color:var(--purple);}
+.t-yellow{color:var(--yellow);}
+.t-cyan{color:var(--cyan);}
+.t-pink{color:var(--pink);}
+
+.card-body{padding:9px 13px 12px;}
+
+/* rows */
+.row{display:flex;align-items:flex-start;gap:7px;margin-bottom:4px;font-size:.79rem;}
+.row:last-child{margin-bottom:0;}
+.arr{color:var(--muted);font-family:'Space Mono',monospace;font-size:.64rem;padding-top:2px;flex-shrink:0;min-width:14px;}
+.txt{color:var(--label);line-height:1.45;flex:1;}
+.txt strong,.txt b{color:var(--text);font-weight:600;}
+.txt em{color:var(--yellow);font-style:normal;font-weight:600;}
+.txt .no{color:var(--red);font-weight:700;}
+.txt .yes{color:var(--green);font-weight:700;}
+
+/* trap box */
+.trap{
+  margin-top:7px;padding:6px 9px;
+  background:#160a0a;border:1px solid rgba(247,96,79,.25);border-radius:5px;
+  font-size:.74rem;color:#f9a89f;line-height:1.4;
+}
+.trap strong{color:var(--red);display:block;font-size:.65rem;letter-spacing:.05em;margin-bottom:2px;}
+
+/* big table cards */
+.tbl{width:100%;border-collapse:collapse;font-size:.78rem;}
+.tbl th{
+  background:#0e1626;padding:6px 10px;text-align:left;
+  font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.05em;
+  color:var(--muted);border-bottom:1px solid var(--border);font-weight:700;
+}
+.tbl td{padding:6px 10px;border-bottom:1px solid #12182a;color:var(--label);vertical-align:top;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl td:first-child{color:var(--text);font-weight:600;}
+.tbl td em{color:var(--yellow);font-style:normal;font-weight:600;}
+.tbl td .no{color:var(--red);font-weight:700;}
+.tbl td .yes{color:var(--green);font-weight:700;}
+.tbl tr:hover td{background:#0f1520;}
+
+/* MUST KNOW alert */
+.must{
+  background:#1a1200;border:1px solid var(--orange);border-radius:8px;
+  padding:12px 14px;margin-bottom:12px;
+}
+.must-title{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--orange);letter-spacing:.08em;margin-bottom:8px;}
+.must-row{display:flex;gap:8px;font-size:.8rem;margin-bottom:4px;align-items:flex-start;}
+.must-row:last-child{margin-bottom:0;}
+.must-key{color:var(--orange);font-weight:700;min-width:90px;flex-shrink:0;}
+.must-val{color:var(--label);}
+.must-val strong{color:var(--text);}
+
+@media(max-width:600px){
+  .grid,.grid-2{grid-template-columns:1fr;}
+  .page{padding:14px 12px;}
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <div>
+    <div class="site-title">CLF-C02 · MASTER CHEAT SHEET</div>
+    <div class="site-sub">EC2 Pricing · Shared Responsibility · Networking · IAM · Cloud Concepts · D3 Services · Well-Architected · CAF</div>
+  </div>
+  <div style="font-size:.62rem;color:var(--muted);text-align:right;line-height:1.5;">Made by cohort<br>2026-RTT-06<br>classmate Brian Thomas</div>
+</div>
+
+<div class="tab-nav" id="tab-nav">
+  <button class="tab-btn active" onclick="showPage('pricing')">⚠ EC2 PRICING TRAPS</button>
+  <button class="tab-btn" onclick="showPage('shared')">SHARED RESPONSIBILITY</button>
+  <button class="tab-btn" onclick="showPage('networking')">NETWORKING</button>
+  <button class="tab-btn" onclick="showPage('iam')">IAM & ACCESS</button>
+  <button class="tab-btn" onclick="showPage('cloud')">CLOUD CONCEPTS</button>
+  <button class="tab-btn" onclick="showPage('d3')">D3 SERVICES</button>
+  <button class="tab-btn" onclick="showPage('wellarch')">WELL-ARCHITECTED</button>
+  <button class="tab-btn" onclick="showPage('caf')">CAF</button>
+  <button class="tab-btn" onclick="showPage('triggers')">EXAM TRIGGERS</button>
+  <button class="tab-btn" onclick="showPage('fullnames')">FULL SERVICE NAMES</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 1 — EC2 PRICING TRAPS
+════════════════════════════════════════ -->
+<div class="page active" id="page-pricing">
+
+  <div class="must">
+    <div class="must-title">⚠ EXAM TRAP — READ EVERY ANSWER CHOICE BEFORE CLICKING</div>
+    <div class="must-row"><span class="must-key">DOES NOT EXIST</span><span class="must-val"><strong style="color:var(--red)">"Reserved Host"</strong> — your classmate saw this on the real exam. It is a made-up distractor combining "Reserved Instances" + "Dedicated Hosts." Eliminate immediately.</span></div>
+    <div class="must-row"><span class="must-key">REAL OPTIONS</span><span class="must-val">On-Demand · Reserved (Standard/Convertible) · Spot · Dedicated Host · Dedicated Instance · Savings Plans</span></div>
+    <div class="must-row"><span class="must-key">RULE</span><span class="must-val">If the answer choice isn't on that list → <strong>eliminate it before reading the others.</strong></span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">ON-DEMAND</span><span class="card-title t-orange">On-Demand Instances</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Pay per second (Linux) or hour (Windows), <em>no commitment</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Most flexible, highest per-unit cost</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Good for: unpredictable workloads, short-term, first-time deployments</span></div>
+        <div class="trap"><strong>TRIGGER PHRASE</strong>"No commitment / most flexible / unpredictable" → On-Demand</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">RESERVED</span><span class="card-title t-blue">Standard Reserved Instances</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">1 or 3 year term, up to <em>72% discount</em> vs On-Demand</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Locked</em> to instance family, OS, region — cannot change family</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">All Upfront 3-year Standard RI = <em>maximum possible discount</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Good for: steady-state, predictable, 1-3 year workloads</span></div>
+        <div class="trap"><strong>⚠ FAKE OPTION</strong>"Reserved Host" = NOT REAL. Standard RI and Dedicated Host are separate products. They do not combine.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">CONVERTIBLE RI</span><span class="card-title t-purple">Convertible Reserved Instances</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">1 or 3 year term, up to <em>54% discount</em> (less than Standard)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Can <em>change instance family, OS, tenancy</em> during the term</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Good for: long-term commitment but uncertain future instance needs</span></div>
+        <div class="trap"><strong>TRIGGER PHRASE</strong>"Change family/OS during term" → Convertible RI (not Standard)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-red">SPOT</span><span class="card-title t-red">Spot Instances</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Up to <em>90% discount</em> — unused EC2 capacity</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><em>AWS can reclaim with 2-minute warning</em> — interruptible</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Good for: fault-tolerant, flexible batch, genomics, rendering</span></div>
+        <div class="trap"><strong>ELIMINATE SPOT WHEN</strong>"Cannot be interrupted" / "mission-critical" / "always running" → Spot is wrong every time</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">DEDICATED HOST</span><span class="card-title t-green">Dedicated Hosts</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Physical server</em> fully dedicated to you</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Full visibility into <em>sockets and cores</em> — required for BYOL</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Supports <em>per-socket / per-core / per-VM licenses</em> (Windows Server, SQL Server, Oracle)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Most expensive option</span></div>
+        <div class="trap"><strong>≠ NOT</strong>Dedicated Instance = isolated hardware, NO physical server visibility, NO BYOL support. Different product.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">SAVINGS PLANS</span><span class="card-title t-yellow">Compute Savings Plans</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Commit to <em>$/hour spend</em> for 1 or 3 years</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Covers <em>EC2 + Lambda + Fargate</em> — most flexible</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Automatically applies to any instance family, region, OS</span></div>
+        <div class="trap"><strong>KEY TRAP</strong>"EC2 + Lambda together in one commitment" → Savings Plans (Reserved Instances = EC2 only, never Lambda/Fargate)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Pricing comparison table -->
+  <div class="sec"><span style="background:var(--orange-dim);color:var(--orange);">COMPARISON TABLE</span></div>
+  <div class="card" style="overflow:auto;">
+    <table class="tbl">
+      <tr><th>Option</th><th>Discount</th><th>Commitment</th><th>Interruptible?</th><th>Use When</th></tr>
+      <tr><td>On-Demand</td><td>—</td><td>None</td><td><span class="no">No</span></td><td>Unpredictable, short-term</td></tr>
+      <tr><td>Standard RI</td><td><em>Up to 72%</em></td><td>1 or 3 yr, locked config</td><td><span class="no">No</span></td><td>Steady-state, known instance type</td></tr>
+      <tr><td>Convertible RI</td><td><em>Up to 54%</em></td><td>1 or 3 yr, flexible config</td><td><span class="no">No</span></td><td>Long-term, may change family</td></tr>
+      <tr><td>Spot</td><td><em>Up to 90%</em></td><td>None</td><td><em style="color:var(--red)">YES — 2-min warning</em></td><td>Fault-tolerant batch only</td></tr>
+      <tr><td>Dedicated Host</td><td>Varies</td><td>On-Demand or Reserved</td><td><span class="no">No</span></td><td>BYOL, per-core licensing</td></tr>
+      <tr><td>Savings Plans</td><td><em>Up to 66%</em></td><td>1 or 3 yr, $/hour</td><td><span class="no">No</span></td><td>EC2 + Lambda + Fargate mix</td></tr>
+      <tr><td style="color:var(--red)">❌ Reserved Host</td><td>—</td><td>—</td><td>—</td><td><strong style="color:var(--red)">DOES NOT EXIST — exam trap</strong></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 2 — SHARED RESPONSIBILITY
+════════════════════════════════════════ -->
+<div class="page" id="page-shared">
+
+  <div class="must">
+    <div class="must-title">THE CORE RULE</div>
+    <div class="must-row"><span class="must-key" style="color:var(--blue)">AWS OWNS</span><span class="must-val"><strong>Security OF the cloud</strong> — hardware, facilities, hypervisor, global network, AZ infrastructure</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--green)">YOU OWN</span><span class="must-val"><strong>Security IN the cloud</strong> — OS (on EC2), apps, data, IAM, encryption config, network/firewall settings</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--yellow)">SHARED</span><span class="must-val">Awareness & Training · Patch Management · Configuration Management (each party handles their own context)</span></div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">AWS OWNS</span><span class="card-title t-blue">AWS Responsibilities</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">✓</span><span class="txt">Physical data centers, buildings, hardware disposal</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Host firmware and hypervisor layer</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Global network infrastructure and backbone</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt"><em>RDS OS and engine patching</em> (managed service → AWS patches it)</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">S3, DynamoDB, Lambda infrastructure and underlying OS</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Physical security of Availability Zones</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Scanning AWS service endpoints for vulnerabilities</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Encrypting traffic on the AWS backbone between facilities</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">CUSTOMER OWNS</span><span class="card-title t-green">Customer Responsibilities</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">✓</span><span class="txt"><em>Guest OS patching on EC2</em> — always the customer's job</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Application code and data</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">IAM — users, roles, groups, policies</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Security Group and NACL configuration</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">S3 bucket policies and encryption configuration</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Client-side data encryption</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Network traffic protection in and out of VPC</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Service and Communications Protection (Zone Security)</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">SHARED CONTROLS</span><span class="card-title t-yellow">Both Parties — Separate Contexts</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Awareness & Training</em> — AWS trains its staff, you train yours</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Patch Management</em> — AWS patches infrastructure, you patch your OS/apps</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Configuration Management</em> — both manage their own layer</span></div>
+        <div class="trap"><strong>EXAM SIGNAL</strong>"Awareness and training" in an answer choice about shared controls → correct. This is the most-tested shared control.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-red">CRITICAL TRAPS</span><span class="card-title t-red">The OS Patching Trap</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">EC2</span><span class="txt">Guest OS patching = <em>Customer</em> (you installed the OS, you patch it)</span></div>
+        <div class="row"><span class="arr">RDS</span><span class="txt">Database engine + OS patching = <em>AWS</em> (managed service)</span></div>
+        <div class="row"><span class="arr">Lambda</span><span class="txt">Runtime patching = <em>AWS</em> (you never see the OS)</span></div>
+        <div class="row"><span class="arr">S3</span><span class="txt">Infrastructure OS = <em>AWS</em>. Bucket encryption config = <em>Customer</em></span></div>
+        <div class="trap"><strong>RULE</strong>Managed service → AWS patches the OS. EC2 → you patch the OS. The word "managed" is the key.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sec"><span style="background:var(--blue-dim);color:var(--blue);">ROOT USER PROTECTION</span></div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">ROOT USER</span><span class="card-title t-blue">Root User Best Practices</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">✓</span><span class="txt">Enable MFA on root account</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Lock away root access keys — don't use them</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Never share root credentials</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Use root only for tasks that require it (billing, close account)</span></div>
+        <div class="trap"><strong>NOT POSSIBLE</strong>"Remove admin permissions from root" → CANNOT be done. Root always has full access. This is a trap answer on NOT-questions.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 3 — NETWORKING
+════════════════════════════════════════ -->
+<div class="page" id="page-networking">
+
+  <div class="sec"><span style="background:var(--blue-dim);color:var(--blue);">VPC COMPONENTS</span></div>
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">VPC</span><span class="card-title t-blue">Internet Gateway</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Enables internet access for <em>PUBLIC subnets</em> (bidirectional)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Attached to VPC, not a subnet</span></div>
+        <div class="trap"><strong>≠ NOT</strong>Private subnets need NAT Gateway for outbound. IGW alone ≠ private subnet internet access.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">VPC</span><span class="card-title t-blue">NAT Gateway</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Private subnet</em> outbound internet only — no inbound connections</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">IPv4 only — use Egress-Only IGW for IPv6</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Lives in a public subnet, routes traffic for private subnets</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">VPC</span><span class="card-title t-blue">Egress-Only Internet Gateway</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><em>IPv6 equivalent of NAT Gateway</em> — outbound only</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Prevents internet from initiating connections to IPv6 instances</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"IPv6 private subnet outbound" → Egress-Only IGW (not NAT Gateway — IPv4 only)</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">VPC</span><span class="card-title t-blue">Security Groups vs NACLs</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">SG</span><span class="txt"><em>Instance-level</em> firewall · Stateful · <em>Allow rules only</em></span></div>
+        <div class="row"><span class="arr">NACL</span><span class="txt"><em>Subnet-level</em> firewall · Stateless · <em>Allow AND Deny rules</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">SGs: return traffic automatically allowed (stateful)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">NACLs: must explicitly allow both directions (stateless)</span></div>
+        <div class="trap"><strong>KEY</strong>"Block a specific IP address" → NACL only. Security Groups cannot deny specific IPs — allow-only.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">VPC</span><span class="card-title t-blue">Subnets & AZs</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Subnet exists within <em>ONE AZ only</em> — cannot span AZs</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Can create <em>multiple subnets per AZ</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>VPC scope</strong> = spans multiple AZs in ONE Region — regional, NOT global</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Egress-Only Internet Gateway</strong> = IPv6 outbound-only traffic from private subnet</span></div>
+        <div class="trap"><strong>TRAP</strong>"Subnets span multiple AZs for HA" → WRONG. You achieve HA by putting resources in multiple subnets, each in a different AZ.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">HYBRID</span><span class="card-title t-purple">On-Premises → AWS Connectivity</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr" style="color:var(--orange)">Site-to-Site VPN</span><span class="txt">Encrypted IPsec tunnel over the <strong>public internet</strong>. Fast to set up. Performance depends on internet connection.</span></div>
+        <div class="row"><span class="arr" style="color:var(--blue)">Direct Connect</span><span class="txt">Dedicated <strong>private physical line</strong> — never touches the public internet. Consistent performance, lower latency, higher cost. Takes weeks to provision.</span></div>
+        <div class="row"><span class="arr" style="color:var(--green)">VPN Components</span><span class="txt"><strong>Customer Gateway</strong> = YOUR on-premises router (your side). <strong>Virtual Private Gateway</strong> = AWS side, attaches to VPC. <em>Both required for Site-to-Site VPN.</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Direct Connect also terminates at the <strong>Virtual Private Gateway</strong> on the AWS side</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Private subnet route table must include: <strong>on-prem CIDR → Virtual Private Gateway</strong> so EC2 can reach on-premises resources</span></div>
+        <div class="trap"><strong>EXAM TRIGGER</strong>"Bypasses the public internet entirely" → AWS Direct Connect. "Encrypted tunnel over the internet" → AWS Site-to-Site VPN. "AWS side of VPN or Direct Connect" → Virtual Private Gateway. "On-premises router" → Customer Gateway.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">HYBRID</span><span class="card-title t-purple">VPC Peering vs Transit Gateway</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Peering</span><span class="txt">Direct private connection <em>between exactly 2 VPCs</em> — no on-prem. Works <strong>cross-region</strong>. Non-overlapping CIDRs required.</span></div>
+        <div class="row"><span class="arr">TGW</span><span class="txt"><em>Hub-and-spoke</em> — connect <strong>many VPCs + on-prem</strong> to one central hub. Specify a threshold — if connecting many, use TGW.</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">15 VPCs full mesh = 105 connections. Transit Gateway = 15 connections.</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Many VPCs connecting to each other" → Transit Gateway. "Two VPCs talk directly, no on-prem" → VPC Peering.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sec"><span style="background:var(--cyan-dim);color:var(--cyan);">LOAD BALANCERS</span></div>
+  <div class="card" style="overflow:auto;">
+    <table class="tbl">
+      <tr><th>Type</th><th>Layer</th><th>Protocol</th><th>Key Features</th><th>Use When</th></tr>
+      <tr><td>ALB</td><td>Layer 7</td><td>HTTP / HTTPS</td><td><em>Path-based + host-based routing, WebSockets</em></td><td>"Route /api to one group, /images to another"</td></tr>
+      <tr><td>NLB</td><td>Layer 4</td><td>TCP / UDP / TLS</td><td><em>Ultra-low latency, millions req/sec</em></td><td>"Extreme performance, financial trading"</td></tr>
+      <tr><td>CLB</td><td>Layer 4 & 7</td><td>Both</td><td>Legacy, EC2-Classic only</td><td>Old architecture review — migrate away from it</td></tr>
+      <tr><td>GWLB</td><td>Layer 3</td><td>IP</td><td>Deploy third-party network appliances</td><td>Firewalls, IDS/IPS at scale</td></tr>
+    </table>
+  </div>
+  <div style="margin-top:8px;font-size:.78rem;color:var(--muted);padding:0 4px;">
+    Minimum <strong style="color:var(--green)">2 AZs</strong> required for high-availability load balancer architecture.
+  </div>
+
+  <div class="sec"><span style="background:var(--green-dim);color:var(--green);">GLOBAL INFRASTRUCTURE</span></div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">GLOBAL</span><span class="card-title t-green">Regions · AZs · Edge Locations</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Region</span><span class="txt">Geographic area — contains <em>multiple AZs</em>. Data stays in region unless you move it.</span></div>
+        <div class="row"><span class="arr">AZ</span><span class="txt">One or more discrete data centers, isolated power/networking, <em>within one region</em></span></div>
+        <div class="row"><span class="arr">Edge</span><span class="txt">CloudFront cache sites globally — <em>NOT a Region or AZ</em></span></div>
+        <div class="trap"><strong>TRAP</strong>"AZ contains multiple Regions" → WRONG. Region contains AZs, not the other way around.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">CDN</span><span class="card-title t-green">Amazon CloudFront</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">CDN — caches content at <em>Edge Locations</em> globally, <strong>close to users</strong></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Reduces latency</strong> by serving content from the nearest edge location</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Protects against DDoS attacks</strong> — AWS Shield Standard included at no cost</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">AWS Shield Advanced available at CloudFront edge locations (additional fee)</span></div>
+        <div class="trap"><strong>≠</strong>S3 Transfer Acceleration = speeds up UPLOADS to S3. CloudFront = speeds up DOWNLOADS/delivery. Opposite directions.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">DNS</span><span class="card-title t-green">Amazon Route 53</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Scalable DNS and domain name routing — <em>global service</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Routing policies: <strong>Latency-based · Geo routing · Failover · Weighted</strong></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Health checks — routes away from unhealthy endpoints</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Works with CloudFront and ELB for traffic management</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 4 — IAM & ACCESS
+════════════════════════════════════════ -->
+<div class="page" id="page-iam">
+
+  <div class="must">
+    <div class="must-title">IAM MUST-KNOW FACTS</div>
+    <div class="must-row"><span class="must-key">GLOBAL</span><span class="must-val">IAM is a global service — create users once, works from anywhere in the world. No per-region setup.</span></div>
+    <div class="must-row"><span class="must-key">FREE</span><span class="must-val">IAM is free — no charge per user, group, role, or policy.</span></div>
+    <div class="must-row"><span class="must-key">CANNOT DO</span><span class="must-val">IAM cannot create local OS accounts on servers. That is OS-level management, not cloud IAM.</span></div>
+    <div class="must-row"><span class="must-key">GROUPS</span><span class="must-val">Groups CANNOT be nested. Users CAN belong to multiple groups.</span></div>
+    <div class="must-row"><span class="must-key">ROOT</span><span class="must-val">Root user = account owner. Enable MFA immediately. Never use for daily tasks. Never create access keys for root.</span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">USER</span><span class="card-title t-orange">IAM User</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Represents <strong>one specific person</strong> — individual named identity (e.g. john@company.com)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Has <strong>long-term credentials</strong> — username/password for Console, access keys for CLI/API</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Best practice: one IAM User per person — never share accounts</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Permissions granted directly OR via group membership</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Individual person needs access to Console or CLI with long-term credentials" → IAM User</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">GROUP</span><span class="card-title t-green">IAM Group</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Collection of IAM Users — <strong>share permissions for many users at once</strong></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Attach one policy to the group → all users in the group inherit it</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Groups <em>cannot be nested</em> — no groups within groups</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">A user can belong to <em>multiple groups</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Groups have NO credentials of their own — permission containers only</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"All developers should have the same S3 read access" → create a Group, attach policy, add users</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">ROLE</span><span class="card-title t-blue">IAM Role</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">For <strong>services, applications, or cross-account access</strong> — NOT for individual people day-to-day</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Provides <strong>temporary credentials</strong> — automatically rotated, no long-term keys stored</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">EC2 needs S3 access → attach a Role to the EC2 instance (instance profile)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Lambda, ECS tasks, cross-account access all use Roles</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Service needs access to another service" → IAM Role. "Temporary permissions, no long-term credentials" → IAM Role. Never hardcode keys.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">POLICY</span><span class="card-title t-yellow">IAM Policy</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">JSON document that <strong>defines permissions</strong> — what actions are allowed or denied on which resources</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Structure: <strong>Effect</strong> (Allow/Deny) · <strong>Action</strong> (s3:GetObject) · <strong>Resource</strong> (ARN)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Managed policies</strong> — AWS pre-built or customer-created, reusable across users/roles</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Inline policies</strong> — embedded directly into one specific user, group, or role</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Explicit <strong>Deny always wins</strong> — even if another policy grants access</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"JSON document that allows or denies actions" → IAM Policy. Policies are attached to Users, Groups, or Roles.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-red">ROOT USER</span><span class="card-title t-red">Root User — Account Owner</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Created when you first set up the AWS account — has <strong>full unrestricted access</strong> to everything</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Enable MFA immediately</strong> — this is the first thing to do after account creation</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Do NOT use for daily tasks</strong> — create IAM Users with least-privilege instead</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Never create access keys</strong> for the root user</span></div>
+        <div class="trap"><strong>ROOT-ONLY TASKS</strong>Change support plan · Close the account · Change account name/email · Restore IAM admin permissions · Enable MFA delete on S3 · Register as seller in Marketplace</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">SSO</span><span class="card-title t-purple">AWS IAM Identity Center</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Formerly called <strong>AWS Single Sign-On (SSO)</strong></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong>Single sign-on across multiple AWS accounts</strong> and business applications</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Users sign in once → access all assigned accounts without re-entering credentials</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Integrates with Microsoft Active Directory, Okta, and other identity providers</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Works with AWS Organizations — manage access across the entire org from one place</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Single sign-on across multiple AWS accounts" → AWS IAM Identity Center. "Federated access / SSO" → IAM Identity Center (not basic IAM Users).</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">CREDENTIALS</span><span class="card-title t-orange">3 Credential Types</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Console</span><span class="txt"><em>Username + Password</em> (+ MFA if enabled)</span></div>
+        <div class="row"><span class="arr">API/CLI</span><span class="txt"><em>Access Key ID + Secret Access Key</em></span></div>
+        <div class="row"><span class="arr">EC2 SSH</span><span class="txt"><em>Key Pair</em> (never confused with access keys)</span></div>
+        <div class="trap"><strong>KEY</strong>Never embed access keys in code → use IAM Roles instead. Access keys ≠ key pairs.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">ROLES</span><span class="card-title t-blue">IAM Roles</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Grant <em>temporary credentials</em> to services/applications</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">EC2 needs S3 access → assign a Role to the EC2 instance</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">No long-term credentials stored → more secure than access keys</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Cross-account access, Lambda permissions, EC2 instance profiles</span></div>
+        <div class="trap"><strong>RULE</strong>Any time a SERVICE needs to access another service → IAM Role. Never hardcode access keys.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">GROUPS</span><span class="card-title t-green">IAM Groups</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Attach one policy → all users in group inherit permissions</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Groups <em>cannot be nested</em> (no groups within groups)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">A user can belong to <em>multiple groups</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Groups have no credentials — they're just permission containers</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">ORGANIZATIONS</span><span class="card-title t-purple">Service Control Policies (SCPs)</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Applied via <em>AWS Organizations</em> — org-wide maximum permissions</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Even account administrators cannot exceed SCP limits</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Restrict specific API actions across all member accounts</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Prevent even admins from doing X across all accounts" → SCPs via Organizations</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">TOOLS</span><span class="card-title t-yellow">Access Advisor vs Access Analyzer</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Advisor</span><span class="txt"><em>Shows last accessed dates</em> per service — identify unused permissions → least privilege</span></div>
+        <div class="row"><span class="arr">Analyzer</span><span class="txt"><em>Finds resources shared externally</em> + generates IAM policies from CloudTrail activity</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Remove unused permissions / least privilege" → Access Advisor. "Externally shared resources" → Access Analyzer.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-cyan">SECURITY</span><span class="card-title t-cyan">Security Services Quick Reference</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Inspector</span><span class="txt"><em>Agent on EC2</em> — scans for CVEs, vulnerability assessment</span></div>
+        <div class="row"><span class="arr">GuardDuty</span><span class="txt"><em>ML threat detection</em> — CloudTrail + VPC Flow Logs + DNS. Detects, does NOT block.</span></div>
+        <div class="row"><span class="arr">Macie</span><span class="txt"><em>Finds PII in S3</em> using ML — credit cards, SSNs, names</span></div>
+        <div class="row"><span class="arr">WAF</span><span class="txt"><strong>AWS WAF</strong> — blocks common web exploits: <strong>SQL injection, cross-site scripting (XSS)</strong>, malicious IPs, geo-blocking. Layer 7. Works with Amazon CloudFront, Application Load Balancer, and Amazon API Gateway.</span></div>
+        <div class="row"><span class="arr">Shield</span><span class="txt"><em>DDoS protection</em> — Advanced includes DRT team 24/7</span></div>
+        <div class="row"><span class="arr">Artifact</span><span class="txt"><em>Download compliance reports</em> — SOC 2, PCI DSS, ISO 27001</span></div>
+        <div class="row"><span class="arr">CloudHSM</span><span class="txt"><em>Dedicated physical HSM</em> — single-tenant, BYOL key management</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 5 — CLOUD CONCEPTS
+════════════════════════════════════════ -->
+<div class="page" id="page-cloud">
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">VOCABULARY</span><span class="card-title t-orange">Agility vs Elasticity — Most Tested</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Agility</span><span class="txt"><em>Speed of innovation</em> — weeks to minutes, faster time to market, rapid experimentation</span></div>
+        <div class="row"><span class="arr">Elasticity</span><span class="txt"><em>Capacity matches demand</em> — auto-scale up/down, stop guessing, no idle cost</span></div>
+        <div class="trap"><strong>RULE</strong>"Faster time to market / idea to deploy" → Agility. "Auto-scale to flash sale traffic" → Elasticity. Never confuse these two.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">FINANCIAL</span><span class="card-title t-blue">CAPEX → OPEX</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">✓</span><span class="txt">"<em>Trade capital expense for variable expense</em>" = correct cloud advantage</span></div>
+        <div class="row"><span class="arr">✓</span><span class="txt">Cloud <em>reduces CAPEX</em> (no upfront hardware purchases)</span></div>
+        <div class="row"><span class="arr">✗</span><span class="txt">"<span class="no">Reduces operational expenditure</span>" = WRONG — cloud IS opex</span></div>
+        <div class="row"><span class="arr">✗</span><span class="txt">"<span class="no">Swap variable for capital expense</span>" = BACKWARDS — always wrong</span></div>
+        <div class="trap"><strong>NOT-QUESTION TRAP</strong>Option saying cloud "swaps variable expense for capital expense" = the NOT answer every time.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">CLOUD BENEFITS</span><span class="card-title t-green">6 Cloud Advantages</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">1</span><span class="txt">Trade capital expense for variable expense</span></div>
+        <div class="row"><span class="arr">2</span><span class="txt">Benefit from massive <em>economies of scale</em></span></div>
+        <div class="row"><span class="arr">3</span><span class="txt">Stop guessing capacity (<em>elasticity</em>)</span></div>
+        <div class="row"><span class="arr">4</span><span class="txt">Increase speed and agility</span></div>
+        <div class="row"><span class="arr">5</span><span class="txt">Stop spending money running data centers</span></div>
+        <div class="row"><span class="arr">6</span><span class="txt">Go global in minutes</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">ECONOMIES</span><span class="card-title t-purple">Economies of Scale</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">AWS aggregates usage across <em>hundreds of thousands of customers</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Higher efficiency → lower per-unit costs → <em>AWS passes savings to customers</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Why AWS prices decrease over time</span></div>
+        <div class="trap"><strong>≠</strong>Economies of scale ≠ elasticity ≠ agility. Economies of scale = lower prices from aggregated usage.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">GLOBAL INFRA</span><span class="card-title t-yellow">Region Selection Factors</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">1</span><span class="txt"><em>Data sovereignty / compliance</em> — where must data physically reside?</span></div>
+        <div class="row"><span class="arr">2</span><span class="txt"><em>Latency</em> — proximity to end users</span></div>
+        <div class="row"><span class="arr">3</span><span class="txt"><em>Service availability</em> — not all services in all regions</span></div>
+        <div class="row"><span class="arr">4</span><span class="txt"><em>Cost</em> — pricing varies by region</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">7 Rs</span><span class="card-title t-green">7 Rs — Cloud Migration Strategies</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr" style="color:var(--red)">Retire</span><span class="txt">Shut it down — application no longer needed, decommission it</span></div>
+        <div class="row"><span class="arr" style="color:var(--yellow)">Retain</span><span class="txt">Keep on-premises for now — not ready or not worth migrating yet</span></div>
+        <div class="row"><span class="arr" style="color:var(--blue)">Rehost</span><span class="txt"><strong>Lift and Shift</strong> — move as-is to AWS, no changes to the application</span></div>
+        <div class="row"><span class="arr" style="color:var(--blue)">Replatform</span><span class="txt"><strong>Lift, Tinker, Shift</strong> — minor optimizations without changing core architecture (e.g. move to Amazon RDS instead of self-managed DB)</span></div>
+        <div class="row"><span class="arr" style="color:var(--orange)">Repurchase</span><span class="txt"><strong>Drop and Shop</strong> — replace with a SaaS product (e.g. move CRM to Salesforce)</span></div>
+        <div class="row"><span class="arr" style="color:var(--purple)">Refactor</span><span class="txt"><strong>Re-architect</strong> — redesign using cloud-native features (microservices, serverless). Most expensive, most benefit.</span></div>
+        <div class="row"><span class="arr" style="color:var(--cyan)">Relocate</span><span class="txt"><strong>Hypervisor-level lift and shift</strong> — move VMware workloads to AWS VMware Cloud, no changes to apps or tools</span></div>
+        <div class="trap"><strong>MOST TESTED</strong>Rehost = lift and shift (fastest, no changes). Refactor = re-architect (most expensive, most cloud-native benefit). Retain = stay on-prem. Retire = shut it down.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-cyan">BILLING</span><span class="card-title t-cyan">Cost Tools Quick Reference</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Cost Explorer</span><span class="txt"><em>Visualize + forecast</em> spending history and trends</span></div>
+        <div class="row"><span class="arr">Budgets</span><span class="txt"><em>Set thresholds + alerts</em> when spend forecasted to exceed</span></div>
+        <div class="row"><span class="arr">CUR</span><span class="txt">Most granular billing data — export to S3/Athena/Redshift</span></div>
+        <div class="row"><span class="arr">Pricing Calc</span><span class="txt"><em>Estimate costs BEFORE deployment</em></span></div>
+        <div class="row"><span class="arr">TCO Calc</span><span class="txt"><em>Compare on-premises vs cloud</em> cost savings</span></div>
+        <div class="row"><span class="arr">Trusted Advisor</span><span class="txt">Cost optimization recommendations + security checks</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 6 — D3 SERVICES
+════════════════════════════════════════ -->
+<div class="page" id="page-d3">
+
+  <div class="sec"><span style="background:var(--orange-dim);color:var(--orange);">COMPUTE</span></div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">COMPUTE</span><span class="card-title t-orange">EC2 / Lambda / Fargate / Beanstalk</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">EC2</span><span class="txt">Virtual server, <em>full OS control</em>, you manage patching</span></div>
+        <div class="row"><span class="arr">Lambda</span><span class="txt"><em>Event-driven, serverless</em>, runs on S3 upload / API call / schedule</span></div>
+        <div class="row"><span class="arr">Fargate</span><span class="txt">Run <em>Docker containers without managing servers</em></span></div>
+        <div class="row"><span class="arr">ECS</span><span class="txt">Docker orchestration on EC2 clusters (you manage the cluster)</span></div>
+        <div class="row"><span class="arr">Beanstalk</span><span class="txt">PaaS — <em>upload code</em>, AWS handles LB/scaling/monitoring</span></div>
+        <div class="trap"><strong>ECR ≠ runtime</strong>ECR = stores Docker images only (registry). ECS/Fargate = runs them.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><span style="background:var(--blue-dim);color:var(--blue);">STORAGE</span></div>
+  <div class="card" style="overflow:auto;">
+    <table class="tbl">
+      <tr><th>Service</th><th>Type</th><th>Access</th><th>Attach to</th><th>Trigger phrase</th></tr>
+      <tr><td>S3</td><td>Object</td><td>REST API / HTTP</td><td>Not mountable</td><td><em>"Virtually unlimited / static website / 11 nines"</em></td></tr>
+      <tr><td>EBS</td><td>Block</td><td>Direct attach</td><td><em>ONE EC2</em></td><td><em>"Virtual hard disk / database primary storage"</em></td></tr>
+      <tr><td>EFS</td><td>File (NFS)</td><td>NFS mount</td><td><em>Many EC2 simultaneously</em></td><td><em>"Shared file system / multiple instances / POSIX compliant"</em></td></tr>
+      <tr><td>Glacier</td><td>Archive</td><td>Retrieval request</td><td>—</td><td><em>"Lowest cost / rarely accessed / compliance archive"</em></td></tr>
+      <tr><td>Snowball</td><td>Physical</td><td>Ship device</td><td>—</td><td><em>"Slow internet / large data migration"</em></td></tr>
+    </table>
+  </div>
+
+  <div class="sec"><span style="background:var(--green-dim);color:var(--green);">DATABASES</span></div>
+  <div class="card" style="overflow:auto;">
+    <table class="tbl">
+      <tr><th>Service</th><th>Type</th><th>Trigger phrases</th><th>NOT when</th></tr>
+      <tr><td>RDS</td><td>Managed relational</td><td><em>"MySQL/PostgreSQL/SQL Server, managed, reduce admin overhead"</em></td><td>Need OS control → use EC2</td></tr>
+      <tr><td>Aurora</td><td>MySQL/PG compatible</td><td><em>"5x faster MySQL / 15 read replicas / cloud-native relational"</em></td><td>NoSQL needed</td></tr>
+      <tr><td>DynamoDB</td><td>NoSQL / serverless</td><td><em>"NoSQL / schemaless / single-digit ms / zero-downtime scale"</em></td><td>SQL or schema required</td></tr>
+      <tr><td>Redshift</td><td>Data warehouse · <strong>Business Intelligence</strong></td><td><em>"OLAP / data warehouse / petabyte SQL analytics / BI tools / QuickSight integration"</em></td><td>Transactions (OLTP) needed</td></tr>
+      <tr><td>ElastiCache</td><td>In-memory cache</td><td><em>"Sub-millisecond / Redis / Memcached / cache SQL queries"</em></td><td>Primary DB needed</td></tr>
+      <tr><td>DAX</td><td>DynamoDB cache only</td><td><em>"DynamoDB microsecond performance / 10x faster DynamoDB"</em></td><td>SQL or non-DynamoDB</td></tr>
+    </table>
+  </div>
+
+  <div class="sec"><span style="background:var(--purple-dim);color:var(--purple);">MONITORING — MOST TESTED TRIO</span></div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="badge b-cyan">MONITOR</span><span class="card-title t-cyan">CloudWatch vs CloudTrail vs Config</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">CloudWatch</span><span class="txt"><em>HOW is it performing?</em> Metrics (including <strong>CPU utilization</strong>), logs, alarms, dashboards, billing alarms</span></div>
+        <div class="row"><span class="arr">CloudTrail</span><span class="txt"><em>WHO did WHAT?</em> API call <strong>audit</strong> log — identity, time, source IP, action taken</span></div>
+        <div class="row"><span class="arr">Config</span><span class="txt"><em>IS it compliant?</em> Resource configuration history + <strong>AWS Config compliance rules</strong> — detects drift from desired state</span></div>
+        <div class="trap"><strong>EXAM QUESTION</strong>"Who terminated instances?" → CloudTrail. "CPU spike alert" → CloudWatch. "S3 bucket became public" → Config rule.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><span style="background:var(--yellow-dim);color:var(--yellow);">MESSAGING & INTEGRATION</span></div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">MESSAGING</span><span class="card-title t-yellow">SNS vs SQS vs SES vs EventBridge</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">SNS</span><span class="txt"><em>Pub/sub fan-out</em> — SMS + email + push to MANY subscribers at once</span></div>
+        <div class="row"><span class="arr">SQS</span><span class="txt"><em>Message queue</em> — decouple components, one consumer per message. <strong>FIFO queue</strong> = First In, First Out, guarantees order.</span></div>
+        <div class="row"><span class="arr">SES</span><span class="txt"><em>Transactional email only</em> — order confirmations, password resets</span></div>
+        <div class="row"><span class="arr">EventBridge</span><span class="txt"><em>Event bus</em> — route events from AWS services to Lambda/SQS/Step Functions</span></div>
+        <div class="trap"><strong>RULE</strong>"SMS AND email to many" → SNS. "Transactional email" → SES. "Decouple" → SQS. "Route AWS events" → EventBridge.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">WORKFLOW</span><span class="card-title t-yellow">Step Functions vs SWF</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Step Fn</span><span class="txt"><em>Visual workflow / state machine</em> — serverless orchestration of multi-step processes</span></div>
+        <div class="row"><span class="arr">SWF</span><span class="txt"><em>Coordinate tasks across distributed application components</em> — business process workflows</span></div>
+        <div class="trap"><strong>KEY</strong>"Visual workflow" → Step Functions. "Distributed app component coordination / order fulfillment" → SWF.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><span style="background:var(--pink-dim);color:var(--pink);">DEPLOYMENT TOOLS</span></div>
+  <div class="card" style="overflow:auto;">
+    <table class="tbl">
+      <tr><th>Service</th><th>What it does</th><th>Key differentiator</th></tr>
+      <tr><td>CloudFormation</td><td>Infrastructure as Code (IaC)</td><td><em>Provisions AWS resources from JSON/YAML templates</em></td></tr>
+      <tr><td>Elastic Beanstalk</td><td>PaaS app deployment</td><td><em>Upload code → AWS handles EC2, ELB, Auto Scaling</em></td></tr>
+      <tr><td>CodeDeploy</td><td>Deploy code to servers</td><td><em>Update app — EC2 fleet AND on-premises servers</em></td></tr>
+      <tr><td>OpsWorks</td><td>Configuration management</td><td><em>Managed Chef and Puppet</em></td></tr>
+      <tr><td>CodeCommit</td><td>Git repo hosting</td><td><em>Store private managed version of source code</em> — fully managed Git</td></tr>
+      <tr><td>CodeBuild</td><td>Build and test</td><td>Compile source code, run tests</td></tr>
+      <tr><td>CodePipeline</td><td>CI/CD orchestration</td><td>Orchestrates full pipeline end-to-end</td></tr>
+      <tr><td>AWS CDK</td><td>Infrastructure as Code in code</td><td><em>Define infra in Python/TypeScript/Java → compiles to CloudFormation. ≠ CLI ≠ SDK</em></td></tr>
+    </table>
+  </div>
+
+  <div class="sec"><span style="background:var(--cyan-dim);color:var(--cyan);">ACCESS METHODS — SDK vs CDK vs CLI vs CONSOLE</span></div>
+  <div class="card">
+    <div class="card-body">
+      <div class="row"><span class="arr">Console</span><span class="txt"><strong style="color:var(--text)">AWS Management Console</strong> — browser-based visual UI. Humans explore and manage resources manually.</span></div>
+      <div class="row"><span class="arr">CLI</span><span class="txt"><strong style="color:var(--text)">AWS Command Line Interface</strong> — terminal commands and shell scripts. Automate tasks from the command line.</span></div>
+      <div class="row"><span class="arr">SDK</span><span class="txt"><strong style="color:var(--text)">AWS Software Development Kit</strong> — libraries for Python (boto3), JavaScript, Java, .NET, Go. Your <em>application code</em> calls AWS services programmatically. Upload a file to S3, query DynamoDB — all via SDK.</span></div>
+      <div class="row"><span class="arr">CDK</span><span class="txt"><strong style="color:var(--text)">AWS Cloud Development Kit</strong> — write infrastructure definitions IN Python/TypeScript/Java. Compiles to CloudFormation templates and deploys AWS resources.</span></div>
+      <div class="trap"><strong>KEY RULE — DO NOT MIX THESE UP</strong>"Programmatic access from app code" → SDK. "Automate via shell script" → CLI. "Define infra in a programming language" → CDK. "JSON/YAML templates" → CloudFormation. Each one sounds similar — read the trigger phrase carefully before choosing.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 7 — WELL-ARCHITECTED
+════════════════════════════════════════ -->
+<div class="page" id="page-wellarch">
+
+  <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:240px;background:#0a2218;border:1px solid rgba(62,207,142,0.35);border-radius:9px;padding:14px 18px;">
+      <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#3ecf8e;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;">Memory Trick · 6 Pillars</div>
+      <div style="font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;color:#e2e8f0;letter-spacing:.1em;margin-bottom:4px;">OSRPCS</div>
+      <div style="font-size:.82rem;color:#3ecf8e;font-style:italic;margin-bottom:10px;">"Old Soldiers Rest Peacefully, Carefully Sleeping"</div>
+      <div style="font-size:.8rem;color:#8899aa;line-height:1.9;">
+        <strong style="color:#e2e8f0;">O</strong>perational Excellence &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">S</strong>ecurity &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">R</strong>eliability<br>
+        <strong style="color:#e2e8f0;">P</strong>erformance Efficiency &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">C</strong>ost Optimization &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">S</strong>ustainability
+      </div>
+    </div>
+    <div style="flex:1;min-width:240px;background:#0e1218;border:1px solid rgba(248,113,113,0.25);border-radius:9px;padding:14px 18px;font-size:.82rem;color:#8899aa;line-height:1.8;">
+      <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#f7604f;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">NOT Pillars — Exam Distractors ❌</div>
+      "Resilience" · "Confidentiality" · "Economics"<br>"Availability" · "Scalability" · "Agility"<br>
+      <span style="color:#f7604f;font-size:.78rem;">These appear as wrong answer choices — do not pick them.</span>
+    </div>
+  </div>
+
+  <div class="must">
+    <div class="must-title">THE 6 PILLARS — MEMORIZE EXACTLY</div>
+    <div class="must-row"><span class="must-key" style="color:var(--orange)">1. Op. Excellence</span><span class="must-val">Run and monitor systems effectively, continuously improve processes. <strong>"Perform operations as code."</strong></span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--green)">2. Security</span><span class="must-val">Protect data, systems, assets. Least privilege, shared responsibility, enable traceability.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--blue)">3. Reliability</span><span class="must-val">Recover from failure, meet demand dynamically. Auto-recovery, multi-AZ, test recovery procedures.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--purple)">4. Performance Eff.</span><span class="must-val">Use right resource types efficiently. Adapt as demand and technology evolve.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--yellow)">5. Cost Optimization</span><span class="must-val">Eliminate waste, right pricing model, consumption-based spending.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--cyan)">6. Sustainability</span><span class="must-val">Minimize environmental footprint. Use managed services, efficient resource utilization.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--red)">NOT PILLARS ❌</span><span class="must-val">"Resilience" · "Confidentiality" · "Economics" · "Availability" · "Scalability" — all fake distractors</span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">PILLAR 1</span><span class="card-title t-orange">Operational Excellence</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><em>"Perform operations as code"</em> — CloudFormation, IaC</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Make frequent, small, reversible changes</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Refine operations procedures frequently</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Anticipate failure — design for it</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"IaC / CloudFormation / operations as code" → Operational Excellence pillar</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">PILLAR 3</span><span class="card-title t-blue">Reliability</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Automatically recover from failure</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Test recovery procedures</em> before an actual outage</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Scale horizontally to increase aggregate system availability</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Stop guessing capacity — use Auto Scaling</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Multi-AZ / automatic failover / recover from failure" → Reliability pillar</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">DESIGN PATTERN</span><span class="card-title t-orange">Design for Failure</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Auto Scaling + ELB across multiple AZs = design for failure</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Single component fails → application continues</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Supports Reliability pillar</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"EC2 Auto Scaling group + Application Load Balancer" → Design for failure</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">PILLAR 4</span><span class="card-title t-purple">Performance Efficiency</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Use the <em>right resource types and sizes</em> for workload</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Adapt as demand and AWS offerings change</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Use serverless and managed services to reduce overhead</span></div>
+        <div class="trap"><strong>≠</strong>Performance Efficiency ≠ Reliability. Perf. Eff. = right resources. Reliability = recover from failure.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sec"><span style="background:var(--cyan-dim);color:var(--cyan);">SUPPORT PLANS</span></div>
+  <div class="card" style="overflow:auto;">
+    <table class="tbl">
+      <tr><th>Plan</th><th>Cost</th><th>Support API</th><th>Trusted Advisor</th><th>Response (Critical)</th><th>TAM / Concierge</th></tr>
+      <tr><td>Basic</td><td>Free</td><td><span class="no">No</span></td><td>7 core checks</td><td>—</td><td><span class="no">No</span></td></tr>
+      <tr><td>Developer</td><td>$29+/mo</td><td><span class="no">No</span></td><td>7 core checks</td><td>—</td><td><span class="no">No</span></td></tr>
+      <tr><td>Business</td><td>$100+/mo</td><td><em class="yes">Yes</em></td><td><em>Full checks</em></td><td>&lt; 1 hour</td><td><span class="no">No</span></td></tr>
+      <tr><td>Enterprise On-Ramp</td><td>$5,500+/mo</td><td><span class="yes">Yes</span></td><td>Full checks</td><td>&lt; 30 min</td><td>Pool of TAMs</td></tr>
+      <tr><td>Enterprise</td><td>$15,000+/mo</td><td><span class="yes">Yes</span></td><td>Full checks</td><td><em>&lt; 15 min</em></td><td><em>Dedicated TAM + Concierge</em></td></tr>
+    </table>
+  </div>
+  <div style="margin-top:8px;background:var(--orange-dim);border:1px solid var(--orange);border-radius:6px;padding:8px 12px;font-size:.78rem;color:var(--orange);">
+    ⚠ ALL plans (including Basic/free) include 24/7 access to customer service, documentation, whitepapers, and forums.
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 8 — CAF
+════════════════════════════════════════ -->
+<div class="page" id="page-caf">
+
+  <div style="display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+    <div style="flex:1;min-width:240px;background:#1e0f30;border:1px solid rgba(168,85,247,0.35);border-radius:9px;padding:14px 18px;">
+      <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#a855f7;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px;">Memory Trick · 6 Perspectives</div>
+      <div style="font-family:'Space Mono',monospace;font-size:1.6rem;font-weight:700;color:#e2e8f0;letter-spacing:.1em;margin-bottom:4px;">BGPPSO</div>
+      <div style="font-size:.82rem;color:#a855f7;font-style:italic;margin-bottom:10px;">"Big Gorillas Play Piano, Sing Opera"</div>
+      <div style="font-size:.8rem;color:#8899aa;line-height:1.9;">
+        <strong style="color:#e2e8f0;">B</strong>usiness &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">G</strong>overnance &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">P</strong>eople<br>
+        <strong style="color:#e2e8f0;">P</strong>latform &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">S</strong>ecurity &nbsp;·&nbsp;
+        <strong style="color:#e2e8f0;">O</strong>perations
+      </div>
+    </div>
+    <div style="flex:1;min-width:240px;background:#0e1218;border:1px solid rgba(247,201,72,0.25);border-radius:9px;padding:14px 18px;font-size:.82rem;color:#8899aa;line-height:1.8;">
+      <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:#f7c948;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;">Keep Separate from Well-Architected</div>
+      Well-Architected = <strong style="color:#e2e8f0;">pillars</strong> · technical design principles<br>
+      CAF = <strong style="color:#e2e8f0;">perspectives</strong> · organizational lenses<br><br>
+      <span style="color:#3ecf8e;">→</span> "protect data and systems" = <strong style="color:#e2e8f0;">Security pillar</strong><br>
+      <span style="color:#3ecf8e;">→</span> "cloud fluency / workforce" = <strong style="color:#e2e8f0;">People perspective</strong>
+    </div>
+  </div>
+
+  <div class="must">
+    <div class="must-title">CAF TRANSFORMATION PHASES — IN ORDER</div>
+    <div class="must-row"><span class="must-key" style="color:var(--blue)">1. Envision</span><span class="must-val">Define vision and measurable business outcomes. Identify opportunities.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--green)">2. Align</span><span class="must-val"><strong>Identify capability gaps and align readiness.</strong> Most tested phase — gap identification = Align.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--yellow)">3. Launch</span><span class="must-val">Initiate new cloud services and processes in production.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--orange)">4. Scale</span><span class="must-val">Optimize and expand cloud adoption across the organization.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--red)">STAKEHOLDERS</span><span class="must-val"><strong>CIOs + IT Architects</strong> are primary CAF stakeholders. Engineers execute, PMs manage, CFOs budget.</span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">BUSINESS PERSP.</span><span class="card-title t-blue">Business Perspective</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><em>Align cloud strategy with business transformation goals</em></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Maximize business value from cloud investments</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Stakeholders: CEO, CFO, COO, CTO</span></div>
+        <div class="trap"><strong>TRIGGER</strong>"Cloud investments accelerate digital transformation / business outcomes" → Business Perspective</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">PEOPLE PERSP.</span><span class="card-title t-green">People Perspective</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Skills, culture, organizational change management</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Cloud fluency, workforce transformation</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Stakeholders: HR, People managers</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">GOVERNANCE PERSP.</span><span class="card-title t-yellow">Governance Perspective</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Policies, controls, compliance, risk management</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Orchestrate cloud initiatives, maximize benefits, minimize risks</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Stakeholders: CIO, program managers, architects</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">PLATFORM PERSP.</span><span class="card-title t-purple">Platform Perspective</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Technical architecture of cloud infrastructure</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Design, implement, optimize cloud solutions</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Stakeholders: CTO, IT architects, engineers</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-red">SECURITY PERSP.</span><span class="card-title t-red">Security Perspective</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Achieve confidentiality, integrity, availability of data</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">IAM, detective controls, infrastructure protection, data protection</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Stakeholders: CISO, security architects</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-cyan">OPERATIONS PERSP.</span><span class="card-title t-cyan">Operations Perspective</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt">Cloud service delivery, performance, reliability</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Day-to-day cloud operations aligned to business needs</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt">Stakeholders: IT operations, site reliability engineers</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="sec"><span style="background:var(--orange-dim);color:var(--orange);">AWS PROGRAMS & SUPPORT</span></div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">PROGRAMS</span><span class="card-title t-orange">AWS Programs Quick Reference</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">APN Tech</span><span class="txt">Technology Partners — provide <em>software solutions</em> on/integrated with AWS</span></div>
+        <div class="row"><span class="arr">APN Consult</span><span class="txt">Consulting Partners — <em>design, build, migrate, manage</em> workloads for customers</span></div>
+        <div class="row"><span class="arr">AWS IQ</span><span class="txt"><em>Find and hire AWS-certified experts</em> for on-demand project work</span></div>
+        <div class="row"><span class="arr">Activate</span><span class="txt"><em>Startups</em> — credits, training, technical support</span></div>
+        <div class="row"><span class="arr">Trust & Safety</span><span class="txt">Report <em>AWS resource abuse</em> — abuse@amazonaws.com</span></div>
+        <div class="row"><span class="arr">Concierge</span><span class="txt"><em>Billing and account experts</em> — Enterprise plan only</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 9 — EXAM TRIGGERS
+════════════════════════════════════════ -->
+<div class="page" id="page-triggers">
+
+  <div class="must">
+    <div class="must-title">⚠ EXAM TRIGGER SHEET — READ THE PHRASE, PICK THE ANSWER</div>
+    <div class="must-row"><span class="must-key" style="color:var(--orange)">HOW TO USE</span><span class="must-val">The exam uses specific trigger phrases. When you see the phrase on the left — the answer on the right is correct. No second-guessing.</span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">PILLAR TRIGGERS</span><span class="card-title t-orange">Well-Architected Pillar Identifiers</span></div>
+      <div class="card-body">
+        <div class="trap"><strong>"Operations as code" · "Frequent, small, reversible changes" · "Refine procedures" · "Anticipate failure"</strong> → Operational Excellence</div>
+        <div class="trap"><strong>"Recover from disruption" · "Dynamically acquire resources" · "Automatically recover"</strong> → Reliability</div>
+        <div class="trap"><strong>"Use resources efficiently" · "Right instance type" · "Adapt as tech evolves"</strong> → Performance Efficiency</div>
+        <div class="trap"><strong>"Protect data / systems" · "Least privilege" · "Encryption"</strong> → Security</div>
+        <div class="trap"><strong>"Avoid unnecessary costs" · "Right-sized resources" · "Match supply to demand"</strong> → Cost Optimization</div>
+        <div class="trap"><strong>"Minimize environmental impact"</strong> → Sustainability</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">SUPPORT PLAN FACTS</span><span class="card-title t-blue">Support Plans & Trusted Advisor Nuances</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">All accounts (even free Basic)</strong> get 24/7 customer service, docs, forums, 7 core Trusted Advisor checks</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Full Trusted Advisor</strong> (all checks) = Business plan and above only</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Trusted Advisor categories</strong> = Cost · Security · Fault Tolerance · Performance · Service Limits</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Support API</strong> = Business and above only (Basic and Developer do NOT have it)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Business plan — production down</strong> response time = &lt; 1 hour</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Enterprise On-Ramp</strong> = pooled TAM team · &lt; 30 min critical response</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Enterprise ONLY features</strong> = Dedicated TAM · Concierge · Well-Architected Reviews · Ops Reviews · 15-min response</span></div>
+        <div class="row"><span class="arr" style="color:var(--red)">❌</span><span class="txt"><strong style="color:var(--red)">Request service limit increases</strong> = AWS Service Quotas — NOT Trusted Advisor</span></div>
+        <div class="trap"><strong>Root-user-only tasks</strong> → Change support plan · Close account · Change account name/email · Restore IAM permissions · Enable MFA delete on S3</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">NETWORKING EDGE CASES</span><span class="card-title t-purple">Networking — The Tricky Ones</span></div>
+      <div class="card-body">
+        <div class="trap"><strong>"Block specific IPs" at subnet level · Stateless firewall</strong> → Network ACL (not Security Group)</div>
+        <div class="trap"><strong>EC2-level firewall · Stateful · Only allow rules</strong> → Security Group (cannot deny specific IPs)</div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Site-to-Site VPN components</strong> = Virtual Private Gateway (AWS side) + Customer Gateway (on-prem side)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Two VPCs in different Regions</strong> → VPC Peering works cross-region using existing infra</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">VPC scope</strong> = spans multiple AZs in ONE Region — VPCs are regional, NOT global</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Many VPCs + on-prem to connect</strong> → AWS Transit Gateway (hub-and-spoke)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Just two VPCs to connect</strong> → VPC Peering (simpler, no Transit Gateway needed)</span></div>
+        <div class="trap"><strong>"Private access to S3 or DynamoDB without internet"</strong> → VPC Endpoint / AWS PrivateLink</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">SHARED RESPONSIBILITY</span><span class="card-title t-green">Shared Responsibility Nuances by Service</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr" style="color:var(--cyan)">Lambda</span><span class="txt"><strong style="color:var(--green)">Customer owns:</strong> Code · IAM permissions · Function versions · Environment variables</span></div>
+        <div class="row"><span class="arr" style="color:var(--cyan)">Lambda</span><span class="txt"><strong style="color:var(--red)">AWS owns:</strong> Runtime environment · OS patching · Scaling · Underlying servers</span></div>
+        <div class="row"><span class="arr" style="color:var(--blue)">RDS</span><span class="txt"><strong style="color:var(--green)">Customer owns:</strong> Security groups · Network access · DB users · Encryption choice · Data</span></div>
+        <div class="row"><span class="arr" style="color:var(--blue)">RDS</span><span class="txt"><strong style="color:var(--red)">AWS owns:</strong> OS patching · DB engine minor patches · Backups · Hardware failure recovery</span></div>
+        <div class="row"><span class="arr" style="color:var(--orange)">EC2</span><span class="txt"><strong style="color:var(--green)">Customer owns:</strong> Guest OS patching · App software · Security groups · Data · IAM</span></div>
+        <div class="row"><span class="arr" style="color:var(--orange)">EC2</span><span class="txt"><strong style="color:var(--red)">AWS owns:</strong> Physical hardware · Hypervisor · Host OS · Network infrastructure</span></div>
+        <div class="trap"><strong>Customer ALWAYS owns — every service:</strong> Customer data, encryption choices made by customer, IAM configuration</div>
+        <div class="trap"><strong>Shared controls (both AWS + customer):</strong> Patch management · Configuration management · Awareness and training</div>
+        <div class="trap"><strong>Customer-ONLY (sole responsibility):</strong> Service and Communications Protection / Zone Security</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-red">IAM BEST PRACTICES</span><span class="card-title t-red">IAM — When to Use What</span></div>
+      <div class="card-body">
+        <div class="trap"><strong>"EC2 instance needs to access S3"</strong> → IAM Role attached to EC2 (NEVER hardcode access keys)</div>
+        <div class="trap"><strong>"Application needs temporary credentials"</strong> → IAM Role (not IAM User)</div>
+        <div class="trap"><strong>"Person logging into Console or CLI"</strong> → IAM User with access keys for CLI, password for Console</div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Principle of least privilege</strong> = grant only permissions required for the task, nothing more</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Root user</strong> = enable MFA immediately, never use for daily tasks, no access keys</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">IAM Group</strong> = easiest way to apply permissions to many users at once</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Cross-account access</strong> = IAM Role with trust relationship (not sharing credentials)</span></div>
+        <div class="row"><span class="arr" style="color:var(--red)">❌</span><span class="txt"><strong style="color:var(--red)">Never hardcode access keys</strong> in application code — always use IAM Roles for EC2/Lambda</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">SERVICE CONFUSABLES</span><span class="card-title t-yellow">Most Commonly Confused on Exam Day</span></div>
+      <div class="card-body">
+        <div class="trap"><strong>CloudWatch</strong> = metrics, logs, alarms &nbsp;|&nbsp; <strong>CloudTrail</strong> = API audit "who did what" &nbsp;|&nbsp; <strong>AWS Config</strong> = config drift/compliance</div>
+        <div class="trap"><strong>Amazon SNS</strong> = push to MANY at once (fan-out) &nbsp;|&nbsp; <strong>Amazon SQS</strong> = queue, one consumer pulls</div>
+        <div class="trap"><strong>Amazon ECS</strong> = Docker, AWS-native &nbsp;|&nbsp; <strong>Amazon EKS</strong> = Kubernetes managed</div>
+        <div class="trap"><strong>DAX</strong> = DynamoDB cache only &nbsp;|&nbsp; <strong>Amazon ElastiCache</strong> = SQL database cache (Redis/Memcached)</div>
+        <div class="trap"><strong>AWS Direct Connect</strong> = physical private line, NOT internet &nbsp;|&nbsp; <strong>AWS Site-to-Site VPN</strong> = encrypted tunnel OVER internet</div>
+        <div class="trap"><strong>AWS Pricing Calculator</strong> = BEFORE deploy &nbsp;|&nbsp; <strong>AWS Cost Explorer</strong> = AFTER deploy (historical) &nbsp;|&nbsp; <strong>AWS Budgets</strong> = ALERT when threshold hit</div>
+        <div class="trap"><strong>Amazon Inspector</strong> = scans EC2/containers for vulnerabilities &nbsp;|&nbsp; <strong>Amazon GuardDuty</strong> = detects threats in account &nbsp;|&nbsp; <strong>Amazon Macie</strong> = finds PII in S3</div>
+        <div class="trap"><strong>AWS Professional Services</strong> = AWS experts do the project WITH you &nbsp;|&nbsp; <strong>APN Consulting Partners</strong> = third-party firms that do it for you</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     PAGE 10 — FULL SERVICE NAMES
+════════════════════════════════════════ -->
+<div class="page" id="page-fullnames">
+
+  <div class="must">
+    <div class="must-title">⚠ EXAM RULE — THE REAL CLF-C02 USES FULL SERVICE NAMES</div>
+    <div class="must-row"><span class="must-key" style="color:var(--orange)">WHAT THE EXAM SAYS</span><span class="must-val">The real exam writes out full names. "Amazon CloudWatch" not "CloudWatch". "AWS CloudTrail" not "CloudTrail". Know the prefix — Amazon vs AWS — it matters.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--green)">STILL ABBREVIATED</span><span class="must-val">EC2 · RDS · S3 · IAM · VPN · VPC · DAX · ACM · MFA · CLI · SDK · CDK · DMS · SCT · SQS · SNS · SES · WAF · KMS — these are officially abbreviated in AWS naming.</span></div>
+    <div class="must-row"><span class="must-key" style="color:var(--red)">TRICK ON EXAM</span><span class="must-val">Options may list "Amazon Simple Notification Service" and "Amazon Simple Queue Service" side by side — you must know what each full name actually does to pick the right one.</span></div>
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">STORAGE</span><span class="card-title t-blue">Full Names — Storage Services</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Simple Storage Service</strong> = S3 · Object storage, static websites, 11 nines</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Elastic Block Store</strong> = EBS · Block storage, single EC2, bootable</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Elastic File System</strong> = EFS · Shared NFS file storage, many EC2s</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon FSx</strong> = FSx · <strong>Windows File Server (SMB protocol)</strong> or FSx for Lustre (HPC/ML high-performance)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon S3 Glacier</strong> · Archive storage, hours to retrieve</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon S3 Glacier Deep Archive</strong> · Cheapest tier, 12–48 hour retrieval</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Storage Gateway</strong> · Hybrid cloud storage — <strong>File Gateway (NFS/SMB) · Tape Gateway (virtual tape backup) · Volume Gateway</strong></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Backup</strong> · Centralized automated backup across AWS services</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Elastic Disaster Recovery</strong> · Fast failover, formerly CloudEndure</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">NETWORKING</span><span class="card-title t-purple">Full Names — Networking Services</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Virtual Private Cloud</strong> = VPC · Isolated virtual network</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Direct Connect</strong> · Dedicated private physical line to AWS</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Site-to-Site VPN</strong> · Encrypted tunnel over public internet</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Transit Gateway</strong> · Hub-and-spoke for many VPCs + on-premises</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Route 53</strong> · DNS, domain registration, latency/geo routing</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon CloudFront</strong> · Global CDN, caches content at edge locations</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Global Accelerator</strong> · Routes via AWS backbone, improves global perf</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon API Gateway</strong> · Build and manage REST and WebSocket APIs</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS PrivateLink</strong> · Private VPC endpoint to S3, DynamoDB, services</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">COMPUTE</span><span class="card-title t-green">Full Names — Compute Services</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon EC2</strong> · Virtual servers, full OS control (EC2 stays abbreviated)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Lambda</strong> · Serverless, event-driven, pay per millisecond</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Elastic Beanstalk</strong> · PaaS, upload code, AWS handles infra</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Lightsail</strong> · Simple VPS, fixed monthly price, beginners</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Batch</strong> · Run batch computing jobs at scale</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Fargate</strong> · Serverless containers, no EC2 to manage</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Elastic Container Service</strong> · AWS-native Docker container orchestration</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Elastic Kubernetes Service</strong> · Managed Kubernetes control plane</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Elastic Container Registry</strong> · Store and manage container images</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Outposts</strong> · AWS rack in YOUR data center, hybrid</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">DATABASES</span><span class="card-title t-orange">Full Names — Database Services</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Aurora</strong> · MySQL/PostgreSQL compatible, 5x throughput</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon RDS</strong> · Managed relational DB (RDS stays abbreviated)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon DynamoDB</strong> · NoSQL, single-digit ms, unpredictable scale</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon DynamoDB Accelerator</strong> = DAX · DynamoDB cache, microsecond latency</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon ElastiCache</strong> · In-memory cache for SQL reads, Redis/Memcached</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Redshift</strong> · Data warehouse, OLAP, BI dashboards</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Neptune</strong> · Fully managed graph database</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon DocumentDB</strong> · MongoDB-compatible document database</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Database Migration Service</strong> = DMS · Migrate DBs, source stays live</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Schema Conversion Tool</strong> = SCT · Convert schema between DB engines</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-red">SECURITY</span><span class="card-title t-red">Full Names — Security Services</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Identity and Access Management</strong> = IAM · Users, groups, roles, policies</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Key Management Service</strong> = KMS · Create and manage encryption keys</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Secrets Manager</strong> · Store DB passwords and API keys, auto rotation</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS WAF</strong> · Block SQL injection and XSS attacks (WAF stays abbreviated)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Shield</strong> · DDoS protection — <strong>Standard (free, always on) · Advanced (fee-based, enhanced protection + 24/7 DRT team)</strong></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon GuardDuty</strong> · Threat detection, malicious activity in account</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Macie</strong> · Discover PII in S3, sensitive data classification</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Inspector</strong> · Vulnerability assessments, scan EC2 and containers</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Security Hub</strong> · Central security dashboard, aggregate findings</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Certificate Manager</strong> = ACM · Free SSL/TLS certificates (ACM abbreviated)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Artifact</strong> · Download compliance reports (SOC, PCI, ISO)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Cognito</strong> · User authentication for web and mobile apps</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-yellow">MONITORING</span><span class="card-title t-yellow">Full Names — Monitoring & Management</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon CloudWatch</strong> · Metrics, logs, alarms, dashboards</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS CloudTrail</strong> · API call audit log, who did what and when</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Config</strong> · Resource configuration history, compliance drift</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Trusted Advisor</strong> · <strong>Best-practice recommendations</strong> for Cost · Security · Performance · Fault Tolerance · Service Limits. <strong>7 core checks free for all accounts.</strong></span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Health Dashboard</strong> · Real-time AWS service outage and status</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS CloudFormation</strong> · Infrastructure as code, JSON/YAML templates</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Systems Manager</strong> · <strong>Patch management · Run commands across EC2 fleet · Parameter Store</strong> for config and secrets</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Organizations</strong> · Manage many accounts centrally, consolidated billing</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Control Tower</strong> · <strong>Set up multi-account landing zone</strong> with security guardrails and compliance baselines</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Compute Optimizer</strong> · ML-based EC2 rightsizing recommendations</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-cyan">MESSAGING</span><span class="card-title t-cyan">Full Names — Messaging & Integration</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Simple Notification Service</strong> = SNS · Pub/sub, push to many subscribers at once</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Simple Queue Service</strong> = SQS · Message queue, poll-based, decouples services</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Simple Email Service</strong> = SES · Bulk and transactional email sending</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon EventBridge</strong> · Event bus, routes events between apps and AWS services</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Step Functions</strong> · Orchestrate serverless functions into workflows</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Connect</strong> · Cloud-based contact center service</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-blue">ANALYTICS & AI</span><span class="card-title t-blue">Full Names — Analytics & AI/ML</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Athena</strong> · Query S3 with SQL, serverless, pay per query</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon QuickSight</strong> · BI dashboards and data visualizations</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Glue</strong> · Serverless ETL — discover, prepare, and <strong>integrate data</strong> for analytics and ML pipelines</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Kinesis</strong> · Real-time data streaming and ingestion</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon EMR</strong> · Managed Hadoop/Spark clusters (EMR abbreviated)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon SageMaker</strong> · Build, train, and deploy ML models</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Rekognition</strong> · Image and video analysis, faces, objects</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Comprehend</strong> · NLP, sentiment analysis, entity recognition</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Lex</strong> · Build chatbots using voice and text (same tech as Alexa)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Polly</strong> · Text-to-Speech (reads text OUT LOUD)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Transcribe</strong> · Speech-to-Text (turns audio INTO text)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Translate</strong> · Neural machine translation</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Textract</strong> · Extract text from scanned documents</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Amazon Kendra</strong> · ML-powered intelligent search</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-green">MIGRATION</span><span class="card-title t-green">Full Names — Migration & Transfer</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Snow Family</strong> · Physical devices to ship data (Snowball, Snowmobile)</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS DataSync</strong> · Online sync of files between on-premises and AWS</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Application Migration Service</strong> · Lift-and-shift servers to AWS</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Migration Hub</strong> · Track migration progress across all services</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Application Discovery Service</strong> · Identify on-prem apps before migration</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-purple">DEPLOYMENT</span><span class="card-title t-purple">Full Names — Deployment & DevOps</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS CodePipeline</strong> · End-to-end CI/CD pipeline orchestration</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS CodeDeploy</strong> · Deploy apps to EC2 AND on-premises servers</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS CodeBuild</strong> · Compile and test build artifacts</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS CodeCommit</strong> · Managed private Git repository hosting</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS OpsWorks</strong> · Chef and Puppet configuration management</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Cloud Development Kit</strong> = CDK · Define cloud infrastructure using familiar programming languages (Python, TypeScript, Java, .NET) — compiles down to CloudFormation templates and provisions the resources. <em>Trigger: "define infra using a programming language"</em></span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-cyan">ACCESS TOOLS</span><span class="card-title t-cyan">SDK vs CDK vs CLI vs Console</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">Console</span><span class="txt"><strong style="color:var(--text)">AWS Management Console</strong> · Browser-based visual UI — humans exploring or managing resources manually</span></div>
+        <div class="row"><span class="arr">CLI</span><span class="txt"><strong style="color:var(--text)">AWS Command Line Interface</strong> = CLI · Terminal commands and shell scripts — automate tasks from the command line</span></div>
+        <div class="row"><span class="arr">SDK</span><span class="txt"><strong style="color:var(--text)">AWS Software Development Kit</strong> = SDK · Libraries for Python (boto3), JavaScript, Java, .NET, Go, Ruby — let your <em>application code</em> call AWS services programmatically. <em>Trigger: "programmatic access from application code"</em></span></div>
+        <div class="row"><span class="arr">CDK</span><span class="txt"><strong style="color:var(--text)">AWS Cloud Development Kit</strong> = CDK · Write infrastructure definitions IN code (Python, TypeScript, Java) → compiles to CloudFormation → provisions AWS resources. <em>Trigger: "define infrastructure using a programming language"</em></span></div>
+        <div class="trap"><strong>KEY DIFFERENCES</strong>SDK = your app talks TO AWS services (upload file, query DynamoDB). CDK = you DEFINE what AWS infrastructure to build. CLI = command line access/automation. Console = visual browser UI.</div>
+        <div class="trap"><strong>DO NOT MIX THESE UP</strong>"Programmatic access to AWS from application code" → SDK (not CLI). "Automate via shell script" → CLI. "Define infra in Python/TypeScript" → CDK. "JSON/YAML templates" → CloudFormation. Read the trigger phrase carefully — these appear as wrong answers for each other.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-orange">BILLING TOOLS</span><span class="card-title t-orange">Full Names — Billing & Cost Tools</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Pricing Calculator</strong> · Estimate costs BEFORE deploying anything</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Cost Explorer</strong> · Visualize and analyze EXISTING historical costs</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Budgets</strong> · Set threshold <strong>"alerts"</strong> — notifies when actual or forecasted spend <strong>"exceeds"</strong> your defined threshold</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Cost and Usage Report</strong> · Most <strong>"granular"</strong> billing data — every resource, tag, and charge. Load into Amazon Athena or Redshift.</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Marketplace</strong> · Buy third-party software (like finding an app on <strong>Facebook's App Store</strong>) — billed directly on your AWS invoice</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Organizations</strong> · Consolidated billing, single invoice, volume discounts</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">Cost Allocation Tags</strong> · Tag resources by <strong>Project · Department · Team</strong> — activating them lets costs appear in billing reports filtered by those labels</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Professional Services</strong> · <strong>Paid engagements</strong> — AWS expert team works alongside your team on complex migrations, transformations, and special practice projects</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><span class="badge b-red">SUPPORT PLANS</span><span class="card-title t-red">Full Names — Support Tiers Compared</span></div>
+      <div class="card-body">
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Basic Support</strong> · Free. Billing questions only. No technical cases. 7 core Trusted Advisor checks.</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Developer Support</strong> · Business-hours email only. 7 core checks. No Support API.</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Business Support</strong> · 24/7 phone + chat. Full Trusted Advisor. Support API. No TAM.</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Enterprise On-Ramp Support</strong> · Pooled TAM team. 30-min critical SLA.</span></div>
+        <div class="row"><span class="arr">→</span><span class="txt"><strong style="color:var(--text)">AWS Enterprise Support</strong> · Dedicated TAM. 15-min critical SLA. Support Concierge.</span></div>
+        <div class="row" style="margin-top:8px"><span class="arr" style="color:var(--red)">❌</span><span class="txt"><strong style="color:var(--red)">Support API starts at Business</strong> — Basic and Developer do NOT have it</span></div>
+        <div class="row"><span class="arr" style="color:var(--red)">❌</span><span class="txt"><strong style="color:var(--red)">TAM starts at Enterprise On-Ramp</strong> — Business does NOT have a TAM</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
