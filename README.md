@@ -1,21 +1,43 @@
-# ☁️ AWS CLF-C02 Study Hub
-> Built by Tushae — AWS  Study Hub
+# AWS CLF-C02 Study Hub
 
-Full interactive study suite for the AWS Certified Cloud Practitioner exam.
+A self-study toolkit for the **AWS Certified Cloud Practitioner (CLF-C02)** exam — three browser-based tools that run offline with no install or build step required.
 
-## 🔗 Live Site
-**[Launch Study Hub](https://YOUR-USERNAME.github.io/aws-clf-c02-study)**
+Built by **Tushae Thomas** (cohort 2026-RTT-06) while going through [Per Scholas' AWS re/Start program](https://perscholas.org/courses/aws-re-start/). Shared here so other re/Start students and anyone else prepping for CLF-C02 can use it.
 
-## 📦 Tools
-| Page | Description |
-|------|-------------|
-| [Study Guide](index.html) | All 4 exam domains with expandable topics |
-| [Practice Exam](practice-exam.html) | 50 scenario-based questions with timer |
-| [Full Mock Exam](full-exam.html) | Official 65-question exam, 90-min timer |
+---
 
-## 🎯 Exam Facts
-- 65 questions (50 scored + 15 unscored) · 90 minutes · Pass = 700/1000
-- Cloud Concepts 24% · Security & Compliance 30% · Technology 34% · Billing 12%
+## Tools
 
-## 🛠️ Tech Stack
-Built with React (CDN), plain HTML/CSS — no build step required.
+| Tool | File | What it does |
+|------|------|--------------|
+| Study Guide | `index.html` | All 4 CLF-C02 exam domains with expandable topic sections |
+| Practice Exam | `practice-exam.html` | 50 scenario-based questions with a countdown timer |
+| Full Mock Exam | `full-exam.html` | Official-format 65-question exam with a 90-minute timer |
+
+## How to use
+
+1. **Download or clone this repo** — click the green "Code" button → "Download ZIP", then unzip it anywhere.
+2. **Open any HTML file in your browser** — double-click `index.html`, `practice-exam.html`, or `full-exam.html`. No server, no npm, no build step. Works offline.
+3. Study, drill, repeat.
+
+> **Tip:** Start with the Study Guide (`index.html`) to review concepts by domain, then test yourself with the Practice Exam, then simulate the real thing with the Full Mock Exam.
+
+## Exam quick-reference
+
+| | |
+|---|---|
+| Questions | 65 (50 scored + 15 unscored) |
+| Time | 90 minutes |
+| Passing score | 700 / 1000 |
+| **Cloud Concepts** | 24% |
+| **Security & Compliance** | 30% |
+| **Cloud Technology & Services** | 34% |
+| **Billing, Pricing & Support** | 12% |
+
+## About
+
+Built with plain HTML, CSS, and React (loaded from CDN) — no frameworks, no build tooling, intentionally simple so it works anywhere and anyone can read the source.
+
+---
+
+*Good luck on your exam. You've got this.*
