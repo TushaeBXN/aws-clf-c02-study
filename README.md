@@ -2,7 +2,7 @@
 
 **Built by a Per Scholas cohort 2026-RTT-06 student who passed the CLF-C02 exam.**  
 All tools are free, self-contained HTML files — no install, no login, no framework. Download and open in any browser.
-
+* Another thing that helps is writing things down and reading them. Take notes for your studies print things out read them out loud! * But remember during the test, you cannot read out loud!!!!!!
 ---
 
 ## What's Inside
