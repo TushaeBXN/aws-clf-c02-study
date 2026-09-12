@@ -4,6 +4,7 @@
 All tools are free, self-contained HTML files — no install, no login, no framework. Download and open in any browser.
 * Another thing that helps is writing things down and reading them. Take notes for your studies print things out read them out loud!
 * But remember during the test, you cannot read out loud!!!!!!
+* Some of these files? You'll probably see my real scores so remember not everything is perfect. Not everyone is perfect. Sometimes you have to work at something to succeed.
 ---
 
 ## What's Inside
